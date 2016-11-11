@@ -1,0 +1,18 @@
+{
+	"id": "ways@lifia.info.unlp.edu.ar",
+	"title": "WAYS",
+	"name": "Web API for Ancillary Search",
+	"version": "1.0",
+	"description": "Define search engines and slightly perform ancillary searchs on any Web page!",
+	"author": "LIFIA",
+	"homepage": "http://www.lifia.info.unlp.edu.ar/lifia/es",
+	"engines": 	{
+		"firefox": ">=38.0a1",
+		"fennec": ">=38.0a1"
+	},
+	"license": "MPL 2.0",
+	"main": "lib/main.js",
+	"keywords": [
+        "jetpack"
+    ]
+}
