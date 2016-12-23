@@ -1,11 +1,11 @@
 /*Ambas clases tienen background-color y box-shadow porque hay ciertos elementos del DOM que no toman alguna de las dos*/
-.woa-highlighted-element { 
+.search-apis-highlighted-element { 
 	border-radius: 7px !important;
 	background-color: #FFD238 !important;
 	box-shadow: 0px 0px 12px 0px #FFD238 !important;
 	/*transition: all .5s; lo hace MUY lento*/
 }
-.woa-selected-element {
+/*.woa-selected-element {
 	border-radius: 7px !important;
 	box-shadow: 0px 0px 12px 0px #FFD238 !important;
 	background: #FFD238 !important;
@@ -15,7 +15,6 @@
 	border-radius: 7px !important;
 	background-color: #FFD238 !important;
 	box-shadow: 0px 0px 12px 0px #FFD238 !important;
-	/*transition: all .5s; lo hace MUY lento*/
 }
 .woa-selected-attr-element {
 	border-radius: 7px !important;
@@ -35,4 +34,4 @@
                 url('../img/loading.gif') 
                 50% 50% 
                 no-repeat;
-}
+}*/
