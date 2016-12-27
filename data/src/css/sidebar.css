@@ -1,10 +1,9 @@
 body{
-    padding: 5px;
     margin: 0px;
     font-family: 'PT Sans', sans-serif !important;
     font-size: 16px !important;
     line-height: 1.2em !important;
-    background-color: #bdbcbc !important; 
+    /*background-color: #bdbcbc !important; */
 }
 .btn-warning {
     color: white !important;
@@ -24,6 +23,9 @@ body{
 }
 .subform-initial-state{
     display: none;
+}
+.sidebar-form{
+    padding: 0px 5px 5px 5px;
 }
 /* Decorators parameters mapping with concept properties */
 .linked-parameter{
@@ -132,6 +134,9 @@ body{
 }
 html, body, .main-container {
     height: 100%;
+}
+.main-container {
+    margin-top: -15px;
 }
 .nav > li > a {
     padding: 5px 15px !important;

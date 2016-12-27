@@ -1,5 +1,6 @@
 //addon es la variable global que el SDK de Firefox pone a disposición para acceder al puerto
 //addon is the global var that Firefox SDK provides for accessing the port
+console.log("sidebarIsLoading");
 function SidebarManager(lbundle) {
     this.locale = lbundle;
     this.temp = {};
@@ -13,13 +14,14 @@ SidebarManager.prototype.initalize = function () {
     this.currentDecorator = {classname:undefined, messages:[], required:[]};
     //Init ports "on" and load the context menu for sidebar
     this.clearCurrCTemplateId();
-    this.loadSubforms();
+    //this.loadSubforms();
     this.initPorts();
-    
-    addon.port.emit("loadContextMenuForSidebar"); //It's required to be called just one time
-    addon.port.emit("sidebarIsReady");
+    console.log("sidebarIsReady");
+    //addon.port.emit("loadContextMenuForSidebar"); //It's required to be called just one time
+    //addon.port.emit("sidebarIsReady");
 };
 SidebarManager.prototype.initPorts = function() {
+
     var man = this;
     addon.port.on("accessWrappersManagement", function(){ man.loadView({id:['manage-decorators', 'decorators-management']}); });
     addon.port.on("enableLoading", function(){ man.enableLoading(); });
@@ -36,14 +38,7 @@ SidebarManager.prototype.initPorts = function() {
     addon.port.on("loadExistingApplications", function(data){ man.loadExistingApplications(data); });
     addon.port.on("loadWrapperMessages", function(data){ man.loadWrapperMessages(data); });    
     addon.port.on("loadWrapperRequiredProps", function(data){ man.loadWrapperRequiredProps(data); });  
-    addon.port.on("createCTemplate", function(){ 
-        //In charge of the Collector
-        man.openCTemplateForm();
-            man.clearCTemplateEditionForm();
-            man.enableCTemplateTags();
-            console.log("from sidebar");
-            addon.port.emit('loadMaterializableOptions'); 
-    });
+    console.log("sidebarIsInitializing");
     addon.port.on("createPTemplate", function(){
         //In charge of the Collector
         man.openPTemplateForm();
@@ -789,12 +784,12 @@ SidebarManager.prototype.loadFormValidation = function(data) {
     });
 };
 SidebarManager.prototype.openCTemplateForm = function() {
-    var ui = this;
+    /*var ui = this;
     this.loadView({ id:['edit-concept-template'] });
     this.loadFormValidation({
         id:'edit-concept-template-form',
         required:['edit-concept-template-name', 'edit-concept-template-tag']
-    });
+    });*/
 }
 SidebarManager.prototype.focus = function(domId) {
     
@@ -1183,6 +1178,21 @@ SidebarManager.prototype.loadCTemplateForSearchEngineLinkage = function (concept
     addon.port.emit("updateCurrentCTemplate", sel.value);
 } 
 var sidebar;
-addon.port.on("initSidebar", function(props) {
+addon.port.on("createResultTemplate", function(props) {
+    
     sidebar = new SidebarManager(props.locale);
-});
+    //sidebar.openCTemplateForm();
+    //sidebar.clearCTemplateEditionForm();
+    //sidebar.enableCTemplateTags();
+
+    //document.getElementById("concept-header-title").innerHTML = this.locale["edit_concept_title"];
+    //document.getElementById("concept-header-icon").className = "glyphicon glyphicon-pencil";
+    
+    //TODO: move this so you can control when the sidebar is loaded   
+    //setTimeout(function(){ 
+        document.getElementById('concept-preview-image').src = props.thumbnail;
+    //}, 3000);
+
+
+    addon.port.emit('loadMaterializableOptions'); 
+});//

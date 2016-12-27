@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="src/css/sidebar.css"></link>
+        <link href='http://fonts.googleapis.com/css?family=Crushed' rel='stylesheet' type='text/css'></link>
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'></link>
+        <!-- JQUERY AND JQUERY UI -->
+        <link rel="stylesheet" href="lib/css/jquery-ui.min.css"></link>
+        <link rel="stylesheet" href="lib/css/jquery-ui.structure.min.css"></link>
+        <link rel="stylesheet" href="lib/css/jquery-ui.theme.min.css"></link>
+        <script type="text/javascript" src="lib/js/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="lib/js/jquery-ui-1.11.min.js"></script>
+        <!-- BOOTSTRAP -->
+        <link rel="stylesheet" href="lib/css/bootstrap.min.css"></link>
+        <script type="text/javascript" src="lib/js/bootstrap.min.js"></script>
+        <!-- TOGGLE -->
+        <link rel="stylesheet" href="lib/css/bootstrap-toggle.min.css"></link>
+        <script type="text/javascript" src="lib/js/bootstrap-toggle.min.js"></script>
+        <!-- VALIDATION -->
+        <script type="text/javascript" src="lib/js/jquery.validate.min.js"></script>
+        <!-- TAG IT -->
+        <link rel="stylesheet" href="lib/css/tag-it.css"></link>
+        <script type="text/javascript" src="lib/js/tag-it.js"></script>
+        <!-- XPATH MANAGEMENT (JUST FOR SIDEBAR SIDE) -->
+        <script type="text/javascript" src="src/js/xpathManagement.js"></script>
+        <!-- SIDEBAR -->
+        <script type="text/javascript" src="src/js/sidebar.js"></script>
+    </head>
+    <body>
+        <div class="main-container">
+            <div class="navbar-default navbar-brand pim-sidebar-header text-center" style="width:100%;">
+                <span id="concept-header-icon" class="glyphicon glyphicon-plus"></span> &nbsp;
+                <span id="concept-header-title" data-l10n-id="define_result_title"></span>
+            </div>       
+            <form id="edit-concept-template-form" class="sidebar-form">
+                <!-- :::::::::: NAME :::::::::: -->
+                <div class="form-group">
+                    <label for="edit-concept-template-name" data-l10n-id="materializable_name"></label>
+                    <input id="edit-concept-template-name" name="edit-concept-template-name" type="text" class="form-control" placeholder="E.g. Scholar Article" required="true"></input>
+                </div>
+                <!-- :::::::::: TAG :::::::::: -->
+                <div class="form-group">
+                    <label for="edit-concept-template-tag" data-l10n-id="materializable_tag"></label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
+                        <input type="text" class="form-control" id="edit-concept-template-tag" required="true"></input>
+                    </div>
+                </div>     
+                <!-- :::::::::: XPATH :::::::::: --> 
+                <div class="form-group">
+                    <label for="edit-concept-template-xpath" data-l10n-id="materializable_selector"></label>
+                    <select id="edit-concept-template-xpath" class="form-control">
+                    </select>
+                </div>
+                <!-- :::::::::: PREVIEW :::::::::: --> 
+                <div class="form-group">
+                    <label for="preview-of-concept" data-l10n-id="materializable_preview"></label>
+                    <div id="preview-of-concept" class="image-preview-container">
+                        <img id="concept-preview-image" class="image-preview" /> 
+                    </div>
+                </div>
+                <div class="">
+                    <a href="" class="pull-right" style="font-size: 12px;color: blue;">   Advanced settings</a>
+                </div>
+                <nav> <!-- :::::::::: PAGINATION :::::::::: -->
+                    <ul class="pager">
+                        <li class="previous active">
+                            <button type="button" class="btn btn-info navbar-btn" onclick="window.sidebar.manageCTemplates();">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                <span id="discard-materializable-label" class="pager-option-label" data-l10n-id="discard"></span>
+                            </button>
+                        </li>
+                        <li class="next active">
+                            <button id="save-concept" type="button" class="btn btn-info navbar-btn" >
+                                <span data-l10n-id="save"></span>
+                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </form>
+        </div>
+    </body>
+</html>

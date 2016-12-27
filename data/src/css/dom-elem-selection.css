@@ -2,7 +2,7 @@
 .search-apis-highlighted-element { 
 	border-radius: 7px !important;
 	background-color: #FFD238 !important;
-	box-shadow: 0px 0px 12px 0px #FFD238 !important;
+	box-shadow: 0px 0px 12px 6px #FFD238 !important;
 	/*transition: all .5s; lo hace MUY lento*/
 }
 /*.woa-selected-element {
