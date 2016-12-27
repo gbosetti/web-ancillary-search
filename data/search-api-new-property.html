@@ -25,54 +25,73 @@
         <!-- XPATH MANAGEMENT (JUST FOR SIDEBAR SIDE) -->
         <script type="text/javascript" src="src/js/xpathManagement.js"></script>
         <!-- SIDEBAR -->
-        <script type="text/javascript" src="src/js/search-api-new-result.js"></script>
+        <script type="text/javascript" src="src/js/search-api-new-property.js"></script>
     </head>
     <body>
         <div class="main-container">
             <div class="navbar-default navbar-brand pim-sidebar-header text-center" style="width:100%;">
                 <span id="concept-header-icon" class="glyphicon glyphicon-plus"></span> &nbsp;
-                <span id="concept-header-title" data-l10n-id="define_result_title"></span>
+                <span id="concept-header-title" data-l10n-id="define_property_title"></span>
             </div>       
-            <form id="edit-concept-template-form" class="sidebar-form">
+            <form id="edit-property-form" class="sidebar-form">
+                <!-- :::::::::: OWNER CONCEPT :::::::::: -->
+                <div class="form-group">
+                    <label for="edit-property-owner" data-l10n-id="owner_concept"></label>
+                    <select id="edit-property-owner" class="form-control">
+                        <option>Página 12's news</option>
+                    </select>
+                </div>
                 <!-- :::::::::: NAME :::::::::: -->
                 <div class="form-group">
-                    <label for="edit-concept-template-name" data-l10n-id="materializable_name"></label>
-                    <input id="edit-concept-template-name" name="edit-concept-template-name" type="text" class="form-control" placeholder="E.g. Scholar Article" required="true"></input>
+                    <label for="edit-property-name" data-l10n-id="materializable_name"></label>
+                    <input id="edit-property-name" name="edit-property-name" type="text" class="form-control" placeholder="E.g. Title" required="true"></input>
                 </div>
                 <!-- :::::::::: TAG :::::::::: -->
                 <div class="form-group">
-                    <label for="edit-concept-template-tag" data-l10n-id="materializable_tag"></label>
+                    <label for="edit-property-tag" data-l10n-id="materializable_tag"></label>
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
-                        <input type="text" class="form-control" id="edit-concept-template-tag" required="true"></input>
+                        <input type="text" class="form-control" id="edit-property-tag" required="true"></input>
                     </div>
-                </div>     
+                </div>   
+                <!-- :::::::::: DATA TYPE ::::::::::   
+                <div class="form-group">
+                    <label for="edit-property-tag" data-l10n-id="property_data_type"></label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                        <input type="text" class="form-control" id="edit-property-tag" required="true"></input>
+                    </div>
+                </div>  -->    
+                <!-- :::::::::: SAVE STATIC :::::::::: 
+                <div class="checkbox">
+                    <label><input type="checkbox"> <b style="vertical-align: text-bottom;"><span data-l10n-id="save_as_static_data"></span></b></label>
+                </div>    --> 
                 <!-- :::::::::: XPATH :::::::::: --> 
                 <div class="form-group">
-                    <label for="edit-concept-template-xpath" data-l10n-id="materializable_selector"></label>
-                    <select id="edit-concept-template-xpath" class="form-control">
-                    </select>
+                    <label for="edit-property-xpath" data-l10n-id="materializable_selector"></label>
+                    <select id="edit-property-xpath" class="form-control"></select>
                 </div>
                 <!-- :::::::::: PREVIEW :::::::::: --> 
                 <div class="form-group">
-                    <label for="preview-of-concept" data-l10n-id="materializable_preview"></label>
-                    <div id="preview-of-concept" class="image-preview-container">
-                        <img id="concept-preview-image" class="image-preview" /> 
+                    <label for="preview-of-property" data-l10n-id="materializable_preview"></label>
+                    <div id="preview-of-property">
+                        <img id="property-preview-image" class="image-preview" /> 
                     </div>
                 </div>
                 <div class="">
                     <a href="" class="pull-right" style="font-size: 12px;color: blue;">   Advanced settings</a>
                 </div>
+                
                 <nav> <!-- :::::::::: PAGINATION :::::::::: -->
                     <ul class="pager">
                         <li class="previous active">
-                            <button type="button" class="btn btn-info navbar-btn" onclick="window.sidebar.manageCTemplates();">
+                            <button id="exit-property" type="button" class="btn btn-info navbar-btn" onclick="window.sidebar.manageCTemplates();">
                                 <span class="glyphicon glyphicon-trash"></span>
-                                <span id="discard-materializable-label" class="pager-option-label" data-l10n-id="discard"></span>
+                                <span id="discard-property-label" class="pager-option-label" data-l10n-id="discard"></span>
                             </button>
                         </li>
                         <li class="next active">
-                            <button id="save-concept" type="button" class="btn btn-info navbar-btn" >
+                            <button id="save-property" type="button" class="btn btn-info navbar-btn" >
                                 <span data-l10n-id="save"></span>
                                 <span class="glyphicon glyphicon-floppy-disk"></span>
                             </button>

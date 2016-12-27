@@ -1153,6 +1153,16 @@ SidebarManager.prototype.createCheckeableListItem = function(data, type, name) {
 
     return groupItem;
 }
+SidebarManager.prototype.loadResultsTemplate = function (props) {
+
+    document.getElementById('concept-preview-image').src = props;
+    addon.port.emit('loadMaterializableOptions'); 
+}
+SidebarManager.prototype.loadResultsPropertyTemplate = function (props) {
+
+    document.getElementById('concept-preview-image').src = props;
+    addon.port.emit('loadMaterializableOptions'); 
+}
 SidebarManager.prototype.loadCTemplateForSearchEngineLinkage = function (concepts, selected, disabled) {
     // TODO: refactor --> edit-property-owner
 
@@ -1178,21 +1188,15 @@ SidebarManager.prototype.loadCTemplateForSearchEngineLinkage = function (concept
     addon.port.emit("updateCurrentCTemplate", sel.value);
 } 
 var sidebar;
+addon.port.on("createSidebarManager", function(props) {
+    
+    sidebar = new SidebarManager(props.locale); 
+});
 addon.port.on("createResultTemplate", function(props) {
     
-    sidebar = new SidebarManager(props.locale);
-    //sidebar.openCTemplateForm();
-    //sidebar.clearCTemplateEditionForm();
-    //sidebar.enableCTemplateTags();
-
-    //document.getElementById("concept-header-title").innerHTML = this.locale["edit_concept_title"];
-    //document.getElementById("concept-header-icon").className = "glyphicon glyphicon-pencil";
+    sidebar.loadResultsTemplate(props);
+});
+addon.port.on("createResultPropertyTemplate", function(props) {
     
-    //TODO: move this so you can control when the sidebar is loaded   
-    //setTimeout(function(){ 
-        document.getElementById('concept-preview-image').src = props.thumbnail;
-    //}, 3000);
-
-
-    addon.port.emit('loadMaterializableOptions'); 
-});//
+    sidebar.loadResultsPropertyTemplate(props);
+});
