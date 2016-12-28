@@ -12,7 +12,7 @@ SearchApiNewPropertyManager.prototype.loadResultsTemplate = function (props) {
 }
 SearchApiNewPropertyManager.prototype.loadPreview = function (imgSrc) {
 
-    document.getElementById('preview-of-property').src = imgSrc;
+    document.getElementById('property-preview-image').src = imgSrc;
 }
 
 var sidebar;
@@ -22,6 +22,5 @@ addon.port.on("createSidebarManager", function(props) {
 });
 addon.port.on("createPropertyTemplate", function(props) {
     
-    console.log(sidebar);
     sidebar.loadResultsTemplate(props);
 });
