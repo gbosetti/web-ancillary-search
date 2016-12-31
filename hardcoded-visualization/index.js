@@ -30,29 +30,31 @@ $(document).ready(function() {
 
   var columnDefs = [{
     title: "Title",
-    render: function(data, type, row) {
-        return decodeURIComponent(escape(data));
-    }
+    responsivePriority: 1
   }, {
     title: "Description",
-    render: function(data, type, row) {
-        return decodeURIComponent(escape(data));
-    }
+    responsivePriority: 2
   }, {
     title: "Image",
+    orderable: false,
     render: function(data, type, row) {
         if(data != 'null')
           return '<img src="'+data+'" />';
         return '';
-    }
+    },
+    responsivePriority: 3,
+    className: "tablet-l desktop"
   }];
+
+  /*render: function(data, type, row) {
+        return decodeURIComponent(escape(data));
+    }*/
 
   var myTable;
 
   myTable = $('#example').DataTable({
     pagingType: "simple",
     data: dataSet,
-    columnDefs: [{ "width": "150px", "targets": 2 }],
     columns: columnDefs,
     info: false,
     dom: 'Brtip',        // Bfrtip -> the f enables the search
