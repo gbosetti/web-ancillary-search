@@ -52,20 +52,25 @@ html,body {
 }
 .sidebar-cog{
 	background-color: #d5d545 !important;
+    padding: 10px 7px !important;
 }
 .sidebar-filters{
 	background-color: #69c669 !important;
     border-bottom-right-radius: 0px !important;
     border-bottom-left-radius: 20px !important;
+    padding: 10px 7px !important;
 }
 .sidebar-visualizations{
 	background-color: #d55b5b !important;
     border-top-left-radius: 20px !important;
     border-top-right-radius: 0px !important;
+    padding: 10px 7px !important;
 }
 #results{
     width: 90% !important;
 }
 #results_wrapper{
-    width: 100% !important;
+    width: 95% !important;
+    margin: auto; 
+    text-align: center;
 }

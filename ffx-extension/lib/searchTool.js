@@ -1,4 +1,5 @@
 var UiManager = require("./UiManager").getClass();
+var {Ci, Cu, Cc, CC} = require("chrome");
 
 function SearchTool(locale, ui){
 
@@ -118,6 +119,7 @@ SearchTool.prototype.createSpecializedVisualizationBox = function(unwrappedWindo
 SearchTool.prototype.loadSpecializedVisualization = function(iframe){
 
 	var Request = require("sdk/request").Request;
+	var me = this;
 	var latestTweetRequest = Request({
 		url: require("sdk/self").data.url("./visualization.html"),
 		onComplete: function (response) {
@@ -126,18 +128,59 @@ SearchTool.prototype.loadSpecializedVisualization = function(iframe){
 			iframe.contentWindow.document.write(response.text);
 			iframe.contentWindow.document.close();
 
-			var cssLink = iframe.contentWindow.document.createElement("link") 
-				cssLink.href = require("sdk/self").data.url("./src/css/visualization.css"); 
-				cssLink.rel = "stylesheet"; 
-				cssLink.type = "text/css"; 
-			iframe.contentWindow.document.head.appendChild(cssLink);
-
-			var jsScript = iframe.contentWindow.document.createElement("script") 
-				jsScript.type = "text/javascript";
-				jsScript.src = require("sdk/self").data.url("./src/js/visualization.js");
-			iframe.contentWindow.document.head.appendChild(jsScript);
+			me.loadCssLIntoFrame(iframe, require("sdk/self").data.url("./src/css/visualization.css")); 
+			me.loadCssLIntoFrame(iframe, require("sdk/self").data.url("./lib/css/jquery.dataTables.min.css")); 
+			me.loadCssLIntoFrame(iframe, require("sdk/self").data.url("./lib/css/responsive.dataTables.min.css"));
+			me.loadCssLIntoFrame(iframe, require("sdk/self").data.url("./lib/css/bootstrap.min.css"));
+			
+			me.loadJsLIntoFrame(
+				iframe, 
+				require("sdk/self").data.url("./lib/js/jquery-1.12.4.min.js"),
+				function(){
+					me.loadJsLIntoFrame(
+						iframe, 
+						require("sdk/self").data.url("./lib/js/bootstrap.min.js")
+					);
+					me.loadJsLIntoFrame(
+						iframe, 
+						require("sdk/self").data.url("./lib/js/jquery.dataTables.min.js"),
+						function(){
+							me.loadJsLIntoFrame(
+								iframe, 
+								require("sdk/self").data.url("./lib/js/dataTables.responsive.min.js"),
+								function(){ 
+									me.loadJsLIntoFrame(
+										iframe, 
+										require("sdk/self").data.url("./src/js/visualization.js")
+									);
+								}
+							);
+						}
+					);
+				}
+			);		
 		}
 	}).get();
+}
+SearchTool.prototype.loadJsLIntoFrame = function(iframe, url, callback){
+
+	var jsScript = iframe.contentWindow.document.createElement("script") 
+		jsScript.type = "text/javascript";
+		jsScript.src = url;
+		jsScript.onload = function(){
+	    	console.log("already loaded: " + url);
+	    	if(callback) callback();
+	    };
+
+	iframe.contentWindow.document.head.appendChild(jsScript);
+}
+SearchTool.prototype.loadCssLIntoFrame = function(iframe, url){
+
+	var cssLink = iframe.contentWindow.document.createElement("link"); 
+		cssLink.href = url; 
+		cssLink.rel = "stylesheet"; 
+		cssLink.type = "text/css"; 
+	iframe.contentWindow.document.head.appendChild(cssLink);
 }
 SearchTool.prototype.createCustomSearchMenus = function(){
 
@@ -192,34 +235,31 @@ SearchTool.prototype.loadRequiredLibraries = function() {
 
 	var win = require('sdk/window/utils').getMostRecentBrowserWindow();
 	var doc = win.content.document.wrappedJSObject;
-	this.loadScript("https://code.jquery.com/jquery-1.12.4.min.js", doc, function(){console.log("loaded jq")});
-	this.loadScript("https://code.jquery.com/ui/1.12.1/jquery-ui.min.js", doc, function(){console.log("loaded ui")});
 
-	console.log(doc.defaultView);
-	console.log("attaching files 2");
+	//DO NOT USE CDN HERE!!!
+	this.loadScript(
+		require("sdk/self").data.url("./lib/js/jquery-1.12.4.min.js"), doc, 
+		"$");
+	this.loadScript(
+		require("sdk/self").data.url("./lib/js/jquery-ui.min.js"), 
+		doc);
+
 	//https://code.jquery.com/jquery-1.12.4.min.js
 }
-SearchTool.prototype.loadScript = function(url, document, callback){
+SearchTool.prototype.loadScript = function(url, document, varToCheck){
 
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.onload = function(){
-    	console.log("loaded: " + url)
-        callback();
-    };
-
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-}
-SearchTool.prototype.loadJS = function(filename, document) {
-    // DOM: Create the script element
-    var jsElm = document.createElement("script");
-    // set the type attribute
-    jsElm.type = "application/javascript";
-    // make the script element load file
-    jsElm.src = filename;
-    // finally insert the element to the body element in order to load the script
-    document.body.appendChild(jsElm);
+	//ACÁ TENEMOS PROBLEMAS CONSITIOS COMOFACE, PERO PASA EN TWITTER
+	//PODRÍA SOLUCIONARSE CAMBIANDO EL $ PARA JQUERY
+	if(varToCheck != undefined && document.defaultView[varToCheck] != undefined){
+	    return;
+	}
+	var script = document.createElement("script");
+	    script.type = "text/javascript";
+	    script.onload = function(){
+	    	console.log("ok: " + url);
+	    };
+	    script.src = url;
+	    document.head.appendChild(script);
 }
 SearchTool.prototype.showContextMenu = function(selectedText){
 
