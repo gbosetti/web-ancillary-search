@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+
+	<link rel="stylesheet" type="text/css" href="src/css/visualization.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<script	  src="https://code.jquery.com/jquery-1.12.4.min.js"
+			  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+			  crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>
+	<script type="text/javascript" src="src/js/visualization.js"></script>
+	<title></title>
+</head>
+<body>
+	<div class="panel panel-primary">
+	    <div class="panel-heading">
+	        <h3 class="panel-title">Results from «Página 12» for «Prat-Gay»</h3>
+	        <!-- Watch Out: Here We must use the effect name in the data tag-->
+	        <span class="pull-right clickable" data-effect="fadeOut"><i class="glyphicon glyphicon-remove"></i></span>
+	    </div>
+	    <div class="panel-body" style="padding:0;border:0px;height:450px;overflow-y:auto">
+		 	<div class="row">
+			    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 scrollit">
+			        <div class="container">
+						<table cellpadding="0" cellspacing="0" border="0" class="custom-res-table dataTable table table-striped" id="example">
+						</table>
+					</div>	
+			    </div>
+			</div>	
+
+			
+	    </div> 
+	</div>  
+	<div class="list-group sidebar-menu"> 
+		<a href="#" class="list-group-item sidebar-visualizations">
+		    <span class="glyphicon glyphicon-blackboard sidebar-icons" aria-hidden="true"></span> 
+		</a>
+		<a href="#" class="list-group-item sidebar-cog">
+		    <span class="glyphicon glyphicon-cog sidebar-icons" aria-hidden="true"></span> 
+		</a>
+		<a href="#" class="list-group-item sidebar-filters">
+		    <span class="glyphicon glyphicon-filter sidebar-icons" aria-hidden="true"></span> 
+		</a>
+	</div>	
+</body>
+</html>

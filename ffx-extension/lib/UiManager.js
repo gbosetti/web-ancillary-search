@@ -136,6 +136,8 @@ UiManager.prototype.createContextSubMenu = function(data) {
 
     //No matter if the item already exists or it was just created, we clear it and update the data (also useful if the user changes the language)
     item.setAttribute("label", data.label);
+    item.onclick = data.callback;
+
     return item;
 }
 UiManager.prototype.getMenupopup = function(elem, document) {
@@ -161,6 +163,22 @@ UiManager.prototype.attachCssFiles = function(files) {
 		var style = Style({ uri: files[i] });
 		attach(style, tabs.activeTab);
 	};
+};
+UiManager.prototype.attachJsFiles = function(files){
+
+	var wrk = tabs.activeTab.attach({
+		contentScriptFile: this.getAsDataResources(files) /*TOCHECK: if empty, this could throw error*/
+	});
+}
+UiManager.prototype.getAsDataResources = function(res){
+	//Process the string array into a valid data URIs array 
+
+	var dataRes = new Array(),
+		data = require("sdk/self").data;		
+	for (var i = 0; i < res.length; i++) {
+		dataRes.push(data.url(res[i]));
+	};
+	return dataRes
 };
 
 exports.getClass = function() {
