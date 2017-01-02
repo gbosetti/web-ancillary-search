@@ -52,7 +52,7 @@ $(document).ready(function() {
 
   var myTable;
 
-  myTable = $('#example').DataTable({
+  myTable = $('#results').DataTable({
     pagingType: "simple",
     data: dataSet,
     columns: columnDefs,

@@ -17,7 +17,10 @@ SearchTool.prototype.definePopupListener = function(){
 
 		//just show it when some text is selected
 		var selectedText = me.getCurrentWindow().content.getSelection().toString();
-		if(selectedText) me.showContextMenu(selectedText);
+		if(selectedText) {
+			me.showContextMenu(selectedText);
+			me.selectedText = selectedText;
+		}
 	};
 }
 SearchTool.prototype.initContextMenus = function() { 
@@ -37,7 +40,6 @@ SearchTool.prototype.createResultsBox = function(unwrappedWindow, title){
 		resultsBox.style["box-sizing"] = "border-box";
 		resultsBox.style["font-family"] = ",Arial,sans-serif";
 		resultsBox.style["font-size"] = "16px";
-		resultsBox.style["left"] = "0px";
 		resultsBox.style["line-height"] = "24px";
 		resultsBox.style["margin-bottom"] = "30px";
 		resultsBox.style["margin-left"] = "0px";
@@ -48,6 +50,12 @@ SearchTool.prototype.createResultsBox = function(unwrappedWindow, title){
 		resultsBox.style["width"] = "456px";
 		resultsBox.style.border = "1px solid rgba(0, 0, 0, 0.2)";
 		resultsBox.style["border-radius"] = "5px 5px 0px 0px";
+		resultsBox.style["position"] = "fixed";
+
+		var w = Math.max(unwrappedWindow.document.documentElement.clientWidth, unwrappedWindow.innerWidth || 0);
+		var h = Math.max(unwrappedWindow.document.documentElement.clientHeight, unwrappedWindow.innerHeight || 0);
+		resultsBox.style["top"] = ((h/2) - 200) + "px";
+		resultsBox.style["left"] = ((w/2) - 250) + "px";
 
 		resultsBox.appendChild(this.createResultsBoxHeader(unwrappedWindow, title));
 		resultsBox.appendChild(this.createResultsBoxBody(unwrappedWindow));
@@ -65,6 +73,7 @@ SearchTool.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
 		resultsHeader.style["box-sizing"] = "border-box";
 		resultsHeader.style["font-family"] = "Arial,sans-serif";
 		resultsHeader.style["font-size"] = " 16px";
+		resultsHeader.style["font-weight"] = "bold";
 		resultsHeader.style["line-height"] = " 24px";
 		resultsHeader.style["padding"] = "15px";
 		resultsHeader.style["border-radius"] = "5px 5px 0px 0px";
@@ -84,13 +93,51 @@ SearchTool.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
 		closeButton.style["padding-bottom"] = "6px";
 		closeButton.style["width"] = "22px";
 		closeButton.style["float"] = "right";
+		closeButton.onclick = function(){
+			resultsHeader.parentElement.remove();
+		}
 		resultsHeader.appendChild(closeButton);
 		
 	return resultsHeader;
 }
 SearchTool.prototype.createResultsBoxBody = function(unwrappedWindow){
 	var resultsBody = unwrappedWindow.document.createElement("div");
-	return resultsBody;
+		resultsBody.style["background-color"] = "#337ab7";
+		resultsBody.style["width"] = "100%"; 
+    	resultsBody.style["text-align"] = "center"; 	
+    	return resultsBody;
+}
+SearchTool.prototype.createSpecializedVisualizationBox = function(unwrappedWindow){
+
+	var iframe = unwrappedWindow.document.createElement('iframe');
+		iframe.style.width = "99%";
+		iframe.style.height = "340px";
+	
+	return iframe;
+}
+SearchTool.prototype.loadSpecializedVisualization = function(iframe){
+
+	var Request = require("sdk/request").Request;
+	var latestTweetRequest = Request({
+		url: require("sdk/self").data.url("./visualization.html"),
+		onComplete: function (response) {
+
+			iframe.contentWindow.document.open('text/html', 'replace');
+			iframe.contentWindow.document.write(response.text);
+			iframe.contentWindow.document.close();
+
+			var cssLink = iframe.contentWindow.document.createElement("link") 
+				cssLink.href = require("sdk/self").data.url("./src/css/visualization.css"); 
+				cssLink.rel = "stylesheet"; 
+				cssLink.type = "text/css"; 
+			iframe.contentWindow.document.head.appendChild(cssLink);
+
+			var jsScript = iframe.contentWindow.document.createElement("script") 
+				jsScript.type = "text/javascript";
+				jsScript.src = require("sdk/self").data.url("./src/js/visualization.js");
+			iframe.contentWindow.document.head.appendChild(jsScript);
+		}
+	}).get();
 }
 SearchTool.prototype.createCustomSearchMenus = function(){
 
@@ -106,32 +153,15 @@ SearchTool.prototype.createCustomSearchMenus = function(){
 			var unwrappedWindow = win.content.wrappedJSObject;
 			
 			var resultsBox = me.createResultsBox(unwrappedWindow, 
-				"Results from «Página 12» for «Prat-Gay»");
+				"Results from «" + this.label + "» for «" + me.selectedText + "»");
 
 			unwrappedWindow.document.body.appendChild(resultsBox);  
 			unwrappedWindow["$"](resultsBox).draggable();
 
 			//IFRAME
-    		var iframe = unwrappedWindow.document.createElement('iframe');
-    			iframe.style.width = "99%";
-    			iframe.style.height = "340px";
-			resultsBox.childNodes[1].appendChild(iframe);
-
-			var w = Math.max(unwrappedWindow.document.documentElement.clientWidth, unwrappedWindow.innerWidth || 0);
-			var h = Math.max(unwrappedWindow.document.documentElement.clientHeight, unwrappedWindow.innerHeight || 0);
-
-			resultsBox.style.top = (h/2) - (resultsBox.style.height/2);
-			resultsBox.style.width = (w/2) - (resultsBox.style.width/2);
-
-
-			var Request = require("sdk/request").Request;
-			var latestTweetRequest = Request({
-				url: require("sdk/self").data.url("./visualization.html"),
-				onComplete: function (response) {
-					iframe.src = 'data:text/html;charset=utf-8,' + 
-					encodeURI(response.text);					
-				}
-			}).get();
+			var iframe = me.createSpecializedVisualizationBox(unwrappedWindow);
+    		resultsBox.childNodes[1].appendChild(iframe);
+    		me.loadSpecializedVisualization(iframe);
 		}
 	});
 }
