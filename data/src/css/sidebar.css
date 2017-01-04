@@ -18,7 +18,7 @@ body{
     font-size: 18px !important;
     line-height: 20px !important;
     color: white;
-    background-color: #e95420;
+    background: linear-gradient(#c6e1e7,#13b8d4) !important;
     height: auto !important;
 }
 .subform-initial-state{
