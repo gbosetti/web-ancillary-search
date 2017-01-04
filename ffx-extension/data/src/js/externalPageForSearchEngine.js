@@ -1,19 +1,38 @@
+//COMMUNICATION WITH THE EXTENSION
 self.port.on("searchNewInstances", function(data){
 
 	//console.log('Searching for: ' + data.keywords);
+
 	var inp = document.evaluate(data.entry, document, null, 9, null).singleNodeValue;
 		inp.value = data.keywords;
-	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
-	if(trg) trg.click();
-});
-self.port.on("clickElement", function(data){
 
-	var trg = document.evaluate(data.id, document, null, 9, null).singleNodeValue;
-	if(trg) trg.click();
+	//TODO: replace with strategies
+	if(data.trigger) {
+		var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
+		if(trg) trg.click();
+	}else{
+		window.location.href = window.location.href + data.keywords;
+	}
 });
-// We can not use window this way from this context. E.g.
-// window.addEventListener("DOMContentLoaded", searching, false);
-self.port.emit("externalPageIsLoaded", {
-	url: document.URL, 
-	textContent: (new XMLSerializer()).serializeToString(document) //document.body.textContent
+self.port.on("getDomForResultsExtraction", function(){
+
+	//There is no sensein extracting the instances from this side, because 
+	//sometimes you need extra privileges and it is really hard to doit for each async message you need
+	//var results = new IOExtractor().extractDataForDatatable(resultsCog);
+	console.log(window.location.href );
+	self.port.emit("notifyDomForResultsExtraction", 
+		{textContent: (new XMLSerializer()).serializeToString(document)});
 });
+
+
+self.port.emit("externalPageIsLoaded");
+
+
+
+
+
+
+
+
+
+

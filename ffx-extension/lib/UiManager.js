@@ -136,6 +136,8 @@ UiManager.prototype.createContextSubMenu = function(data) {
 
     //No matter if the item already exists or it was just created, we clear it and update the data (also useful if the user changes the language)
     item.setAttribute("label", data.label);
+    item.specification = data.specification;
+    
     item.onclick = data.callback;
 
     return item;
