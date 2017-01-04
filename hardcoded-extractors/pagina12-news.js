@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name        pagina12extractor
 // @namespace   gbosetti at LIFIA
-// @include     https://www.pagina12.com.ar/buscar?q=prat+gay
+// @include     https://www.pagina12.com.ar/buscar?q=*
 // @version     1
 // @grant       none
 // ==/UserScript==
 
 window.onload = function() { try{
-
+  
 	//WRAPPERS FOR DOMELEMENTS-----------------------------------------------------------------
 
 	class DomElemWrapper{ 
@@ -236,14 +236,26 @@ window.onload = function() { try{
 				xpath:'//div[2]/div/a'
 			},
 			{
+				name: 'categoria',
+				xpath: '//a'
+			},
+			{
+				name: 'fecha',
+				xpath: '//span[2]'
+			},
+			{
 				name:'image',
 				xpath:'//img[3]'
 			}
 		]
 	};
-
-	var extractor = new IOExtractor();
+  
+	setTimeout(function(){ 
+	  var extractor = new IOExtractor();
 		extractor.extractIntoFile("results.json", cfg);
 		extractor.extractDataForDatatableIntoFile("processed-data-for-datatable.json", cfg);
 
+	}, 3000);
+	
+	
 }catch(err){console.log(err)}}

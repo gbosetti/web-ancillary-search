@@ -35,7 +35,7 @@ SearchTool.prototype.createResultsBox = function(unwrappedWindow, title){
 
 	//CONTAINER
 	var resultsBox = unwrappedWindow.document.createElement("div");
-		resultsBox.style.width = "500px";
+		resultsBox.style.width = "490px";
 		resultsBox.style.height = "400px";
 		resultsBox.style.zIndex = "2147483647";
 		resultsBox.style["box-sizing"] = "border-box";
@@ -46,9 +46,7 @@ SearchTool.prototype.createResultsBox = function(unwrappedWindow, title){
 		resultsBox.style["margin-left"] = "0px";
 		resultsBox.style["margin-right"] = "0px";
 		resultsBox.style["margin-top"] = "30px";
-		resultsBox.style["max-width"] = "600px";
 		resultsBox.style["position"] = "relative";
-		resultsBox.style["width"] = "456px";
 		resultsBox.style.border = "1px solid rgba(0, 0, 0, 0.2)";
 		resultsBox.style["border-radius"] = "5px 5px 0px 0px";
 		resultsBox.style["position"] = "fixed";
@@ -187,8 +185,8 @@ SearchTool.prototype.createCustomSearchMenus = function(){
 	var theMenu = this.menu;
 	var me = this;
 	return this.createContextSubMenu({
-		id: "p-12-news", 
-		label: "Página 12", 
+		id: "concrete-results-page", 
+		label: "DBLP", 
 		menu: theMenu,
 		callback: function(){
 
@@ -196,7 +194,7 @@ SearchTool.prototype.createCustomSearchMenus = function(){
 			var unwrappedWindow = win.content.wrappedJSObject;
 			
 			var resultsBox = me.createResultsBox(unwrappedWindow, 
-				"Results from «" + this.label + "» for «" + me.selectedText + "»");
+				"«Papers» from «" + this.label + "» matching «" + me.selectedText + "»");
 
 			unwrappedWindow.document.body.appendChild(resultsBox);  
 			unwrappedWindow["$"](resultsBox).draggable();
