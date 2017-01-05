@@ -2,25 +2,24 @@
 self.port.on("searchNewInstances", function(data){
 	try{
 
-		//console.log('searchNewInstances for: ' + data.keywords + " at " + window.location.href);
-		//console.log(new XMLSerializer().serializeToString(document));
-
 		var inp = document.evaluate(data.entry, document, null, 9, null).singleNodeValue;
 			inp.value = data.keywords;
 
-		//console.log("input", inp.value);
-
 		//TODO: replace with strategies
 		if(data.trigger) {
-			//console.log('Triggering button');
 			var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
 			if(trg) {
-				trg.click();
-				setTimeout(function(){ window.location.reload(false); }, 1500);
+				trg.click(); //Estrategia (1)
+				console.log("Estrategia 1");
+				setTimeout(function(){ 
+					console.log("Sorry, no es 1 es Estrategia 2");
+					window.location.reload(false); 
+				}, 1500);  //Estrategia (2)
 			}
 		}else{
 			//console.log('Loading the new URL');
-			//var trg = document.evaluate(data.tr);
+			//Estrategia (3)
+			console.log("Estrategia 3");
 			window.location.href = window.location.href + data.keywords;
 		}
 	}catch(err){console.log(err)}
