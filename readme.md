@@ -1,9 +1,8 @@
 # About the project #
 Web Web AncillarY Search (WAYS in the base project) is a tool supporting the visual definition of search engines from the UI of any Web page. This allow end users to slightly perform ancillary searchs over the Web. 
 
-**Status: DO NOT INSTALL.** Just skeleton + basic functionality. See commits for more details.
-
-![ways.png](https://bitbucket.org/repo/5p9o5z/images/2632509778-ways.png)
+For demo videos you can access this playlist:
+https://www.youtube.com/playlist?list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj
 
 ## Getting started: {**END USERS**} ##
 You can download and install the XPI at the root directory of this repo. To do so, you can drag and drop the extension into the browser, but before you should enable the not-signed extensions to be installed:
