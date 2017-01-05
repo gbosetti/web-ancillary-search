@@ -20,7 +20,7 @@ self.port.on("searchNewInstances", function(data){
 			}
 		}else{
 			//console.log('Loading the new URL');
-			var trg = document.evaluate(data.tr);
+			//var trg = document.evaluate(data.tr);
 			window.location.href = window.location.href + data.keywords;
 		}
 	}catch(err){console.log(err)}
