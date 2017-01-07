@@ -110,7 +110,6 @@ var rlc = new ReLoadingsCounter();
 
 if(rlc.getPrevStoredValue(rlc.getStoreVariable("reloads"))>0){
 
-	console.log("RELOADING " + window.location.href);
 	rlc.setStoredValue(rlc.getStoreVariable("reloads"), 0);
 	var strategyClass = sessionStorage.getItem(rlc.getStoreVariable("strategy"));
 	var strategy = new window[strategyClass]();
