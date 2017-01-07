@@ -4,50 +4,70 @@ LoadingResultStrategy.prototype.communicateAction = function() {
 	
 	self.port.emit("resultsAreAvailable");
 };
+LoadingResultStrategy.prototype.notifyActionIfRequired = function(data) {}
 
 window.WriteAndClickForAjaxCall = function(){}
 window.WriteAndClickForAjaxCall.prototype= new LoadingResultStrategy();
 window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data) {
 	
-	//window.location.href = window.location.href + data.keywords;
-	var me = this;
-	setTimeout(function(){ 
-		me.communicateAction();
-	}, 1000); 
+	//You can't use window.onload here. So we should detect the next reloading after click
+	var rlc = new ReLoadingsCounter();
+		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
+		rlc.setStoredValue(rlc.getStoreVariable("strategy"), "WriteAndClickForAjaxCall");
+
+	//window.onhashchange can't be used here 
+	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
+	if(trg) {
+		trg.click(); 
+		//We reload to snotify changes when results are there
+		window.location.reload(false); 
+	}
 };
+window.WriteAndClickForAjaxCall.prototype.notifyActionIfRequired = function(data) {
+	this.communicateAction();
+	//En el futuro, no va a ser neceario implementar este método
+}
 
 window.WriteForAjaxCall = function(){}
 window.WriteForAjaxCall.prototype= new LoadingResultStrategy();
 window.WriteForAjaxCall.prototype.executeAndNotifySearch = function(data) {
 	
-	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
-	if(trg) {
-		trg.click(); 
-		setTimeout(function(){ 
-			window.location.reload(false); 
-		}, 1000); 
-	}
+	//The user writes and the URL is changed, so it is enogh to reload to see the results
+	var rlc = new ReLoadingsCounter();
+		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
+		rlc.setStoredValue(rlc.getStoreVariable("strategy"), "WriteForAjaxCall");
 
-	this.communicateAction();
+		window.location.reload(false); 
 };
+window.WriteForAjaxCall.prototype.notifyActionIfRequired = function(data) {
+	this.communicateAction();
+	//En el futuro, no va a ser neceario implementar este método
+}
 
 window.WriteAndClickToReload = function(){}
 window.WriteAndClickToReload.prototype= new LoadingResultStrategy();
 window.WriteAndClickToReload.prototype.executeAndNotifySearch = function(data) {
 
+	//You can't use window.onload here. So we should detect the next reloading after click
+	var rlc = new ReLoadingsCounter();
+		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
+		rlc.setStoredValue(rlc.getStoreVariable("strategy"), "WriteAndClickToReload");
+
 	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
 	if(trg) trg.click();
-
-	this.communicateAction();
 };
+window.WriteAndClickToReload.prototype.notifyActionIfRequired = function(data) {
+	this.communicateAction();
+}
+
 
 self.port.on("searchNewInstances", function(data){
-	try{
+	try{		
 		var inp = document.evaluate(data.entry, document, null, 9, null).singleNodeValue;
 			inp.value = data.keywords;
 
 		var strategy = new window[data.loadingResStrategy]();
-		console.log(strategy); //GoodReads -> WriteAndClickToReload
+		//console.log(strategy); //GoodReads -> WriteAndClickToReload
 		strategy.executeAndNotifySearch(data);
 
 	}catch(err){console.log(err)}
@@ -63,15 +83,37 @@ self.port.on("getDomForResultsExtraction", function(){
 		{textContent: (new XMLSerializer()).serializeToString(document)});
 });
 
-//console.log("Loading " + window.location.href);
+
+
+function ReLoadingsCounter(){}
+ReLoadingsCounter.prototype.getPrevStoredValue = function(id) {
+	return (this.storedValueIsUndefined(id))? 0: parseInt(sessionStorage.getItem(id));
+}
+ReLoadingsCounter.prototype.storedValueIsUndefined = function(id) {
+	return (
+		isNaN(sessionStorage.getItem(id)),
+		sessionStorage.getItem(id) == "null" || 
+		sessionStorage.getItem(id) == null || 
+		sessionStorage.getItem(id) == undefined 
+	);
+}
+ReLoadingsCounter.prototype.setStoredValue = function(id, value) {
+	sessionStorage.setItem(id, value);
+}
+ReLoadingsCounter.prototype.getStoreVariable = function(id) {
+
+	return window.location.hostname + id;
+}
+
 self.port.emit("externalPageIsLoaded");
+var rlc = new ReLoadingsCounter();
 
+if(rlc.getPrevStoredValue(rlc.getStoreVariable("reloads"))>0){
 
-
-
-
-
-
-
-
+	console.log("RELOADING " + window.location.href);
+	rlc.setStoredValue(rlc.getStoreVariable("reloads"), 0);
+	var strategyClass = sessionStorage.getItem(rlc.getStoreVariable("strategy"));
+	var strategy = new window[strategyClass]();
+		strategy.notifyActionIfRequired();
+}
 
