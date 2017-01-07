@@ -1,4 +1,31 @@
 //COMMUNICATION WITH THE EXTENSION
+function LoadingResultStrategy(){}
+LoadingResultStrategy.prototype.communicateAction = function() {
+	
+	self.port.emit("resultsAreAvailable");
+};
+
+function WriteAndClickForAjaxCall(){}
+WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(first_argument) {
+	// body...
+
+	this.communicateAction();
+};
+
+function WriteForAjaxCall(){}
+WriteForAjaxCall.prototype.executeAndNotifySearch = function(first_argument) {
+	// body...
+
+	this.communicateAction();
+};
+
+function WriteAndClickToReload(){}
+WriteAndClickToReload.prototype.executeAndNotifySearch = function(first_argument) {
+	// body...
+
+	this.communicateAction();
+};
+
 self.port.on("searchNewInstances", function(data){
 	try{
 
@@ -10,9 +37,9 @@ self.port.on("searchNewInstances", function(data){
 			var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
 			if(trg) {
 				trg.click(); //Estrategia (1)
-				console.log("Estrategia 1");
+				//console.log("Estrategia 1");
 				setTimeout(function(){ 
-					console.log("Sorry, no es 1 es Estrategia 2");
+					//console.log("Sorry, no es 1 es Estrategia 2");
 					window.location.reload(false); 
 				}, 1500);  //Estrategia (2)
 			}
@@ -35,7 +62,7 @@ self.port.on("getDomForResultsExtraction", function(){
 		{textContent: (new XMLSerializer()).serializeToString(document)});
 });
 
-console.log("Loading " + window.location.href);
+//console.log("Loading " + window.location.href);
 self.port.emit("externalPageIsLoaded");
 
 
