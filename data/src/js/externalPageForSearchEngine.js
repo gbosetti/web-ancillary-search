@@ -5,50 +5,51 @@ LoadingResultStrategy.prototype.communicateAction = function() {
 	self.port.emit("resultsAreAvailable");
 };
 
-function WriteAndClickForAjaxCall(){}
-WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(first_argument) {
-	// body...
+window.WriteAndClickForAjaxCall = function(){}
+window.WriteAndClickForAjaxCall.prototype= new LoadingResultStrategy();
+window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data) {
+	
+	//window.location.href = window.location.href + data.keywords;
+	var me = this;
+	setTimeout(function(){ 
+		me.communicateAction();
+	}, 1000); 
+};
+
+window.WriteForAjaxCall = function(){}
+window.WriteForAjaxCall.prototype= new LoadingResultStrategy();
+window.WriteForAjaxCall.prototype.executeAndNotifySearch = function(data) {
+	
+	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
+	if(trg) {
+		trg.click(); 
+		setTimeout(function(){ 
+			window.location.reload(false); 
+		}, 1000); 
+	}
 
 	this.communicateAction();
 };
 
-function WriteForAjaxCall(){}
-WriteForAjaxCall.prototype.executeAndNotifySearch = function(first_argument) {
-	// body...
+window.WriteAndClickToReload = function(){}
+window.WriteAndClickToReload.prototype= new LoadingResultStrategy();
+window.WriteAndClickToReload.prototype.executeAndNotifySearch = function(data) {
 
-	this.communicateAction();
-};
-
-function WriteAndClickToReload(){}
-WriteAndClickToReload.prototype.executeAndNotifySearch = function(first_argument) {
-	// body...
+	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
+	if(trg) trg.click();
 
 	this.communicateAction();
 };
 
 self.port.on("searchNewInstances", function(data){
 	try{
-
 		var inp = document.evaluate(data.entry, document, null, 9, null).singleNodeValue;
 			inp.value = data.keywords;
 
-		//TODO: replace with strategies
-		if(data.trigger) {
-			var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
-			if(trg) {
-				trg.click(); //Estrategia (1)
-				//console.log("Estrategia 1");
-				setTimeout(function(){ 
-					//console.log("Sorry, no es 1 es Estrategia 2");
-					window.location.reload(false); 
-				}, 1500);  //Estrategia (2)
-			}
-		}else{
-			//console.log('Loading the new URL');
-			//Estrategia (3)
-			console.log("Estrategia 3");
-			window.location.href = window.location.href + data.keywords;
-		}
+		var strategy = new window[data.loadingResStrategy]();
+		console.log(strategy); //GoodReads -> WriteAndClickToReload
+		strategy.executeAndNotifySearch(data);
+
 	}catch(err){console.log(err)}
 });
 self.port.on("getDomForResultsExtraction", function(){
