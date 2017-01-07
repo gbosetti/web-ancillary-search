@@ -20,7 +20,7 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 	if(trg) {
 		trg.click(); 
 		//We reload to snotify changes when results are there
-		window.location.reload(false); 
+		setTimeout(function(){ window.location.reload(false); }, 500);
 	}
 };
 window.WriteAndClickForAjaxCall.prototype.notifyActionIfRequired = function(data) {
@@ -37,7 +37,7 @@ window.WriteForAjaxCall.prototype.executeAndNotifySearch = function(data) {
 		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
 		rlc.setStoredValue(rlc.getStoreVariable("strategy"), "WriteForAjaxCall");
 
-		window.location.reload(false); 
+		setTimeout(function(){ window.location.reload(false); }, 500);
 };
 window.WriteForAjaxCall.prototype.notifyActionIfRequired = function(data) {
 	this.communicateAction();
