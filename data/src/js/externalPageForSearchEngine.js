@@ -5,12 +5,15 @@ LoadingResultStrategy.prototype.communicateAction = function() {
 	self.port.emit("resultsAreAvailable");
 };
 LoadingResultStrategy.prototype.getSingleDomElement = function(xpath) {
-	
-	return document.evaluate(xpath, document, null, 9, null).singleNodeValue;
+	try{
+		return document.evaluate(xpath, document, null, 9, null).singleNodeValue;
+	}catch(err){
+		return;
+	}
 };
-LoadingResultStrategy.prototype.emulateKeyPress = function(code) {
+LoadingResultStrategy.prototype.emulateKeyPress = function(evnt, code) {
 	var ev = document.createEvent('KeyboardEvent');
-	ev.initKeyEvent("keypress",       // typeArg,                                                           
+	ev.initKeyEvent(evnt,       // typeArg,                                                           
                    true,             // canBubbleArg,                                                        
                    true,             // cancelableArg,                                                       
                    null,             // viewArg,  Specifies UIEvent.view. This value may be null.     
@@ -23,6 +26,12 @@ LoadingResultStrategy.prototype.emulateKeyPress = function(code) {
 	document.body.dispatchEvent(ev);
 }
 LoadingResultStrategy.prototype.notifyActionIfRequired = function(data) {}
+
+
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+
 
 window.WriteAndClickForAjaxCall = function(){}
 window.WriteAndClickForAjaxCall.prototype = new LoadingResultStrategy();
@@ -42,9 +51,62 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 	} else console.log("We could' not find the trigger element");
 
 	setTimeout(function(){ window.location.reload(false); }, 500);
+	
+	/*var inp = this.getSingleDomElement(data.entry); 
+		inp.value = data.keywords;
+	//You can't use window.onload here. So we should detect the next reloading after click
+	var rlc = new ReLoadingsCounter();
+		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
+		rlc.setStoredValue(rlc.getStoreVariable("strategy"), "WriteAndClickForAjaxCall");
+	
+	var res1 = this.getSingleDomElement(data.results.xpath);
+
+	var me = this, i=0, res2;
+	var resHasLoaded = setInterval(function myTimer2() {
+		if(res1 || i>40){
+			
+			clearInterval(resHasLoaded);
+			//window.onhashchange can't be used here 
+			if(data.trigger){
+				var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
+				if(trg) {
+					trg.click(); 
+					//We reload to snotify changes when results are there
+				} else console.log("We could' not find the trigger element");
+			}
+			
+
+			var j=0, res2;
+			var resultsChanged = setInterval(function myTimer() {
+				console.log("... " + j);
+				if((res2 && res2.innerHTML == res1.innerHTML) || j>40){
+					clearInterval(resultsChanged);
+					//window.location.reload(false);
+					//me.communicateAction();
+
+					var doc = (new XMLSerializer()).serializeToString(document);
+					console.log(document);
+
+					self.port.emit("notifyDomForResultsExtraction", 
+					{textContent: doc});
+
+				}
+				j++;
+				res2 = me.getSingleDomElement(data.results.xpath); 
+			}, 1000);
+
+		}
+		i++;
+		res1 = me.getSingleDomElement(data.results.xpath).innerHTML; 
+	}, 500);*/
+
+	
+	
+
+	//setTimeout(function(){ window.location.reload(false); }, 500);
 };
 window.WriteAndClickForAjaxCall.prototype.notifyActionIfRequired = function(data) {
-	this.communicateAction();
+	//this.communicateAction();
 	//En el futuro, no va a ser neceario implementar este método
 }
 
@@ -58,7 +120,9 @@ window.WriteForAjaxCall.prototype.executeAndNotifySearch = function(data) {
 		inp.value = data.keywords;
 		inp.focus();
 
-	this.emulateKeyPress(13);
+	this.emulateKeyPress("keydown", 13);
+	this.emulateKeyPress("keypress", 13);
+	this.emulateKeyPress("keyup", 13);
 
 	var me = this, i=0;
 	var resultsChanged = setInterval(function myTimer() {
@@ -76,7 +140,7 @@ window.WriteAndReload = function(){}
 window.WriteAndReload.prototype= new LoadingResultStrategy();
 window.WriteAndReload.prototype.executeAndNotifySearch = function(data) {
 
-	//this.emulateKeyPress(27);
+	//this.emulateKeyPress("keypress", 27);
 	
 	//The user writes and the URL is changed, so it is enogh to reload to see the results
 	var rlc = new ReLoadingsCounter();
@@ -89,7 +153,11 @@ window.WriteAndReload.prototype.executeAndNotifySearch = function(data) {
 		inp.value = data.keywords;
 		inp.focus();
 
-	this.emulateKeyPress(13);
+	this.emulateKeyPress("keydown", 13);
+	this.emulateKeyPress("keypress", 13);
+	this.emulateKeyPress("keyup", 13);
+
+	inp.blur();
 	
 	//console.log("ORIG", res1);
 	//var me = this; //, i=0;
@@ -103,7 +171,7 @@ window.WriteAndReload.prototype.executeAndNotifySearch = function(data) {
 		console.log(res2);*/
 		//me.notifyActionIfRequired();
 	//}, 500);
-	setTimeout(function(){ console.log("reloading"); window.location.reload(false); }, 1000);
+	setTimeout(function(){ console.log("reloading"); window.location.reload(false); }, 2500);
 };
 window.WriteAndReload.prototype.notifyActionIfRequired = function(data) {
 	this.communicateAction();
