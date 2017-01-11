@@ -139,7 +139,7 @@ window.WriteAndClickToReload.prototype= new LoadingResultStrategy();
 window.WriteAndClickToReload.prototype.executeAndNotifySearch = function(data) {
 
 	var inp = document.evaluate(data.entry, document, null, 9, null).singleNodeValue;
-			inp.value = data.keywords;
+		inp.value = data.keywords;
 	//You can't use window.onload here. So we should detect the next reloading after click
 	var rlc = new ReLoadingsCounter();
 		rlc.setStoredValue(rlc.getStoreVariable("reloads"), 5);
@@ -147,6 +147,7 @@ window.WriteAndClickToReload.prototype.executeAndNotifySearch = function(data) {
 
 	var trg = document.evaluate(data.trigger, document, null, 9, null).singleNodeValue;
 	if(trg) trg.click();
+	else console.log("no trigger was found");
 };
 window.WriteAndClickToReload.prototype.notifyActionIfRequired = function(data) {
 	this.communicateAction();
