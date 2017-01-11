@@ -1,7 +1,7 @@
 //COMMUNICATION WITH THE EXTENSION
 function LoadingResultStrategy(){}
 LoadingResultStrategy.prototype.communicateAction = function() {
-	
+	console.log("loading", window.location.href);
 	self.port.emit("resultsAreAvailable");
 };
 LoadingResultStrategy.prototype.getSingleDomElement = function(xpath) {
@@ -42,7 +42,7 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 	var inp = this.getSingleDomElement(data.entry); 
 		inp.value = data.keywords;
 	//this.emulateKeyPress("keydown", 13, inp);
-	this.emulateKeyPress("keyup", 13, inp);
+	this.emulateKeyPress("keyup", 13, inp); //***
 	
 	//You can't use window.onload here. So we should detect the next reloading after click
 	var rlc = new ReLoadingsCounter();
@@ -52,7 +52,8 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 	//triggering the search
 	var trg = this.getSingleDomElement(data.trigger); 
 	var me = this, i=0, res2;
-	var loadingTrigger = setInterval(function myTimer2() {
+	var loadingTrigger = setInterval(function() {
+		console.log("trg", trg);
 		if(trg || i>40){
 
 			//Clearing
@@ -62,19 +63,20 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 				return;
 			}
 			var oldHref = window.location.href;
-
+			console.log("oldHref", oldHref);
 			//Clicking
 			trg.click();
 
 			//Waiting for changes in the URL //window.onhashchange can't be used here 
 			i=0;
-			var loadingNewUrl = setInterval(function myTimer2() {
+			var loadingNewUrl = setInterval(function() {
+				console.log("newHref: ", window.location.href);
 				if((oldHref != window.location.href) || i>40){
+					
 					clearInterval(loadingNewUrl);
 					window.location.reload(false); 
-					}
+				}
 				i++;
-				trg = me.getSingleDomElement(data.trigger); 
 			}, 500);
 		}
 		i++;
@@ -82,32 +84,53 @@ window.WriteAndClickForAjaxCall.prototype.executeAndNotifySearch = function(data
 	}, 500);
 };
 window.WriteAndClickForAjaxCall.prototype.notifyActionIfRequired = function(data) {
-
+	
 	this.communicateAction();
 	//En el futuro, no va a ser neceario implementar este método
 }
 
 window.WriteForAjaxCall = function(){}
 window.WriteForAjaxCall.prototype= new LoadingResultStrategy();
+window.WriteForAjaxCall.prototype.emulateOnChange = function(elem) {
+
+	var evt = document.createEvent("HTMLEvents");
+		evt.initEvent("change", true, true );
+	elem.dispatchEvent(evt);
+}
 window.WriteForAjaxCall.prototype.executeAndNotifySearch = function(data) {
 
-	var newRes, oldRes = this.getSingleDomElement(data.results.xpath).innerHTML; 
+	var me=this, newRes, oldRes = this.getSingleDomElement(data.results.xpath);
 
-	var inp = this.getSingleDomElement(data.entry); 
-		inp.value = data.keywords;
-		//inp.focus();
+	//Wait until results are loaded
+	var i=0, loadingPrevResult = setInterval(function() {
+		if(oldRes || i>40){
+			
+			clearInterval(loadingPrevResult);
+			if(!oldRes) return;
 
-	this.emulateKeyPress("keydown", 13, inp);
-	this.emulateKeyPress("keyup", 13, inp);
+			oldRes = oldRes.innerHTML;
 
-	var me = this, i=0;
-	var resultsChanged = setInterval(function myTimer() {
-		if(newRes== oldRes || i>40){
-			clearInterval(resultsChanged);
-			me.communicateAction();
+			var inp = me.getSingleDomElement(data.entry); 
+				inp.value = data.keywords;
+
+			me.emulateKeyPress("keydown", 13, inp);
+			me.emulateKeyPress("keyup", 13, inp);
+			if(inp.onchange) me.emulateOnChange(inp);
+
+			i=0;
+			var resultsChanged = setInterval(function myTimer() {
+
+				if(newRes== oldRes || i>40){
+					clearInterval(resultsChanged);
+					me.communicateAction();
+				}
+				i++;
+				newRes = me.getSingleDomElement(data.results.xpath);
+				if(newRes) newRes = newRes.innerHTML; 
+
+			}, 500);
 		}
 		i++;
-		newRes = me.getSingleDomElement(data.results.xpath).innerHTML; 
 	}, 500);
 };
 
@@ -172,6 +195,7 @@ ReLoadingsCounter.prototype.getStoreVariable = function(id) {
 }
 
 self.port.emit("externalPageIsLoaded");
+console.log("externalPageIsLoaded");
 var rlc = new ReLoadingsCounter();
 
 if(rlc.getPrevStoredValue(rlc.getStoreVariable("reloads"))>0){
