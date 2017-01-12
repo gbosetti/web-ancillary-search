@@ -5,7 +5,9 @@ For demo videos you can access this playlist:
 https://www.youtube.com/playlist?list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj
 
 ## Getting started: {**END USERS**} ##
-You can download and install the XPI at the root directory of this repo. To do so, you can drag and drop the extension into the browser, but before you should enable the not-signed extensions to be installed:
+You can download and install the XPI at the root directory of this repo. Take into account that some Search Services may experience some troubles if you have AdBlock enabled. Just one of the 18 sites experienced troubles: Aliexpress. So, if you experience troubles, please disable AdBlock for all the sites when running ancillary searches. 
+ 
+To install the extension, you can drag and drop the .xpi file into the browser, but before you should enable the not-signed extensions to be installed:
 
 Write **about:config** in your navigation bar and turn the following entry value to false:
 
