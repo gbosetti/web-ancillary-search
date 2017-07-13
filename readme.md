@@ -4,70 +4,7 @@ Web Web AncillarY Search (WAYS in the base project) is a tool supporting the vis
 For demo videos you can access this playlist:
 https://www.youtube.com/playlist?list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj
 
-## Getting started: {**END USERS**} ##
-You can download and install the XPI at the root directory of this repo. Take into account that some Search Services may experience some troubles if you have AdBlock enabled. Just one of the 18 sites experienced troubles: Aliexpress. So, if you experience troubles, please disable AdBlock for all the sites when running ancillary searches. 
- 
-To install the extension, you can drag and drop the .xpi file into the browser, but before you should enable the not-signed extensions to be installed:
+# Getting started: #
+There are two versions of the tool at this project. The original one, implemented with the Firefox SDK, and a new version targetting webextensions. The idea is to migrate the SDK version to webextensions, since from Firefox 57 onwards, WebExtensions will be the only supported extension type.
 
-Write **about:config** in your navigation bar and turn the following entry value to false:
-
-```
-#!javascript
-
-xpinstall.signatures.required  
-```
-
-## Getting started {**DEVELOPERS**} ##
-
-## This repo contains ##
-* Files in src/lib/ is high privileged code. 
-* Files in src/data/ is low level code. 
-
-This is how extensions built with the FFX SDK use to be organized. E.g. Low privileged code is the one that is loaded in the sidebar, or in the DOM of the current Web page. High privileged code is the one in the lib folder, and can use the SDK API (you can r/w files, retrieve external content, etc.). The main file is SOURCE/lib/main.js
-
-## Requirements ##
-For running the project, you should have installed:
-
-* NPM [https://www.npmjs.com/](Link URL) It could be necessary to install also: nodejs-legacy
-* JPM [https://developer.mozilla.org/fr/docs/Mozilla/Add-ons/SDK/Tools/jpm](Link URL) 
-* Firefox addon autoinstaller [https://addons.mozilla.org/es/firefox/addon/autoinstaller/](Link URL)
-
-## Debugging ##
-For **debugging** the extension, you can use the Firefox Browser Toolbox: https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox
-
-You can **access the database** at the extension's dedicated folder, placed in the 'jetpack' folder inside the Firefox user profile one. E.g. /home/your_username/.mozilla/firefox/1xflzexk.default/jetpack/ways@lifia.info.unlp.edu.ar
-
-## Loading the extension ##
-First, enable not-signed extensions to be installed. Write *about:config* in your navigation bar and turn the following entry value to false:
-
-```
-#!javascript
-
-xpinstall.signatures.required  
-```
-
-If that option does not work for you, try loading unsigned addons temporarily through about:debugging: https://developer.mozilla.org/en-US/docs/Tools/about:debugging
-
-For installing the extension from terminal. Open it in the src/ directory and execute watchpost:
-
-```
-#!javascript
-
-jpm watchpost --post-url http://localhost:8888/
-```
-
-Or force changes to be zipped again and post just once (this is better):
-
-```
-#!javascript
-
-jpm xpi; jpm post --post-url http://localhost:8888/
-```
-
-## Progressive docs ##
-
-Class diagram:
-[https://drive.google.com/file/d/0B4L48Y0gCU7lcGZSYXlSWjZ2Qnc/view?usp=sharing](https://drive.google.com/file/d/0B4L48Y0gCU7lcGZSYXlSWjZ2Qnc/view?usp=sharing)
-
-TODO at Trello:
-[https://trello.com/b/VbQKtr21/web-ancillary-search](https://trello.com/b/VbQKtr21/web-ancillary-search)
+You can find a readme_*.txt file with instructions about each project at the root folder of each branch.  
