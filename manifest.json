@@ -5,20 +5,14 @@
   "description": "A decision support system integrated to the Web",
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
 
-  "applications": {
-    "gecko": {
-      "strict_min_version": "55.0a1"
-    }
-  },
+  // THIS IS COMMENTED SO IT CAN BE INTERPRETED BY CHROME :(
+  //"applications": {
+  //  "gecko": {
+  //    "strict_min_version": "55.0a1"
+  //  }
+  //},
 
   "default_locale": "en",
-
-  //"content_scripts": [
-  //  {
-  //    "matches": ["*://*/*"],
-  //    "js": ["/content_scripts/enable_harvesting.js"]
-  //  }
-  //],
 
   "browser_action": { //Note that your extension can have only one browser action
     "default_icon": {
@@ -26,7 +20,6 @@
       "64": "icons/logo-disabled-64.png"
     },
     "default_title": "searchApis",
-    //"default_popup": "popup/choose-action.html", //maybe code running here is not loggeable
     "browser_style": true
   },
 
@@ -34,11 +27,11 @@
     "scripts": ["background.js"]
   },
 
-  //"sidebar_action": {
-  //  "default_icon": "icons/logo-disabled-64.png",
-  //  "default_title" : "Annotating concepts",
-  //  "default_panel": "sidebar/sidebar.html"
-  //},
+  "sidebar_action": {
+    "default_icon": "icons/logo-disabled-64.png",
+    "default_title" : "Annotating concepts",
+    "default_panel": "sidebar/sidebar.html"
+  },
 
   "permissions": [
     "activeTab",

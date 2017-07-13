@@ -1,3 +1,6 @@
+//GLOBALS for making it compatible btw firefoc and chrome
+var browser = browser || chrome;
+
 function BrowserUiManager(){
   /* PROPERTIES
 
@@ -11,9 +14,9 @@ function BrowserUiManager(){
 BrowserUiManager.prototype.initialize = function() {
 
   this.browserActionsClicks = {};
+  //this.mainMenu = this.createExtensionMainMenu(); No tiene sentido porque después te lo mueve como quiere
   this.templatesCreator = new TemplatesCreator();
   this.searchTool = new SearchTool();
-
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
@@ -163,6 +166,22 @@ SearchTool.prototype.getYoutubeService = function() {
 
 
 function TemplatesCreator(){}
+TemplatesCreator.prototype.createTemplatesEditorMenu = function(){
+
+  //The menu is created
+  var mainMenuId = "templates-editor";
+  browser.contextMenus.create({
+      id: mainMenuId,
+      title: browser.i18n.getMessage("defineAs"),
+      contexts: ["all"]
+  });
+  this.populateTemplatesEditorMenu(mainMenuId); //if you pass thee menu is not always well rendered
+}
+TemplatesCreator.prototype.populateTemplatesEditorMenu = function(mainMenuId) {
+
+  this.createContextMenuForAnnotatingConcept(mainMenuId);
+  this.createContextMenuForAnnotatingProperties(mainMenuId);
+}
 TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
   this.removeContextMenus();
@@ -174,7 +193,7 @@ TemplatesCreator.prototype.disableDomHighlighting = function(tab) {
 }
 TemplatesCreator.prototype.enableHarvesting = function(tab) {
 
-  this.createContextMenus();
+  this.createTemplatesEditorMenu();
   this.enableDomHighlighting(tab);
 }
 TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
@@ -183,7 +202,7 @@ TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
   browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
   browser.tabs.executeScript(tab.id, { file: "/content_scripts/DomUiManager.js"}).then(function () {
       browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
-        me.enableDomHighlighting(tab);
+        me.enableHarvesting(tab);
       });
   });
   
@@ -192,21 +211,17 @@ TemplatesCreator.prototype.enableDomHighlighting = function(tab) {
 
   browser.tabs.sendMessage(tab.id, {call: "enableHighlight"});
 }
-TemplatesCreator.prototype.createContextMenus = function(){
-
-  this.createContextMenuForAnnotatingConcept();
-  this.createContextMenuForAnnotatingProperties();
-}
 TemplatesCreator.prototype.removeContextMenus = function(){
 
   browser.contextMenus.remove("define-template");
   browser.contextMenus.remove("define-template-property");
 }
-TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(){
+TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(mainMenuId){
 
   //The menu is created
   browser.contextMenus.create({
       id: "define-template",
+      parentId: mainMenuId,
       title: browser.i18n.getMessage("annotateAsConcept"),
       contexts: ["all"],
       command: "_execute_sidebar_action"
@@ -225,15 +240,15 @@ TemplatesCreator.prototype.createSidebar = function(){
     myWindowId = windowInfo.id;
   });
 }
-TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(){
+TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(mainMenuId){
 
   browser.contextMenus.create({
       id: "define-template-property",
+      parentId: mainMenuId,
       title: browser.i18n.getMessage("annotateAsProperty"),
       contexts: ["all"],
       command: "_execute_sidebar_action"
   });
-
   
   browser.contextMenus.onClicked.addListener(function(info, tab) {
     document.body.style.background = "green";

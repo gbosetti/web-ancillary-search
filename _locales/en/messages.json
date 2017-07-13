@@ -4,5 +4,11 @@
   },
   "annotateAsProperty": {
     "message": "Annotate as property"
+  },
+  "defineAs": {
+    "message": "Define as..."
+  },
+  "ass":{
+  	"message": "Augmented Search Services"
   }
 }
