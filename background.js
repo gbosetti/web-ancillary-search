@@ -102,16 +102,21 @@ SearchTool.prototype.populateApisMenu = function(){
   var apis = this.getApiSpecifications();
   console.log(apis);
 
-  browser.contextMenus.create({
+/*  browser.contextMenus.create({
         id: "search-menu-item-001",
         parentId: "search-with-search-api", 
         title: "Youtube",
         contexts: ["all"]
-    });
+    });*/
 
-  /*for (var i = apis.length - 1; i >= 0; i--) {
-    
-  }*/
+  for (var i = apis.length - 1; i >= 0; i--) {
+    browser.contextMenus.create({
+        id: apis[i].name,
+        parentId: "search-with-search-api", 
+        title: apis[i].name
+        contexts: ["all"]
+    });
+  }
 }
 SearchTool.prototype.getApiSpecifications = function(){
 
@@ -119,6 +124,7 @@ SearchTool.prototype.getApiSpecifications = function(){
   //TODO: load fromfiles ^
     var apiDefinitions = [];
     apiDefinitions.push(this.getYoutubeService());
+    apiDefinitions.push(this.getLiveService());
     
   return apiDefinitions;
 }
@@ -145,6 +151,43 @@ SearchTool.prototype.getYoutubeService = function() {
           name:'Authors', 
           xpath:'//div[contains(@class, "yt-lockup-description")]' //,
           //extractor: new SingleNodeExtractor()
+        }
+      ]
+    },
+    visualization:{
+      colsDef: [{
+          title: "Title",
+          responsivePriority: 1
+        }, {
+          title: "Authors",
+          responsivePriority: 2
+        }]
+    }
+  };
+};
+SearchTool.prototype.getLiveService = function() {
+
+  return {
+    name:'Live',
+    url:'https://outlook.live.com/owa/?path=/mail/search',
+    keywords:'',
+    loadingResStrategy: "WriteForAjaxCall", 
+    contentScriptWhen: "end",
+    entry:'//form/div/input',
+    trigger:'//div[@class="conductorContent"]/div/div/div/div/div/div/div[2]',
+    results: {
+      name: 'Videos',
+      xpath:'//div[@class="conductorContent"]/div/div[3]/div/div/div/div[2]/div',
+      properties:[
+        {
+          name:'Title',
+          xpath:'//span[contains(@class,"lvHighlightAllClass")]',
+          extractor: new SingleNodeExtractor()
+        },
+        {
+          name:'Authors', 
+          xpath:'/div[2]/div[5]',
+          extractor: new SingleNodeExtractor()
         }
       ]
     },
