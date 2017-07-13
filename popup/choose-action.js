@@ -8,7 +8,7 @@ TemplatesCreator.prototype.loadRequiredScripts = function(activeTab) {
 TemplatesCreator.prototype.loadPageSideActions = function(activeTab) {
 
 	browser.tabs.executeScript(activeTab.id, { file: "/content_scripts/DomUiManager.js"});
-	browser.tabs.executeScript(activeTab.id, { file: "/content_scripts/enable_harvesting.js"});
+	//browser.tabs.executeScript(activeTab.id, { file: "/content_scripts/enable_harvesting.js"});
  	browser.tabs.sendMessage(activeTab.id, {}); 
 };
 TemplatesCreator.prototype.enableHarvesting = function(tab) {

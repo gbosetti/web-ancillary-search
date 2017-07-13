@@ -6,7 +6,8 @@ BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
 };
 BrowserUiManager.prototype.increaseBrowserActionClicksInTab = function(tabId) {
-  this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab() + 1;
+
+  this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab(tabId) + 1;
 };
 BrowserUiManager.prototype.disableBrowserAction = function(tab) {
   this.changeBrowserActionIcon({
@@ -14,10 +15,8 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
       64: "icons/logo-disabled-64.png"
     },
     tab.id, "✗", "gray");
-  this.disableHarvesting(tab);
-};
-BrowserUiManager.prototype.disableHarvesting = function(tab) {
-  //this.templatesCreator.disableHarvesting(tab);
+
+  this.templatesCreator.disableHarvesting(tab);
 };
 BrowserUiManager.prototype.enableBrowserAction = function(tab) {
   this.changeBrowserActionIcon({
@@ -25,10 +24,12 @@ BrowserUiManager.prototype.enableBrowserAction = function(tab) {
       64: "icons/logo-disabled-64.png"
     },
     tab.id, "✓", "#60DA11");
-  this.enableHarvesting(tab);
-};
-BrowserUiManager.prototype.enableHarvesting = function(tab) {
-  this.templatesCreator.enableHarvesting(tab);
+  
+  if(this.getBrowserActionClicksInTab(tab.id) == 1) {
+    //loading files just once on each tab
+    this.templatesCreator.loadDomHighlightingExtras(tab); // This can be done every time a tab is opened and you avoid using this if
+  }
+  else this.templatesCreator.enableHarvesting(tab);
 };
 BrowserUiManager.prototype.changeBrowserActionIcon = function(icons, tabId, badgeText, badgeColor) {
 
@@ -45,8 +46,6 @@ BrowserUiManager.prototype.updateBrowserActionIconByClicks = function() {
 
   var me = this;
   this.executeOnCurrentTab(function(currentTab){
-
-    console.log("currentTab", currentTab);
 
     if(me.getBrowserActionClicksInTab(currentTab.id) % 2 == 0)
       me.enableBrowserAction(currentTab);
@@ -72,32 +71,44 @@ BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
 
 
 function TemplatesCreator(){}
-TemplatesCreator.prototype.loadRequiredScripts = function(activeTab) {
+TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
-  this.loadPageSideActions(activeTab);
-};
-TemplatesCreator.prototype.loadPageSideActions = function(activeTab) {
+  this.removeContextMenus();
+  this.disableDomHighlighting(tab);
+}
+TemplatesCreator.prototype.disableDomHighlighting = function(tab) {
 
-  browser.tabs.executeScript(activeTab.id, { file: "/content_scripts/DomUiManager.js"});
-  browser.tabs.executeScript(activeTab.id, { file: "/content_scripts/enable_harvesting.js"});
-  browser.tabs.sendMessage(activeTab.id, {greeting: "Something to avoid errors..."}); 
-};
+  browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
+}
 TemplatesCreator.prototype.enableHarvesting = function(tab) {
 
   this.createContextMenus();
   this.enableDomHighlighting(tab);
-  this.loadRequiredScripts(tab);
+}
+TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
+
+  var me = this;
+  browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
+  browser.tabs.executeScript(tab.id, { file: "/content_scripts/DomUiManager.js"}).then(function () {
+      browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
+        me.enableDomHighlighting(tab);
+      });
+  });
+  
 }
 TemplatesCreator.prototype.enableDomHighlighting = function(tab) {
 
-  browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
-
-
+  browser.tabs.sendMessage(tab.id, {call: "enableHighlight"});
 }
 TemplatesCreator.prototype.createContextMenus = function(){
 
   this.createContextMenuForAnnotatingConcept();
   this.createContextMenuForAnnotatingProperties();
+}
+TemplatesCreator.prototype.removeContextMenus = function(){
+
+  browser.contextMenus.remove("define-template");
+  browser.contextMenus.remove("define-template-property");
 }
 TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(){
 
@@ -125,7 +136,7 @@ TemplatesCreator.prototype.createSidebar = function(){
 TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(){
 
   browser.contextMenus.create({
-      id: "define-template-property2",
+      id: "define-template-property",
       title: browser.i18n.getMessage("annotateAsProperty"),
       contexts: ["all"],
       command: "_execute_sidebar_action"
@@ -134,18 +145,10 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function()
   
   browser.contextMenus.onClicked.addListener(function(info, tab) {
     document.body.style.background = "green";
-    if (info.menuItemId == "define-template-property2") { //Unfortunately, this is the only way right now
+    if (info.menuItemId == "define-template-property") { //Unfortunately, this is the only way right now
       console.log(info.selectionText);
     }
   });
-}
-TemplatesCreator.prototype.highlightInDom = function(xpath) {
-
-  var elems = document.getElementsByClassName('woa-highlighted-element');
-  for (i in elems) elems[i].classList.remove('woa-highlighted-element');
-
-  elems = new XPathInterpreter().getElementsByXpath(xpath, document);
-  if(elems) for (i in elems) elems[i].classList.add('woa-highlighted-element');
 }
 
 

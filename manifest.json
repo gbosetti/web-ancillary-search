@@ -13,12 +13,12 @@
 
   "default_locale": "en",
 
-  "content_scripts": [
-    {
-      "matches": ["*://*/*"],
-      "js": ["/content_scripts/enable_harvesting.js"]
-    }
-  ],
+  //"content_scripts": [
+  //  {
+  //    "matches": ["*://*/*"],
+  //    "js": ["/content_scripts/enable_harvesting.js"]
+  //  }
+  //],
 
   "browser_action": { //Note that your extension can have only one browser action
     "default_icon": {
