@@ -109,7 +109,10 @@ SearchTool.prototype.populateApisMenu = function(){
         id: "search-menu-item-001",
         parentId: "search-with-search-api", 
         title: "Youtube",
-        contexts: ["all"]
+        contexts: ["all"],
+        onclick: function(){
+          console.log("CLICK");
+        }
     });
 
   /*for (var i = apis.length - 1; i >= 0; i--) {
@@ -224,14 +227,13 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(main
       parentId: mainMenuId,
       title: browser.i18n.getMessage("annotateAsConcept"),
       contexts: ["all"],
-      command: "_execute_sidebar_action"
-  });
-
-  browser.contextMenus.onClicked.addListener(function(info, tab) {
-    document.body.style.background = "yellow";
-    if (info.menuItemId == "define-template") { //Unfortunately, this is the only way right now
-      console.log(info.selectionText);
-    }
+      onclick: function(info,tab){ 
+        console.log(info, tab);
+        browser.sidebarAction.setPanel({
+          panel: browser.extension.getURL("/sidebar/concept-definition.html")
+        }); 
+      },
+      command: "_execute_sidebar_action" //This is not something you can change
   });
 }
 TemplatesCreator.prototype.createSidebar = function(){
@@ -247,15 +249,18 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(m
       parentId: mainMenuId,
       title: browser.i18n.getMessage("annotateAsProperty"),
       contexts: ["all"],
-      command: "_execute_sidebar_action"
+      onclick: function(info,tab){ //en compatibilidad con chrome
+        console.log(info);
+      }
   });
   
+  /* alternative way,, not sure if compatible with other browsers. But it is possible to retrieve a selection through the "info" object
   browser.contextMenus.onClicked.addListener(function(info, tab) {
     document.body.style.background = "green";
     if (info.menuItemId == "define-template-property") { //Unfortunately, this is the only way right now
       console.log(info.selectionText);
     }
-  });
+  });*/
 }
 
 

@@ -30,7 +30,7 @@
   "sidebar_action": {
     "default_icon": "icons/logo-disabled-64.png",
     "default_title" : "Annotating concepts",
-    "default_panel": "sidebar/sidebar.html"
+    "default_panel": "sidebar/welcome.html"
   },
 
   "permissions": [
