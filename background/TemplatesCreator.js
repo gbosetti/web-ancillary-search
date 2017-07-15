@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 function TemplatesCreator(){}
 TemplatesCreator.prototype.createTemplatesEditorMenu = function(){
 
@@ -66,9 +58,19 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(main
       title: browser.i18n.getMessage("annotateAsConcept"),
       contexts: ["all"],
       onclick: function(info,tab){ 
-        console.log(info, tab);
-        browser.sidebarAction.setPanel({
-          panel: browser.extension.getURL("/sidebar/concept-definition.html")
+
+        //console.log("Selected text: " + info.selectionText, tab);
+
+        browser.sidebarAction.setPanel({ panel: browser.extension.getURL("/sidebar/concept-definition.html")   
+        }).then(function(){ //nothing coming as param :(
+
+          browser.sidebarAction.getPanel({}).then(function(panel, x, y){
+            console.log("panel", panel, x, y); // panel is just an URL
+          });
+
+          //In this context, "this" = the chrome window. 
+          //console.log("window", this.document.querySelector("#edit-concept-template-name"));
+          console.log("window", this);
         }); 
       },
       command: "_execute_sidebar_action" //This is not something you can change
@@ -88,8 +90,12 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(m
       title: browser.i18n.getMessage("annotateAsProperty"),
       contexts: ["all"],
       onclick: function(info,tab){ //en compatibilidad con chrome
-        console.log(info);
-      }
+
+          browser.sidebarAction.setPanel({ 
+            panel: browser.extension.getURL("/sidebar/concept-definition.html")   
+          });
+      },
+      command: "_execute_sidebar_action" //This is not something you can change
   });
   
   /* alternative way,, not sure if compatible with other browsers. But it is possible to retrieve a selection through the "info" object

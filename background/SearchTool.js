@@ -19,7 +19,7 @@ SearchTool.prototype.createApisMenu = function(){
 SearchTool.prototype.populateApisMenu = function(){
 
   var apis = this.getApiSpecifications();
-  console.log(apis);
+  //console.log(apis);
 
   browser.contextMenus.create({
         id: "search-menu-item-001",

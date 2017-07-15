@@ -2,10 +2,10 @@
   "manifest_version": 2,
   "name": "Augmented Search Services",
   "version": "1.0",
-  "description": "A decision support system integrated to the Web",
+  "description": "...",
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
 
-  // THIS IS COMMENTED SO IT CAN BE INTERPRETED BY CHROME :(
+  // THIS IS COMMENTED SO IT CAN BE INTERPRETED BY GOOGLE CHROME :(
   //"applications": {
   //  "gecko": {
   //    "strict_min_version": "55.0a1"
