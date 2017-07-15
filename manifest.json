@@ -24,7 +24,12 @@
   },
 
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background/browsers-standarization.js", 
+      "background/BrowserUiManager.js", 
+      "background/SearchTool.js", 
+      "background/TemplatesCreator.js",
+      "background/main.js"]
   },
 
   "sidebar_action": {
