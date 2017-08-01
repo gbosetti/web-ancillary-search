@@ -1,1 +1,0 @@
-window.DUIman = "lalalal";

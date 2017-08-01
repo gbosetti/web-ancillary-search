@@ -58,7 +58,9 @@ TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
 
   var me = this;
   browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
-  browser.tabs.executeScript(tab.id, { file: "/content_scripts/DomUiManager.js"}).then(function () {
+  browser.tabs.executeScript(tab.id, { file: "/content_scripts/XPathInterpreter.js"}).then(function () {
+
+      console.log("THE SECOND!");
       browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
         me.enableHarvesting(tab);
       });
