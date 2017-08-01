@@ -65,6 +65,18 @@ BrowserUiManager.prototype.updateBrowserActionIconByClicks = function() {
     else me.disableBrowserAction(currentTab);
   });
 };
+BrowserUiManager.prototype.loadDataForConceptDefinition = function() {
+
+  //var me = this;
+  //this.executeOnCurrentTab(function(currentTab){
+
+  this.templatesCreator.loadDataForConceptDefinition();
+  //});
+};
+BrowserUiManager.prototype.setContextualizedElement = function(extractedData) {
+
+    this.templatesCreator.setContextualizedElement(extractedData); 
+};
 BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
 
   try{
