@@ -17,14 +17,30 @@ The starting point is searchApis.js
 *Firefox 55 onwards, in your desktop environment*. sudo apt-get install firefox. Starting from Firefox 57, WebExtensions will be the only supported extension type.
 Please, make you sure you are using at least version 55.0a1
 
-## Loading the extension ##
+
+
+## Loading and debugging the extension in Firefox ##
 
 Open "about:debugging" in Firefox, click "Load Temporary Add-on" and select any file in your add-on's directory. It will be installed until you restart Firefox. 
 
-## Debugging ##
 After installing the extension, you can see a «debug» button next to the extension, as well as an «update». You ca use it but sometimes it is not logging things. The best way is still using the browser's toolbox (CTRL+SHIFT+ALT+i).
 
 If you are trying to debug a "popup script", you should prevent the popups to be closed. To do so, click the "4 sqaures icon" in the right-top area of the browser's toolbox. 
+
+If the button for debugging is not enabled, please activate the "Browser Toolbox"
+https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox
+
+
+
+## Loading and debugging the extension in Chromium/Chrome ##
+
+Open "chrome://extensions/" in Chromium, chech the "developer mode" at the top-right of the document. Click "Load non-packaged extension" and select any file in your add-on's directory. The extension will be installed.
+
+After installing the extension, you can see an «update». Update not always work as expected, sometimes you need to restart the browser to see the changes.
+
+Debugging...
+
+
 
 ## Publishing the extension ##
 

@@ -1,0 +1,9 @@
+.pager .previous{
+    float: left;
+}
+.pager .next{
+    float: right;
+}
+form{
+	padding-top: 20px !important;
+}

@@ -4,5 +4,17 @@
   },
   "annotateAsProperty": {
     "message": "Annotate as property"
+  },
+  "defineAs": {
+    "message": "Define as..."
+  },
+  "singleMatch":{
+    "message": "match"
+  },
+  "multipleMatches":{
+    "message": "matches"
+  },
+  "ass":{
+  	"message": "Augmented Search Services"
   }
 }
