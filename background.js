@@ -82,14 +82,15 @@ BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
 function SearchTool(){
   this.createContextMenus();
 }
+
 SearchTool.prototype.createContextMenus = function() {
 
   //por ahora una sola entarda
   this.createApisMenu();
   this.populateApisMenu();
 }
-SearchTool.prototype.createApisMenu = function(){
 
+SearchTool.prototype.createApisMenu = function(){
   //The menu is created
   browser.contextMenus.create({
       id: "search-with-search-api",
@@ -97,41 +98,30 @@ SearchTool.prototype.createApisMenu = function(){
       contexts: ["all"]
   });
 }
-SearchTool.prototype.populateApisMenu = function(){
 
-  var apis = this.getApiSpecifications();
-  console.log(apis);
+function onError(error) {
+  console.log(`Error: ${error}`);
+}
 
-/*  browser.contextMenus.create({
-        id: "search-menu-item-001",
+SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
+  this.setApiSpecifications();//Set manually the api specifications (this will be generated in the definition of each search service)
+  var getApiSpecifications = browser.storage.local.get(null);
+  getApiSpecifications.then((results) => {
+    var apiSpecifications= Object.keys(results);
+    for (let apiSpecification of apiSpecifications) {
+       browser.contextMenus.create({
+        id: results[apiSpecification].name,
         parentId: "search-with-search-api", 
-        title: "Youtube",
-        contexts: ["all"]
-    });*/
-
-  for (var i = apis.length - 1; i >= 0; i--) {
-    browser.contextMenus.create({
-        id: apis[i].name,
-        parentId: "search-with-search-api", 
-        title: apis[i].name
+        title: results[apiSpecification].name,
         contexts: ["all"]
     });
-  }
+    }
+    }, onError);
 }
-SearchTool.prototype.getApiSpecifications = function(){
 
-  //this.getServiceSpecsFromFiles();
-  //TODO: load fromfiles ^
-    var apiDefinitions = [];
-    apiDefinitions.push(this.getYoutubeService());
-    apiDefinitions.push(this.getLiveService());
-    
-  return apiDefinitions;
-}
-SearchTool.prototype.getYoutubeService = function() {
-
-  return {
-    name:'Youtube',
+SearchTool.prototype.setApiSpecifications = function(){
+  browser.storage.local.set({
+  youtube:  {    name:'Youtube',
     url:'https://www.youtube.com/results?search_query=X',
     keywords:'',
     loadingResStrategy: "WriteAndClickForAjaxCall", 
@@ -162,48 +152,12 @@ SearchTool.prototype.getYoutubeService = function() {
           title: "Authors",
           responsivePriority: 2
         }]
-    }
-  };
-};
-SearchTool.prototype.getLiveService = function() {
+    }},
+  google: {"name":"Google", "url":"https://www.google.com.ar/#q=x"}
 
-  return {
-    name:'Live',
-    url:'https://outlook.live.com/owa/?path=/mail/search',
-    keywords:'',
-    loadingResStrategy: "WriteForAjaxCall", 
-    contentScriptWhen: "end",
-    entry:'//form/div/input',
-    trigger:'//div[@class="conductorContent"]/div/div/div/div/div/div/div[2]',
-    results: {
-      name: 'Videos',
-      xpath:'//div[@class="conductorContent"]/div/div[3]/div/div/div/div[2]/div',
-      properties:[
-        {
-          name:'Title',
-          xpath:'//span[contains(@class,"lvHighlightAllClass")]',
-          extractor: new SingleNodeExtractor()
-        },
-        {
-          name:'Authors', 
-          xpath:'/div[2]/div[5]',
-          extractor: new SingleNodeExtractor()
-        }
-      ]
-    },
-    visualization:{
-      colsDef: [{
-          title: "Title",
-          responsivePriority: 1
-        }, {
-          title: "Authors",
-          responsivePriority: 2
-        }]
-    }
-  };
-};
-
-
+  //FALTAN APIS
+});
+}
 
 function TemplatesCreator(){}
 TemplatesCreator.prototype.disableHarvesting = function(tab) {
