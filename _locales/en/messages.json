@@ -1,9 +1,15 @@
 {
   "annotateAsConcept": {
-    "message": "Annotate as concept"
+    "message": "result"
   },
   "annotateAsProperty": {
-    "message": "Annotate as property"
+    "message": "result's property"
+  },
+  "searchTrigger": {
+    "message": "search trigger"
+  },
+  "searchInput": {
+    "message": "search input"
   },
   "defineAs": {
     "message": "Define as..."

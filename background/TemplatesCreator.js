@@ -18,7 +18,9 @@ TemplatesCreator.prototype.createTemplatesEditorMenu = function(){
 }
 TemplatesCreator.prototype.populateTemplatesEditorMenu = function(mainMenuId) {
 
-  this.createContextMenuForAnnotatingConcept(mainMenuId);
+  this.createContextMenuForDefiningInput(mainMenuId);
+  this.createContextMenuForDefiningTrigger(mainMenuId);
+  this.createContextMenuForDefiningResult(mainMenuId);
   this.createContextMenuForAnnotatingProperties(mainMenuId);
 }
 TemplatesCreator.prototype.disableHarvesting = function(tab) {
@@ -56,11 +58,11 @@ TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
 
   var me = this;
   browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
-  //browser.tabs.executeScript(tab.id, { file: "/content_scripts/DomUiManager.js"}).then(function () {
+  browser.tabs.executeScript(tab.id, { file: "/content_scripts/DomUiManager.js"}).then(function () {
       browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
         me.enableHarvesting(tab);
       });
-  //});
+  });
 }
 TemplatesCreator.prototype.enableDomSelection = function(tab) {
 
@@ -72,9 +74,8 @@ TemplatesCreator.prototype.removeContextMenus = function(){
   browser.contextMenus.remove("define-template");
   //browser.contextMenus.remove("define-template-property");
 }
-TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(mainMenuId){
+TemplatesCreator.prototype.createContextMenuForDefiningResult = function(mainMenuId){
 
-  //The menu is created
   browser.contextMenus.create({
       id: "define-template",
       parentId: mainMenuId,
@@ -82,13 +83,41 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingConcept = function(main
       contexts: ["all"],
       onclick: function(info,tab){ 
 
-        //console.log("Selected text: " + info.selectionText, tab);
-        //console.log("info", info);
-
         browser.sidebarAction.setPanel({ 
           panel: browser.extension.getURL("/sidebar/concept-definition.html")   
-        }); 
-        //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
+        }); //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
+      },
+      command: "_execute_sidebar_action" //This is not something you can change
+  });
+}
+TemplatesCreator.prototype.createContextMenuForDefiningInput = function(mainMenuId){
+
+  browser.contextMenus.create({
+      id: "define-input",
+      parentId: mainMenuId,
+      title: browser.i18n.getMessage("searchInput"),
+      contexts: ["all"],
+      onclick: function(info,tab){ 
+
+        /*browser.sidebarAction.setPanel({ 
+          panel: browser.extension.getURL("/sidebar/concept-definition.html")   
+        });*/ //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
+      },
+      command: "_execute_sidebar_action" //This is not something you can change
+  });
+}
+TemplatesCreator.prototype.createContextMenuForDefiningTrigger = function(mainMenuId){
+
+  browser.contextMenus.create({
+      id: "define-trigger",
+      parentId: mainMenuId,
+      title: browser.i18n.getMessage("searchTrigger"),
+      contexts: ["all"],
+      onclick: function(info,tab){ 
+
+        /*browser.sidebarAction.setPanel({ 
+          panel: browser.extension.getURL("/sidebar/concept-definition.html")   
+        });*/ //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
       },
       command: "_execute_sidebar_action" //This is not something you can change
   });
@@ -101,17 +130,17 @@ TemplatesCreator.prototype.createSidebar = function(){
 }
 TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(mainMenuId){
 
-  /*browser.contextMenus.create({
+  browser.contextMenus.create({
       id: "define-template-property",
       parentId: mainMenuId,
       title: browser.i18n.getMessage("annotateAsProperty"),
       contexts: ["all"],
       onclick: function(info,tab){ //en compatibilidad con chrome
 
-          browser.sidebarAction.setPanel({ 
+          /*browser.sidebarAction.setPanel({ 
             panel: browser.extension.getURL("/sidebar/concept-definition.html")   
-          });
+          });*/
       },
       command: "_execute_sidebar_action" //This is not something you can change
-  });*/
+  });
 }

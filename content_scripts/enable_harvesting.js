@@ -2,7 +2,8 @@
 console.log("\n\n\n********* LOADING THE FILE *********\n\n\n");
 
 
-
+console.log(window);
+console.log(window.DUIman);
 
 
 
