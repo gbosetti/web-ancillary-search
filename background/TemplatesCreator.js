@@ -60,7 +60,6 @@ TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
   browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
   browser.tabs.executeScript(tab.id, { file: "/content_scripts/XPathInterpreter.js"}).then(function () {
 
-      console.log("THE SECOND!");
       browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
         me.enableHarvesting(tab);
       });
@@ -74,6 +73,9 @@ TemplatesCreator.prototype.enableDomSelection = function(tab) {
 TemplatesCreator.prototype.removeContextMenus = function(){
 
   browser.contextMenus.remove("define-template");
+  browser.contextMenus.remove("define-template-property");
+  browser.contextMenus.remove("define-input");
+  browser.contextMenus.remove("define-trigger");
   //browser.contextMenus.remove("define-template-property");
 }
 TemplatesCreator.prototype.createContextMenuForDefiningResult = function(mainMenuId){
@@ -101,9 +103,9 @@ TemplatesCreator.prototype.createContextMenuForDefiningInput = function(mainMenu
       contexts: ["all"],
       onclick: function(info,tab){ 
 
-        /*browser.sidebarAction.setPanel({ 
-          panel: browser.extension.getURL("/sidebar/concept-definition.html")   
-        });*/ //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
+        browser.sidebarAction.setPanel({ 
+          panel: browser.extension.getURL("/sidebar/input-definition.html")   
+        }); //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
       },
       command: "_execute_sidebar_action" //This is not something you can change
   });
@@ -117,9 +119,9 @@ TemplatesCreator.prototype.createContextMenuForDefiningTrigger = function(mainMe
       contexts: ["all"],
       onclick: function(info,tab){ 
 
-        /*browser.sidebarAction.setPanel({ 
-          panel: browser.extension.getURL("/sidebar/concept-definition.html")   
-        });*/ //Do not use a "then". After the panel is opened, the browser.runtime is notified (main.js) 
+        browser.sidebarAction.setPanel({ 
+          panel: browser.extension.getURL("/sidebar/trigger-definition.html")   
+        }); 
       },
       command: "_execute_sidebar_action" //This is not something you can change
   });
@@ -139,9 +141,9 @@ TemplatesCreator.prototype.createContextMenuForAnnotatingProperties = function(m
       contexts: ["all"],
       onclick: function(info,tab){ //en compatibilidad con chrome
 
-          /*browser.sidebarAction.setPanel({ 
-            panel: browser.extension.getURL("/sidebar/concept-definition.html")   
-          });*/
+          browser.sidebarAction.setPanel({ 
+            panel: browser.extension.getURL("/sidebar/property-definition.html")   
+          });
       },
       command: "_execute_sidebar_action" //This is not something you can change
   });

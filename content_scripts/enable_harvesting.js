@@ -1,15 +1,6 @@
 //TODO: somehow, the file is realoded and that makes it impossible to remove listeners :(
 console.log("\n\n\n********* LOADING THE FILE *********\n\n\n");
 
-console.log(window["XPathInterpreter"]);
-
-
-
-
-
-
-
-
 function DomUiManager(){
 
 	this.createEventListeners();

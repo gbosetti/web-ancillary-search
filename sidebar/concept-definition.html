@@ -2,6 +2,7 @@
 <html lang="en">
     <head> 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
 		<link rel="stylesheet" type="text/css" href="css/forms-commons.css">
 		<link rel="stylesheet" type="text/css" href="css/concept-definition.css">
@@ -11,26 +12,20 @@
 		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
 		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 
-		<script src="js/concept-definition.js"></script>
-		<link rel="localization" href="../_locales/manifest.json">
+		<script src="lib/js/concept-definition.js"></script>
 
 		<title>Concept definition</title>
 	</head>
 	<body>
 		<title></title>
-		<div class="navbar navbar-default navbar-fixed-top">
-	      <div class="container">
-	        <div class="navbar-header">
-	          <a href="../" class="navbar-brand">Concept definition</a>
-		    </div>
-		  </div>
-    	</div>
+    	<div class="panel-heading" style="padding-bottom: 0px;">
+           <div class="panel-title text-center">
+           		<h2 class="title">Result definition</h2>
+           		<hr />
+           	</div>
+        </div> 
 		<div class="container">
-			<form id="edit-concept-template-form">
-			    <div class="navbar-brand pim-sidebar-header text-center" style="width:100%;">
-			        <span id="concept-header-icon"></span> &nbsp;
-			        <span id="concept-header-title"></span>
-			    </div>       
+			<form id="edit-concept-template-form">   -->
 			    <!-- :::::::::: NAME :::::::::: -->
 			    <div class="form-group">
 			        <label for="edit-concept-template-name">Name</label>
@@ -64,13 +59,13 @@
 			    <nav> <!-- :::::::::: PAGINATION :::::::::: -->
 			        <ul class="pager">
 			            <li class="previous active">
-			                <button type="button" class="btn btn-sucess navbar-btn">
+			                <button type="button" class="btn btn-primary">
 			                    <span class="glyphicon glyphicon-trash"></span>
 			                    <span id="discard-materializable-label" class="pager-option-label">Discard</span>
 			                </button>
 			            </li>
 			            <li class="next active">
-			                <button id="save-concept" type="button" class="btn btn-sucess navbar-btn" >
+			                <button id="save-concept" type="button" class="btn btn-primary" >
 			                    <span>Save</span>
 			                    <span class="glyphicon glyphicon-floppy-disk"></span>
 			                </button>

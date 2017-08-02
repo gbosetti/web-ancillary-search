@@ -6,11 +6,11 @@
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
 
   // THIS IS COMMENTED SO IT CAN BE INTERPRETED BY GOOGLE CHROME :(
-  //"applications": {
-  //  "gecko": {
-  //    "strict_min_version": "55.0a1"
-  //  }
-  //},
+  "applications": {
+    "gecko": {
+      "strict_min_version": "55.0a1"
+    }
+  },
 
   "default_locale": "en",
 
@@ -34,7 +34,7 @@
 
   "sidebar_action": {
     "default_icon": "icons/logo-disabled-64.png",
-    "default_title" : "Annotating concepts",
+    "default_title" : "Augmented Search Services",
     "default_panel": "sidebar/welcome.html"
   },
 

@@ -10,16 +10,24 @@ https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Anatomy_of_a_WebExtens
 
 Please, read carefully such article, since rules are not always the same. E.g. DOM elements can not be fully manipulated from any script, for instance, the event listeners can not be added from popups but the popup can call a contentscript to do so.
 
-The starting point is searchApis.js
+The starting point is background/main.js
 
 ## System Requirements ##
 
 *Firefox 55 onwards, in your desktop environment*. sudo apt-get install firefox. Starting from Firefox 57, WebExtensions will be the only supported extension type.
 Please, make you sure you are using at least version 55.0a1
 
+*Bower. We have a bower file for downloading the dependencies that the project needs for the sidebar. This way, we are not distributing the code of the dependencies. We need those files to be part of the extension because some need to be injected from the extension itself and not through a CDN. https://bower.io/
+sudo apt-get install npm, nodejs
+sudo chown -R $USER:$GROUP ~/.npm
+sudo chown -R $USER:$GROUP ~/.config
+sudo npm install -g bower
 
 
 ## Loading and debugging the extension in Firefox ##
+
+Download dependencies. Open a console at the sidebar/ folder (in the root dir) and execute:
+bower install
 
 Open "about:debugging" in Firefox, click "Load Temporary Add-on" and select any file in your add-on's directory. It will be installed until you restart Firefox. 
 
