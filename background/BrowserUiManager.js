@@ -8,6 +8,10 @@ function BrowserUiManager(){
 
   this.initialize();
 }
+BrowserUiManager.prototype.toggleSidebar = function() {
+
+  this.templatesCreator.toggleSidebar();
+};
 BrowserUiManager.prototype.initialize = function() {
 
   this.browserActionsClicks = {};
@@ -80,8 +84,7 @@ BrowserUiManager.prototype.setContextualizedElement = function(extractedData) {
 BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
 
   try{
-      var activeTabPromise = browser.tabs.query({active: true, currentWindow: true}); //browser.tabs.getCurrent();
-      activeTabPromise.then((tabs) => {
+      browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
 
           callback(tabs[0]);
       });

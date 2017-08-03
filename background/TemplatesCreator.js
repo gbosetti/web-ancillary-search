@@ -40,9 +40,8 @@ TemplatesCreator.prototype.enableHarvesting = function(tab) {
 }
 TemplatesCreator.prototype.loadDataForConceptDefinition = function() {
 
-  console.log("selection", this.targetElement);
-
-  console.log(this.targetElement.xpaths);
+  //console.log("selection", this.targetElement);
+  //console.log(this.targetElement.xpaths);
 
   browser.runtime.sendMessage({
       call: "loadXpaths",

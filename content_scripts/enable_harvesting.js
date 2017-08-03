@@ -43,7 +43,6 @@ DomUiManager.prototype.addHighlightingClass = function(elem){
 DomUiManager.prototype.getMatchedElementsQuantity = function(xpath){
 
 	var elems = (new window["XPathInterpreter"]()).getElementsByXpath(xpath, document);
-	console.log(elems);
 	return (elems && elems.length && elems.length > 0)? elems.length : 0;
 };
 DomUiManager.prototype.labelXPaths = function(xpaths, baseXpath){
@@ -52,7 +51,6 @@ DomUiManager.prototype.labelXPaths = function(xpaths, baseXpath){
 	var labeledXpaths = [];
 	for (var i = 0; i < xpaths.length; i++) {
 
-		console.log("iterating ", i);
 		var matches = (baseXpath)? this.getMatchedElementsQuantity(baseXpath + "/" + xpaths[i]): this.getMatchedElementsQuantity(xpaths[i]);
 
 		if(matches >= 1){
@@ -69,7 +67,6 @@ DomUiManager.prototype.labelXPaths = function(xpaths, baseXpath){
 		else if (a.order > b.order) return 1;
 		else return 0;
 	});
-	console.log("labeledXpaths", labeledXpaths);
 	return labeledXpaths;
 };
 DomUiManager.prototype.createCTemplateThumbnail = function(element) { 
