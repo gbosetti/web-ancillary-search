@@ -141,12 +141,28 @@ DomUiManager.prototype.disableHighlight = function(){
     	me.removeHighlightingEventListeners(elem);
     });
 };
+DomUiManager.prototype.removeHighlightings = function(){
+
+	var me = this, elems = this.getAllVisibleDomElements(); 
+	elems.forEach(function(elem) { 
+		console.log(elem);
+    	me.removeHighlightingClass(elem);
+    });
+};
+DomUiManager.prototype.highlightMatchingElements = function(data){
+
+	var elems = (new window.XPathInterpreter()).getElementsByXpath(data.xpath, document);
+	this.removeHighlightings();
+
+	for (var i = elems.length - 1; i >= 0; i--) {
+		this.addHighlightingClass(elems[i]);
+	}
+};
 
 var ui = new DomUiManager();
-
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call);
+	console.log("calling " + request.call + " (content_scripts/enable_harvesting.js)");
 	//Se lo llama con: browser.tabs.sendMessage
-	ui[request.call]();
+	ui[request.call](request.args);
 });

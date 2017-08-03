@@ -69,6 +69,14 @@ BrowserUiManager.prototype.updateBrowserActionIconByClicks = function() {
     else me.disableBrowserAction(currentTab);
   });
 };
+BrowserUiManager.prototype.highlightInDom = function(data) {
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+
+    me.templatesCreator.highlightMatchingElements(tab, data);
+  });
+}
 BrowserUiManager.prototype.loadDataForConceptDefinition = function() {
 
   //var me = this;

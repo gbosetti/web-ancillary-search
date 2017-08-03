@@ -23,6 +23,11 @@ TemplatesCreator.prototype.populateTemplatesEditorMenu = function(mainMenuId) {
   this.createContextMenuForDefiningResult(mainMenuId);
   this.createContextMenuForAnnotatingProperties(mainMenuId);
 }
+TemplatesCreator.prototype.highlightMatchingElements = function(tab, data) {
+
+  console.log("from templates-creator: ", data);
+  browser.tabs.sendMessage(tab.id, {call: "highlightMatchingElements", args: data});
+}
 TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
   this.removeContextMenus();

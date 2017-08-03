@@ -55,5 +55,21 @@
 			this.filesManager.setFileAsync(this.file, function(file){
 				console.log("saved file from file", file);
 			});
-		}
+		};
+		this.saveXpath = function(xpath) {
+
+			//This is a problem. I sthere a way for easily adding a new "file"?
+			this.file.xpath = xpath;
+			this.filesManager.setFileAsync(this.file, function(file){
+				console.log("saved file from file", file);
+			});
+		};
+		this.getName = function(name) {
+
+			return this.file.name;
+		};
+		this.getXpath = function(name) {
+
+			return this.file.xpath;
+		};
 	};

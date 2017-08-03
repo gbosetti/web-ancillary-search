@@ -13,9 +13,10 @@
 		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 
 		<script type="text/javascript" src="lib/js/files-management.js"></script>
+		<script type="text/javascript" src="lib/js/TemplatesCreator.js"></script>
 		<script type="text/javascript" src="lib/js/concept-definition.js"></script>
 
-		<title>Concept definition</title>
+		<title>result definition</title>
 	</head>
 	<body>
 		<title></title>
@@ -26,23 +27,23 @@
            	</div>
         </div> 
 		<div class="container">
-			<form id="edit-concept-template-form">  
+			<form id="edit-result-form">  
 			    <!-- :::::::::: NAME :::::::::: -->
 			    <div class="form-group">
-			        <label for="edit-result-template-name">Name</label>
-			        <input id="edit-result-template-name" name="edit-concept-template-name" type="text" class="form-control" placeholder="E.g. Scholar Article" required="true"></input>
+			        <label for="edit-result-name">Name</label>
+			        <input id="edit-result-name" name="edit-result-name" type="text" class="form-control" placeholder="E.g. Scholar Article" required="true"></input>
 			    </div>
 			    <!-- :::::::::: XPATH :::::::::: --> 
 			    <div class="form-group">
-			        <label for="edit-concept-template-xpath">Selector</label>
-			        <select id="edit-concept-template-xpath" class="form-control">
+			        <label for="edit-result-xpath">Selector</label>
+			        <select id="edit-result-xpath" class="form-control">
 			        </select>
 			    </div>
 			    <!-- :::::::::: PREVIEW :::::::::: --> 
 			    <div class="form-group">
-			        <label for="preview-of-concept">Preview</label>
-			        <div id="preview-of-concept" class="image-preview-container">
-			            <img id="concept-preview-image" class="image-preview" /> 
+			        <label for="preview-of-result">Preview</label>
+			        <div id="preview-of-result" class="image-preview-container">
+			            <img id="result-preview-image" class="image-preview" /> 
 			        </div>
 			    </div>
 			    <div class="">
@@ -58,7 +59,7 @@
 			                </button>
 			            </li>
 			            <li class="next active">
-			                <button id="save-concept" type="button" class="btn btn-primary" >
+			                <button id="save-result" type="button" class="btn btn-primary" >
 			                    <span>Save</span>
 			                    <span class="glyphicon glyphicon-floppy-disk"></span>
 			                </button>
