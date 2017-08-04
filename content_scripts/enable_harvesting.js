@@ -145,7 +145,7 @@ DomUiManager.prototype.removeHighlightings = function(){
 
 	var me = this, elems = this.getAllVisibleDomElements(); 
 	elems.forEach(function(elem) { 
-		console.log(elem);
+		//console.log(elem);
     	me.removeHighlightingClass(elem);
     });
 };

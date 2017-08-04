@@ -5,7 +5,6 @@ function BrowserUiManager(){
     this.templatesCreator;
     this.searchTool;
   */
-
   this.initialize();
 }
 BrowserUiManager.prototype.toggleSidebar = function() {
@@ -41,13 +40,23 @@ BrowserUiManager.prototype.enableBrowserAction = function(tab) {
       64: "icons/logo-disabled-64.png"
     },
     tab.id, "✓", "#60DA11");
+
+  browser.sidebarAction.setPanel({ 
+    panel: browser.extension.getURL("/sidebar/manage-services.html")   
+  }); 
   
-  if(this.getBrowserActionClicksInTab(tab.id) == 1) {
-    //loading files just once on each tab
-    this.templatesCreator.loadDomHighlightingExtras(tab); // This can be done every time a tab is opened and you avoid using this if
-  }
-  else this.templatesCreator.enableHarvesting(tab);
+  /*if(this.getBrowserActionClicksInTab(tab.id) == 1) {
+    
+    this.openSidebar();
+    //this.templatesCreator.loadDomHighlightingExtras(tab); // This can be done every time a tab is opened and you avoid using this if
+  }*/
+
+  //else this.templatesCreator.enableHarvesting(tab);
 };
+BrowserUiManager.prototype.openSidebar = function() {
+
+
+}
 BrowserUiManager.prototype.changeBrowserActionIcon = function(icons, tabId, badgeText, badgeColor) {
 
   browser.browserAction.setIcon({
