@@ -6,11 +6,24 @@ function SearchTool(){
 	//Init
   	this.createContextMenus();
 }
-SearchTool.prototype.loadVisalizers = function(tab) {
+SearchTool.prototype.loadVisalizers = function(tab, callback) {
 
-  //This should be called every time a tab is created, so the objects for presenting results are available everywhere
-  //TODO: also import jquery ui tfor making them draggables
-  return browser.tabs.executeScript(tab.id, { file: "/content_scripts/visualizations.js"});
+  	this.syncLoadScripts([
+  		"/content_scripts/vendor/jquery/dist/jquery.min.js",
+  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
+  		"/content_scripts/visualizations.js"
+  	], tab, callback);
+}
+SearchTool.prototype.syncLoadScripts = function(filePaths, tab, callback) {
+
+	var me = this, path = filePaths.splice(0, 1)[0];
+	if(path){
+		browser.tabs.executeScript(tab.id, { file: path }).then(function(){
+			me.syncLoadScripts(filePaths, tab, callback);
+		});
+	}else{
+		if(callback) callback();
+	}	
 }
 SearchTool.prototype.createContextMenus = function() {
 
@@ -105,7 +118,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				onclick: function(info,tab){ 
 
 					//this = the current window, but you can not manipulate a lot because this is a background script.
-					me.loadVisalizers(tab).then(function(){ //TODO: loadVisalizers should be called on tabs change, and just once
+					me.loadVisalizers(tab, function(){ //TODO: loadVisalizers should be called on tabs change, and just once
 
 						console.log("\n\n", info);
 

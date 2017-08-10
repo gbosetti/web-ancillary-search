@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "jquery": "3.2.1",
-    "datatables-responsive": "2.0.2"
+    "datatables-responsive": "2.0.2",
+    "jquery-ui": "1.12.1"
   }
 }

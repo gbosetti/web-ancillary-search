@@ -12,14 +12,14 @@ ResultsVisualizer.prototype.setVisualizer = function(visualizer) {
 	this.visualizer = visualizer;
 };
 ResultsVisualizer.prototype.makePanelDraggable = function(panel) {
-	//unwrappedWindow["$"](panel).draggable();
+	document.defaultView["$"](panel).draggable();
 };
 ResultsVisualizer.prototype.buildPanel = function(data) {
 	var resultsPanel = this.createResultsBox(document.defaultView, 
 		"«"+data.resultsName+"» from «" + data.seearchEngineName + "» matching «" + data.selectedText + "»");
 
 	document.body.appendChild(resultsPanel);
-	this.makePanelDraggable(panel);
+	this.makePanelDraggable(resultsPanel);
 	
 	return resultsPanel;
 };
