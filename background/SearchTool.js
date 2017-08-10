@@ -86,7 +86,7 @@ SearchTool.prototype.createApisMenu = function(){
   //The menu is created
   browser.contextMenus.create({
       id: "search-with-search-api",
-      title: "Search at", //TODO: create a message with params like in the old tool (see video) browser.i18n.getMessage("search at"),
+      title: "Search «%s» at", //TODO: create a message with params like in the old tool (see video) browser.i18n.getMessage("search at"),
       contexts: ["selection"]
   });
 }
@@ -115,7 +115,8 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 								"resultsName": apiSpecs[info.menuItemId].results.name,
 								"selectedText": info.selectionText,
 								"seearchEngineName": info.menuItemId,
-								"results": []
+								"results": [],
+								"visualizer": "Datatables"
 							}
 						});
 

@@ -1,10 +1,15 @@
-function ResultsVisualizer(visualizator){
-	this.visualizator = visualizator || new Datatables(); //strategy
+function ResultsVisualizer(){
+	this.visualizer; //= visualizer || new Datatables(); //strategy
 }
 ResultsVisualizer.prototype.showResults = function(data) {
+
 	var panel = this.buildPanel(data);
-	this.makePanelDraggable(panel);
-	this.visualizator.presentData(data.results, panel.childNodes[1]);
+
+	this.setVisualizer(new window[data.visualizer]());
+	this.visualizer.presentData(data.results, panel.childNodes[1]);
+};
+ResultsVisualizer.prototype.setVisualizer = function(visualizer) {
+	this.visualizer = visualizer;
 };
 ResultsVisualizer.prototype.makePanelDraggable = function(panel) {
 	//unwrappedWindow["$"](panel).draggable();
@@ -14,6 +19,8 @@ ResultsVisualizer.prototype.buildPanel = function(data) {
 		"«"+data.resultsName+"» from «" + data.seearchEngineName + "» matching «" + data.selectedText + "»");
 
 	document.body.appendChild(resultsPanel);
+	this.makePanelDraggable(panel);
+	
 	return resultsPanel;
 };
 ResultsVisualizer.prototype.createResultsBox = function(unwrappedWindow, title){
@@ -103,7 +110,7 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 function Visualization(){}
 
 
-function Datatables(visualizator){
+function Datatables(visualizer){
 
 	Visualization.call(this);
 }
