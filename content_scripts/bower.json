@@ -1,0 +1,22 @@
+{
+  "name": "ANDES sidebar",
+  "authors": [
+    "LIFIA"
+  ],
+  "description": "Dependencies for the sidebar",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src"
+  ],
+  "dependencies": {
+    "jquery": "3.2.1",
+    "datatables-responsive": "2.0.2"
+  }
+}

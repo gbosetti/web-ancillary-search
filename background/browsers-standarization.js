@@ -1,2 +1,2 @@
-//GLOBALS for making it compatible btw firefoc and chrome
+//GLOBALS for making it compatible btw firefox and chrome
 var browser = browser || chrome;
