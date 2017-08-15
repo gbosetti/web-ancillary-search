@@ -21,13 +21,12 @@ ResultsVisualizer.prototype.showResults = function(data) {
 ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	//console.log(browser);
-	console.log(unwrappedWindow);
 	var iframe = unwrappedWindow.document.createElement('iframe');
 		iframe.id = "andes-results-frame";
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		//the source will not loadbecause the ./ in the path will be resolved to the current web page
-		iframe.src = browser.extension.getURL("/content_scripts/visualizers/datatables/visualization.html");
+		iframe.src = browser.extension.getURL("/content_scripts/visualizations/datatables/index.html");
 	
 	return iframe;
 }

@@ -44,5 +44,9 @@
     "storage",
     "<all_urls>",
     "contextMenus"
+  ],
+
+  "web_accessible_resources": [
+    "/content_scripts/visualizations/datatables/index.html"
   ]
 }
