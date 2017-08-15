@@ -78,8 +78,8 @@ XPathInterpreter.prototype.getBetterPath = function(element) {
     //console.info(xPaths);
     return xPaths[0];        
 };
-XPathInterpreter.prototype.getElementByXPath = function(xpath, doc){
-
+XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
+    var doc = node.ownerDocument;
     return  doc.evaluate( xpath, doc, null, 
         9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE
 }

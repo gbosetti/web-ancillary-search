@@ -1,18 +1,28 @@
 function ResultsVisualizer(){
 	this.visualizer; //= visualizer || new Datatables(); //strategy
+	this.presentationState = new WaitingForRequest(this);
 }
 ResultsVisualizer.prototype.showResults = function(data) {
 
 	var panel = this.buildPanel(data);
 	this.setVisualizer(new Datatables()); //window[data.visualizer]());
 
+	this.presentData(data.results, panel.childNodes[1]);
 };
+ResultsVisualizer.prototype.presentData = function(results, targetPanel){
+
+	this.visualizer.presentData(results, targetPanel.children[0]);
+}
 ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	var iframe = unwrappedWindow.document.createElement('iframe');
 		iframe.id = "andes-results-frame";
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
+		iframe.style.background = "white";
+
+		var me = this;
+		//iframe.onload = function(){ /* TODO: change PresentationState */ }
 		iframe.src = browser.extension.getURL("/content_scripts/visualizations/datatables/index.html");
 	
 	return iframe;
@@ -30,17 +40,35 @@ ResultsVisualizer.prototype.loadDependencies = function(visualizer) {
 };
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 	
-	this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
-
+	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
 	
-
 	browser.runtime.sendMessage({
 		call: data.callbackMethod,
 		args: {
-			"results": []
+			"results": this.extractConcepts(conceptDomElems,data.resultSpec.properties)
 		}
 	});
 };
+ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
+
+	var concepts = [], me= this;
+
+	domElements.forEach(function(domElem){
+
+		propSpecs.forEach(function(prop){
+
+			var propValue = me.getSingleElement(prop.xpath, domElem);
+			if(propValue && propValue.textContent){
+			
+				var concept = {};
+					concept[prop.name] = propValue.textContent;
+				concepts.push(concept);
+			}
+		});
+	});
+
+	return concepts;
+}
 ResultsVisualizer.prototype.getExternalContent = function(url, selector){
 
    const req = new window.XMLHttpRequest();
@@ -54,13 +82,14 @@ ResultsVisualizer.prototype.getParsedDocument = function(responseText){
     return new window.DOMParser().parseFromString(responseText, "text/html");
 };
 ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
-
+	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
 	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
     //return doc.querySelector(selector).textContent;
 };
-ResultsVisualizer.prototype.onDocumentLoaded = function() {
-	console.log("dependencies have been loaded!");
-	//this.visualizer.presentData(data.results, panel.childNodes[1]);
+ResultsVisualizer.prototype.getSingleElement = function(selector, node){
+	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
+	return (new XPathInterpreter()).getElementByXPath(selector, node);
+    //return doc.querySelector(selector).textContent;
 };
 ResultsVisualizer.prototype.getDependencies = function(visualizer) {
 	return this.visualizer.getDependencies();
@@ -161,6 +190,31 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 }
 
 
+// Estados
+//TODO: implementar con estados, cada cual chequea lo que corresponde 
+function PresentationStatus(context){
+	this.context = context;
+	//...
+}
+
+function WaitingForRequest(context){
+	PresentationStatus.call(this, context);
+	//...
+}
+
+function WaitingForIframe(){
+	PresentationStatus.call(this);
+	//...
+}
+
+function WaitingForResults(){
+	PresentationStatus.call(this);
+	var me = this;
+	//...
+}
+
+
+
 
 
 
@@ -189,10 +243,27 @@ Datatables.prototype.getDependencies = function(visualizer) {
 		]
 	};
 };
-Datatables.prototype.presentData = function(results, panel) {
+Datatables.prototype.presentData = function(concepts, iframe) {
 
-	console.log("Presenting data");
-	panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
+	//TODO: apply state pattern
+
+	var checkForIframe = setInterval(function(){ 
+		var panel = iframe.contentWindow.document.querySelector("#results");
+		console.log(panel);
+
+		if(panel){
+			clearInterval(checkForIframe);
+			concepts.forEach(function(concept){
+
+				for(prop in concept){
+					var conceptDomElement = document.createElement("div");
+						conceptDomElement.innerHTML = prop + ": " + concept[prop];
+					panel.appendChild(conceptDomElement);
+				};
+			});
+		}
+	}, 3000);
+	//panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
 };
 Datatables.prototype.getDocumentPath = function(unwrappedWindow){
 
