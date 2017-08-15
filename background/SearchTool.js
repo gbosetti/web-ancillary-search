@@ -18,7 +18,7 @@ SearchTool.prototype.syncLoadScripts = function(filePaths, tab, callback) {
 
 	var me = this, path = filePaths.splice(0, 1)[0];
 	if(path){
-		browser.tabs.executeScript(tab.id, { file: path }).then(function(){
+		browser.tabs.executeScript({ file: path , allFrames: true }).then(function(){
 			me.syncLoadScripts(filePaths, tab, callback);
 		});
 	}else{
@@ -103,6 +103,51 @@ SearchTool.prototype.createApisMenu = function(){
       contexts: ["selection"]
   });
 }
+/*
+me.loadCssLIntoFrame(iframe, SDK.data.url("./src/css/visualization.css")); 
+			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/jquery.dataTables.min.css")); 
+			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/responsive.dataTables.min.css"));
+			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/bootstrap.min.css"));
+*/
+SearchTool.prototype.loadDocumentIntoResultsFrame = function(args){
+
+	/*console.log("*********************");
+	console.log(browser.windows);
+	console.log(window.Windows);*/
+
+	
+
+	
+
+	/*var querying = browser.tabs.query({currentWindow: true});
+	querying.then(
+		function logTabs(tabs) {
+		  for (let tab of tabs) {
+		    // tab.url requires the `tabs` permission
+		    console.log(this);
+		    console.log(tabs);
+		  }
+		}, 
+		function onError(error) {
+	  		console.log(`Error: ${error}`);
+		});*/
+
+
+	var iframe = window.document.createElement("iframe");
+		iframe.src = 'www.stackoverflow.com';
+
+	window.document.appendChild(iframe);
+	console.log(iframe);
+
+	//iframe.setAttribute("src", "browser.extension.getURL("content_scripts/visualizers/datatables/datatables-visualization.html"));
+
+
+	/*browser.windows.getCurrent().then(function logTabs(windowInfo) {
+		console.log(this);
+		console.log(windowInfo);
+	});*/
+
+}
 SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
   
 	var me = this, getApiSpecifications = browser.storage.local.get(null); //TODO: use the class: filereader
@@ -119,8 +164,6 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 
 					//this = the current window, but you can not manipulate a lot because this is a background script.
 					me.loadVisalizers(tab, function(){ //TODO: loadVisalizers should be called on tabs change, and just once
-
-						console.log("\n\n", info);
 
 						browser.tabs.sendMessage(tab.id, {
 							call: "showResults", 

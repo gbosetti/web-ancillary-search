@@ -8,5 +8,7 @@ browser.browserAction.onClicked.addListener(function updateIcon() {
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     console.log("message ", message, " (main.js)");
+    //console.log("window.chrome.windows ", window.chrome.windows, " (main.js)");
+    //console.log("window.chrome ", window.chrome, " (main.js)");
     browserUI[message.call](message.args); // e.g. message.call = "notifyContextualElementChange"
 });

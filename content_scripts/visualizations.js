@@ -5,8 +5,49 @@ ResultsVisualizer.prototype.showResults = function(data) {
 
 	var panel = this.buildPanel(data);
 
-	this.setVisualizer(new window[data.visualizer]());
-	this.visualizer.presentData(data.results, panel.childNodes[1]);
+	this.setVisualizer(new Datatables()); //window[data.visualizer]());
+	//this.loadDependencies();
+	console.log("retrievable", document.querySelector("#andes-results-frame"));
+	browser.runtime.sendMessage({
+		call: "loadDocumentIntoResultsFrame",
+		args: {
+			"selector": "#andes-results-frame",
+			"file": "content_scripts/visualizers/datatables/datatables-visualization.html",
+			"dependencies": this.getDependencies(),
+			"callback": "onDocumentLoaded"
+		}
+	});
+};
+ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
+
+	//console.log(browser);
+	console.log(unwrappedWindow);
+	var iframe = unwrappedWindow.document.createElement('iframe');
+		iframe.id = "andes-results-frame";
+		iframe.style.width = "99%";
+		iframe.style.height = "340px";
+		//the source will not loadbecause the ./ in the path will be resolved to the current web page
+		iframe.src = browser.extension.getURL("/content_scripts/visualizers/datatables/visualization.html");
+	
+	return iframe;
+}
+ResultsVisualizer.prototype.loadDependencies = function(visualizer) {
+	browser.runtime.sendMessage({
+		call: "loadDependenciesIntoResultsFrame",
+		args: {
+			"selector": "andes-results-frame",
+			"dependencies": this.getDependencies(),
+			"callback": "onDependenciesLoaded"
+		}
+	});
+	this.visualizer.getDependencies();
+};
+ResultsVisualizer.prototype.onDocumentLoaded = function() {
+	console.log("dependencies have been loaded!");
+	//this.visualizer.presentData(data.results, panel.childNodes[1]);
+};
+ResultsVisualizer.prototype.getDependencies = function(visualizer) {
+	return this.visualizer.getDependencies();
 };
 ResultsVisualizer.prototype.setVisualizer = function(visualizer) {
 	this.visualizer = visualizer;
@@ -20,7 +61,7 @@ ResultsVisualizer.prototype.buildPanel = function(data) {
 
 	document.body.appendChild(resultsPanel);
 	this.makePanelDraggable(resultsPanel);
-	
+
 	return resultsPanel;
 };
 ResultsVisualizer.prototype.createResultsBox = function(unwrappedWindow, title){
@@ -97,7 +138,9 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 	var resultsBody = unwrappedWindow.document.createElement("div");
 		resultsBody.style["background-color"] = "#337ab7";
 		resultsBody.style["width"] = "100%"; 
-    	resultsBody.style["text-align"] = "center"; 	
+    	resultsBody.style["text-align"] = "center"; 
+
+    	resultsBody.appendChild(this.createVisualizationFrame(unwrappedWindow));
     	return resultsBody;
 }
 
@@ -114,18 +157,30 @@ function Datatables(visualizer){
 
 	Visualization.call(this);
 }
+Datatables.prototype.getDependencies = function(visualizer) {
+	return {
+		"js": [
+			"/content_scripts/vendor/jquery/dist/jquery.min.js",
+			"/content_scripts/vendor/bootstrap/dist/js/bootstrap.min.js", 
+			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
+			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
+		],
+		"css": [
+			"/content_scripts/visualizers/datatables/visualization.css",
+			"/content_scripts/vendor/datatables/media/css/jquery.dataTables.min.css", 
+			"/content_scripts/vendor/datatables-responsive/css/responsive.dataTables.min.css",
+			"/content_scripts/vendor/bootstrap/dist/css/bootstrap.min.css"
+		]
+	};
+};
 Datatables.prototype.presentData = function(results, panel) {
 
 	console.log(results);
 	panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
 };
-Datatables.prototype.createSpecializedVisualizationBox = function(unwrappedWindow){
+Datatables.prototype.getDocumentPath = function(unwrappedWindow){
 
-	var iframe = unwrappedWindow.document.createElement('iframe');
-		iframe.style.width = "99%";
-		iframe.style.height = "340px";
-	
-	return iframe;
+	return "./visualizers/datatables/datatables-visualization.html";
 }
 
 

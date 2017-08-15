@@ -25,6 +25,10 @@ BrowserUiManager.prototype.increaseBrowserActionClicksInTab = function(tabId) {
 
   this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab(tabId) + 1;
 };
+BrowserUiManager.prototype.loadDocumentIntoResultsFrame = function(data) {
+
+  this.searchTool.loadDocumentIntoResultsFrame(data);
+};
 BrowserUiManager.prototype.disableBrowserAction = function(tab) {
   this.changeBrowserActionIcon({
       16: "icons/logo-disabled-16.png",
