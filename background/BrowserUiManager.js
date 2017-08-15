@@ -25,6 +25,9 @@ BrowserUiManager.prototype.increaseBrowserActionClicksInTab = function(tabId) {
 
   this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab(tabId) + 1;
 };
+BrowserUiManager.prototype.presentResults = function(args) {
+  return this.searchTool.presentResults(args.results);
+};
 BrowserUiManager.prototype.loadDocumentIntoResultsFrame = function(data) {
 
   this.searchTool.loadDocumentIntoResultsFrame(data);

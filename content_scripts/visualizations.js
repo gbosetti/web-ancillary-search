@@ -4,28 +4,15 @@ function ResultsVisualizer(){
 ResultsVisualizer.prototype.showResults = function(data) {
 
 	var panel = this.buildPanel(data);
-
 	this.setVisualizer(new Datatables()); //window[data.visualizer]());
-	//this.loadDependencies();
-	console.log("retrievable", document.querySelector("#andes-results-frame"));
-	browser.runtime.sendMessage({
-		call: "loadDocumentIntoResultsFrame",
-		args: {
-			"selector": "#andes-results-frame",
-			"file": "content_scripts/visualizers/datatables/datatables-visualization.html",
-			"dependencies": this.getDependencies(),
-			"callback": "onDocumentLoaded"
-		}
-	});
+
 };
 ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
 
-	//console.log(browser);
 	var iframe = unwrappedWindow.document.createElement('iframe');
 		iframe.id = "andes-results-frame";
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
-		//the source will not loadbecause the ./ in the path will be resolved to the current web page
 		iframe.src = browser.extension.getURL("/content_scripts/visualizations/datatables/index.html");
 	
 	return iframe;
@@ -40,6 +27,36 @@ ResultsVisualizer.prototype.loadDependencies = function(visualizer) {
 		}
 	});
 	this.visualizer.getDependencies();
+};
+ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
+	
+	this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
+
+	
+
+	browser.runtime.sendMessage({
+		call: data.callbackMethod,
+		args: {
+			"results": []
+		}
+	});
+};
+ResultsVisualizer.prototype.getExternalContent = function(url, selector){
+
+   const req = new window.XMLHttpRequest();
+        req.open('GET', url, false);
+        req.send(null);
+
+    return this.evaluateSelector(selector, this.getParsedDocument(req.responseText));
+};
+ResultsVisualizer.prototype.getParsedDocument = function(responseText){
+
+    return new window.DOMParser().parseFromString(responseText, "text/html");
+};
+ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
+
+	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
+    //return doc.querySelector(selector).textContent;
 };
 ResultsVisualizer.prototype.onDocumentLoaded = function() {
 	console.log("dependencies have been loaded!");
@@ -174,7 +191,7 @@ Datatables.prototype.getDependencies = function(visualizer) {
 };
 Datatables.prototype.presentData = function(results, panel) {
 
-	console.log(results);
+	console.log("Presenting data");
 	panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
 };
 Datatables.prototype.getDocumentPath = function(unwrappedWindow){

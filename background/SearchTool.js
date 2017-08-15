@@ -2,6 +2,7 @@ function SearchTool(){
 
 	//PROPS
 	this.selectedText;
+	this.loadedScriptsByTabs = {};
 
 	//Init
   	this.createContextMenus();
@@ -11,9 +12,17 @@ SearchTool.prototype.loadVisalizers = function(tab, callback) {
   	this.syncLoadScripts([
   		"/content_scripts/vendor/jquery/dist/jquery.min.js",
   		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
+  		"/content_scripts/XPathInterpreter.js",
   		"/content_scripts/visualizations.js"
   	], tab, callback);
 }
+SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
+  return this.loadedScriptsByTabs[tabId]? this.loadedScriptsByTabs[tabId] : false;
+};
+SearchTool.prototype.toggleLoadedScriptsInTab = function(tabId) {
+
+  this.loadedScriptsByTabs[tabId] = !this.areScriptsLoadedInTab(tabId);
+};
 SearchTool.prototype.syncLoadScripts = function(filePaths, tab, callback) {
 
 	var me = this, path = filePaths.splice(0, 1)[0];
@@ -103,51 +112,6 @@ SearchTool.prototype.createApisMenu = function(){
       contexts: ["selection"]
   });
 }
-/*
-me.loadCssLIntoFrame(iframe, SDK.data.url("./src/css/visualization.css")); 
-			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/jquery.dataTables.min.css")); 
-			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/responsive.dataTables.min.css"));
-			me.loadCssLIntoFrame(iframe, SDK.data.url("./lib/css/bootstrap.min.css"));
-*/
-SearchTool.prototype.loadDocumentIntoResultsFrame = function(args){
-
-	/*console.log("*********************");
-	console.log(browser.windows);
-	console.log(window.Windows);*/
-
-	
-
-	
-
-	/*var querying = browser.tabs.query({currentWindow: true});
-	querying.then(
-		function logTabs(tabs) {
-		  for (let tab of tabs) {
-		    // tab.url requires the `tabs` permission
-		    console.log(this);
-		    console.log(tabs);
-		  }
-		}, 
-		function onError(error) {
-	  		console.log(`Error: ${error}`);
-		});*/
-
-
-	var iframe = window.document.createElement("iframe");
-		iframe.src = 'www.stackoverflow.com';
-
-	window.document.appendChild(iframe);
-	console.log(iframe);
-
-	//iframe.setAttribute("src", "browser.extension.getURL("content_scripts/visualizers/datatables/datatables-visualization.html"));
-
-
-	/*browser.windows.getCurrent().then(function logTabs(windowInfo) {
-		console.log(this);
-		console.log(windowInfo);
-	});*/
-
-}
 SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
   
 	var me = this, getApiSpecifications = browser.storage.local.get(null); //TODO: use the class: filereader
@@ -162,27 +126,13 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
 
-					//this = the current window, but you can not manipulate a lot because this is a background script.
-					me.loadVisalizers(tab, function(){ //TODO: loadVisalizers should be called on tabs change, and just once
-
-						browser.tabs.sendMessage(tab.id, {
-							call: "showResults", 
-							args: {
-								"resultsName": apiSpecs[info.menuItemId].results.name,
-								"selectedText": info.selectionText,
-								"seearchEngineName": info.menuItemId,
-								"results": [],
-								"visualizer": "Datatables"
-							}
-						});
-
+				    if(me.areScriptsLoadedInTab(tab.id))
+						me.retrieveExtenralResults(tab, info, apiSpecs);
+				    else me.loadVisalizers(tab, function(){ 
+						me.retrieveExtenralResults(tab, info, apiSpecs);
+						me.toggleLoadedScriptsInTab(tab.id);
 					}); 
-					
-					
-					/*me.currentApiCog = this.specification;
-					//IFRAME
-		    		me.loadSpecializedVisualization(iframe);*/
-				},
+				}
 			});
 			menu.apiSpec= apiSpecs[spec];
 
@@ -192,76 +142,35 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 		console.log(`Error: ${error}`);
 	});
 }
-SearchTool.prototype.getDataForVisualization = function(iframe, callback){
+SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
 
-	//01 Loading the page
-	var me = this;
-	/*this.pageWorker = SDK.pworker.Page({
-		contentScriptFile: SDK.data.url("./src/js/externalPageForSearchEngine.js"),
-		contentURL: this.currentApiCog.url,
-		contentScriptWhen: this.currentApiCog.contentScriptWhen 
-	});
-
-	//LASTTTTT
-	me.pageWorker.port.on("notifyDomForResultsExtraction", function(res){
-		
-		me.logAction("[08][end] Retrieving the DOM with results");
-		me.logAction("[09][start] Parsing the DOM");
-
-		me.showLoadingMessage("Extracting results...", iframe);
-		var domForResults = SDK.NsIDomParser.parseFromString(res.textContent, "text/html"); //.wrappedJSObject;
-		//me.saveIntoFile("dom.html", res.textContent);
-		me.logAction("[10][end] Parsing the DOM");
-		me.logAction("[11][start] Extracting results");
-		var data = {
-			results: new IOExtractor(domForResults).extractDataForDatatable(me.currentApiCog.results),
-			colsDef: me.currentApiCog.visualization.colsDef
-		}
-		me.logAction("[12][end] Extracting results");
-		me.logAction("[13][start] Visualizing results");
-		callback(data);
-		me.hideLoadingMessage(iframe);
-		me.logAction("[14][end] Visualizing results");
-		//me.logAction(me.currentApiCog.loadingResStrategy);
-		//console.log(me.currentApiCog.name); 
-		//console.log(JSON.stringify(me.logs, null, 2));
-		me.saveIntoFile(me.currentApiCog.name + "_log.json", 
-			me.currentApiCog.name + "\n\n" + 
-			JSON.stringify(me.logs, null, 2));
-	});
-	me.pageWorker.port.on("resultsAreAvailable", function(data){
-		
-		me.logAction("[06][end] Detecting UI cmponents & executing the query");
-		me.logAction("[07][start] Retrieving the DOM with results");
-		//me.logAction("Retrieving the new DOM");
-		me.showLoadingMessage("Retrieving the new DOM...", iframe);
-		//Se extraen los resultados
-		me.pageWorker.port.emit("getDomForResultsExtraction");
-	});
-
-	//02 executing search (first time an url is loaded)
-	var executingSearch = function(){
-
-		me.pageWorker.port.removeListener("externalPageIsLoaded", executingSearch);
-
-		me.logAction("[04][end] loading the search form");
-		me.logAction("[05][start] Detecting UI cmponents & executing the query");
-
-		me.showLoadingMessage("Detecting UI cmponents...", iframe);
-		//Se tiene acceso a los controles y se hace la búsqueda
-
-		//Se suscbrine a otro
-		//HERE we can have probles if thre is somefunction, it will be prevented. So you need to clone it or remove functions in the json
-		me.pageWorker.port.emit("searchNewInstances", me.currentApiCog);
-
-		me.showLoadingMessage("Executing the query...", iframe);
-		//Se desvincula el listener
+	this.presentationParams = {
+		"resultsName": apiSpecs[info.menuItemId].results.name,
+		"selectedText": info.selectionText,
+		"seearchEngineName": info.menuItemId,
+		"results": [],
+		"visualizer": "Datatables",
+		"tabId": tab.id
 	};
-
-	me.showLoadingMessage("Loading search engine...", iframe);
-	this.pageWorker.port.on("externalPageIsLoaded", executingSearch);
-	*/
+	browser.tabs.sendMessage(tab.id, {
+		call: "retrieveExtenralResults", 
+		args: {
+			"url": apiSpecs[info.menuItemId].url, 
+			"resultSpec": apiSpecs[info.menuItemId].results, 
+			"callbackMethod": "presentResults"
+		}
+	});
 }
+SearchTool.prototype.presentResults = function(results) {
+	
+	console.log(results);
+	this.presentationParams.results = results;
+
+	browser.tabs.sendMessage(this.presentationParams.tabId, {
+		call: "showResults", 
+		args: this.presentationParams
+	});
+};
 SearchTool.prototype.getApiSpecifications = function(){
 
   //this.getServiceSpecsFromFiles();
