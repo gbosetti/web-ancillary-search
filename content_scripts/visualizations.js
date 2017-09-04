@@ -5,7 +5,7 @@ function ResultsVisualizer(){
 ResultsVisualizer.prototype.showResults = function(data) {
 
 	var panel = this.buildPanel(data);
-	this.setVisualizer(new Datatables()); //window[data.visualizer]());
+	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
 
 	this.presentData(data.results, panel.childNodes[1]);
 };
@@ -21,9 +21,9 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
 
-		var me = this;
+		//var me = this;
 		//iframe.onload = function(){ /* TODO: change PresentationState */ }
-		iframe.src = browser.extension.getURL("/content_scripts/visualizations/datatables/index.html");
+		iframe.src = browser.extension.getURL("/content_scripts/index.html");
 	
 	return iframe;
 }
@@ -189,6 +189,28 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
     	return resultsBody;
 }
 
+ResultsVisualizer.prototype.loadVisalizerDependencies = function(dependencies, doc, callback) {
+
+  	this.syncLoadScripts(dependencies.js, doc, callback);
+  	//this.syncLoadStyles()
+}
+ResultsVisualizer.prototype.syncLoadScripts = function(filePaths, doc, callback) {
+
+	var me=this, path = filePaths.splice(0, 1)[0];
+	if(path){
+
+		var script = doc.createElement('script');
+		script.onload = function() {
+		  me.syncLoadScripts(filePaths, doc, callback);
+		};
+		doc.getElementsByTagName('head')[0].appendChild(script);
+		script.src = browser.extension.getURL(path);
+
+	}else{
+		if(callback) callback();
+	}	
+}
+
 
 // Estados
 //TODO: implementar con estados, cada cual chequea lo que corresponde 
@@ -226,15 +248,19 @@ function Visualization(){}
 function Datatables(visualizer){
 
 	Visualization.call(this);
+	this.visualizer = visualizer;
 }
 Datatables.prototype.getDependencies = function(visualizer) {
 	return {
 		"js": [
-			"/content_scripts/vendor/jquery/dist/jquery.min.js",
-			"/content_scripts/vendor/bootstrap/dist/js/bootstrap.min.js", 
-			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
-		],
+	  		"/content_scripts/vendor/jquery/dist/jquery.min.js",
+	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
+	  		"/content_scripts/XPathInterpreter.js",
+	  		"/content_scripts/visualizations.js",
+	      "/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
+	      "/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js",
+	      "/content_scripts/dtdemo.js"
+	  	],
 		"css": [
 			"/content_scripts/visualizers/datatables/visualization.css",
 			"/content_scripts/vendor/datatables/media/css/jquery.dataTables.min.css", 
@@ -244,6 +270,39 @@ Datatables.prototype.getDependencies = function(visualizer) {
 	};
 };
 Datatables.prototype.presentData = function(concepts, iframe) {
+
+	//TODO: apply state pattern
+	// ============================================ console is not useful in this context
+
+	var me = this;
+	var checkForIframe = setInterval(function(){ 
+		var panel = iframe.contentWindow.document.querySelector("#results");
+
+		if(panel){
+			clearInterval(checkForIframe);
+
+			me.visualizer.loadVisalizerDependencies(
+				me.getDependencies(),
+				iframe.contentWindow.document,
+				function(){
+
+					concepts.forEach(function(concept){
+						for(prop in concept){
+							var conceptDomElement = document.createElement("div");
+								conceptDomElement.innerHTML = prop + ": " + concept[prop];
+							panel.appendChild(conceptDomElement);
+						};
+						
+					});
+					iframe.contentWindow.document.body.style.background = "red";
+				}
+			);
+		}
+	}, 3000);
+	//panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
+};
+
+/*Datatables.prototype.presentData = function(concepts, iframe) {
 
 	//TODO: apply state pattern
 
@@ -264,7 +323,7 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 		}
 	}, 3000);
 	//panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
-};
+};*/
 Datatables.prototype.getDocumentPath = function(unwrappedWindow){
 
 	return "./visualizers/datatables/datatables-visualization.html";
@@ -280,4 +339,6 @@ browser.runtime.onMessage.addListener(function callPageSideActions(request, send
 
 	console.log("calling " + request.call + " (content_scripts/visualizations.js)");
 	presenter[request.call](request.args);
+
+
 });

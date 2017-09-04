@@ -35,7 +35,7 @@
   "sidebar_action": {
     "default_icon": "icons/logo-disabled-64.png",
     "default_title" : "Augmented Search Services",
-    "default_panel": "sidebar//manage-services.html"
+    "default_panel": "sidebar/manage-services.html"
   },
 
   "permissions": [
@@ -47,6 +47,6 @@
   ],
 
   "web_accessible_resources": [
-    "/content_scripts/visualizations/datatables/index.html"
+    "/content_scripts/index.html"
   ]
 }

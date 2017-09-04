@@ -1,0 +1,1 @@
+var window = document.defaultView;

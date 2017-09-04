@@ -13,7 +13,9 @@ SearchTool.prototype.loadVisalizers = function(tab, callback) {
   		"/content_scripts/vendor/jquery/dist/jquery.min.js",
   		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
   		"/content_scripts/XPathInterpreter.js",
-  		"/content_scripts/visualizations.js"
+  		"/content_scripts/visualizations.js",
+      "/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
+      "/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
   	], tab, callback);
 }
 SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
@@ -125,7 +127,8 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				title: apiSpecs[spec].name,
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
-
+          
+            //CONSULTAR
 				    if(me.areScriptsLoadedInTab(tab.id))
 						me.retrieveExtenralResults(tab, info, apiSpecs);
 				    else me.loadVisalizers(tab, function(){ 
@@ -137,12 +140,15 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 			menu.apiSpec= apiSpecs[spec];
 
 			console.log("apiSpecs[spec]", apiSpecs[spec]);
+
 	  	}
 	}, function onError(error) {
 		console.log(`Error: ${error}`);
 	});
 }
 SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
+  console.log("retrieveExtenralResults");
+  console.log(1);
 
 	this.presentationParams = {
 		"resultsName": apiSpecs[info.menuItemId].results.name,
@@ -152,6 +158,7 @@ SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
 		"visualizer": "Datatables",
 		"tabId": tab.id
 	};
+  console.log(this.presentationParams);
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
@@ -162,58 +169,14 @@ SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
 	});
 }
 SearchTool.prototype.presentResults = function(results) {
-	
-	console.log(results);
+	  console.log("presentResults");
+  console.log(2);
+
+	//console.log(results);
 	this.presentationParams.results = results;
 
 	browser.tabs.sendMessage(this.presentationParams.tabId, {
 		call: "showResults", 
 		args: this.presentationParams
 	});
-};
-SearchTool.prototype.getApiSpecifications = function(){
-
-  //this.getServiceSpecsFromFiles();
-  //TODO: load fromfiles ^
-    var apiDefinitions = [];
-    apiDefinitions.push(this.getYoutubeService());
-    
-  return apiDefinitions;
-}
-SearchTool.prototype.getYoutubeService = function() {
-
-  return {
-    name:'Youtube',
-    url:'https://www.youtube.com/results?search_query=X',
-    keywords:'',
-    loadingResStrategy: "WriteAndClickForAjaxCall", 
-    contentScriptWhen: "ready",
-    entry:'//input[@id="masthead-search-term"]',
-    trigger:'//button[@id="search-btn"]',
-    results: {
-      name: 'Videos',
-      xpath:'//div[@id="results"]/ol/li[2]/ol/li',
-      properties:[
-        {
-          name:'Title',
-          xpath:'//h3' //,
-          //extractor: new SingleNodeExtractor()
-        },
-        {
-          name:'Authors', 
-          xpath:'//div[contains(@class, "yt-lockup-description")]' //,
-          //extractor: new SingleNodeExtractor()
-        }
-      ]
-    },
-    visualization:{
-      colsDef: [{
-          title: "Title",
-          responsivePriority: 1
-        }, {
-          title: "Authors",
-          responsivePriority: 2
-        }]
-    }
-  };
 };
