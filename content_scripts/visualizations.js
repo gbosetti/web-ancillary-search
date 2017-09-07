@@ -4,19 +4,20 @@ function ResultsVisualizer(){
 }
 ResultsVisualizer.prototype.showResults = function(data) {
 
+	console.log("TAB: " + data.tabId);
 	var panel = this.buildPanel(data);
 	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
 
-	this.presentData(data.results, panel.childNodes[1]);
+	this.presentData(data.results, panel.childNodes[1].children[0]);
 };
 ResultsVisualizer.prototype.presentData = function(results, targetPanel){
 
-	this.visualizer.presentData(results, targetPanel.children[0]);
+	this.visualizer.presentData(results, targetPanel);
 }
 ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	var iframe = unwrappedWindow.document.createElement('iframe');
-		iframe.id = "andes-results-frame";
+		iframe.id = "andes-results-frame-" + Date.now();
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
@@ -27,17 +28,6 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 	
 	return iframe;
 }
-ResultsVisualizer.prototype.loadDependencies = function(visualizer) {
-	browser.runtime.sendMessage({
-		call: "loadDependenciesIntoResultsFrame",
-		args: {
-			"selector": "andes-results-frame",
-			"dependencies": this.getDependencies(),
-			"callback": "onDependenciesLoaded"
-		}
-	});
-	this.visualizer.getDependencies();
-};
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 	
 	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
@@ -253,16 +243,12 @@ function Datatables(visualizer){
 Datatables.prototype.getDependencies = function(visualizer) {
 	return {
 		"js": [
-	  		"/content_scripts/vendor/jquery/dist/jquery.min.js",
-	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
-	  		"/content_scripts/XPathInterpreter.js",
-	  		"/content_scripts/visualizations.js",
-	      "/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-	      "/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js",
-	      "/content_scripts/dtdemo.js"
+			"/content_scripts/vendor/jquery/dist/jquery.min.js",
+			"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
+			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
+			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
 	  	],
 		"css": [
-			"/content_scripts/visualizers/datatables/visualization.css",
 			"/content_scripts/vendor/datatables/media/css/jquery.dataTables.min.css", 
 			"/content_scripts/vendor/datatables-responsive/css/responsive.dataTables.min.css",
 			"/content_scripts/vendor/bootstrap/dist/css/bootstrap.min.css"
@@ -288,7 +274,7 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 
 					concepts.forEach(function(concept){
 						for(prop in concept){
-							var conceptDomElement = document.createElement("div");
+							var conceptDomElement = iframe.contentWindow.document.createElement("div");
 								conceptDomElement.innerHTML = prop + ": " + concept[prop];
 							panel.appendChild(conceptDomElement);
 						};

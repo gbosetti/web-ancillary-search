@@ -8,14 +8,13 @@ function SearchTool(){
   	this.createContextMenus();
 }
 SearchTool.prototype.loadVisalizers = function(tab, callback) {
+	//Esto es para crear el iframe draggable, no las visualizaciones de adentro del iframe
 
   	this.syncLoadScripts([
   		"/content_scripts/vendor/jquery/dist/jquery.min.js",
   		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
   		"/content_scripts/XPathInterpreter.js",
-  		"/content_scripts/visualizations.js",
-      "/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-      "/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
+  		"/content_scripts/visualizations.js"
   	], tab, callback);
 }
 SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
@@ -29,7 +28,7 @@ SearchTool.prototype.syncLoadScripts = function(filePaths, tab, callback) {
 
 	var me = this, path = filePaths.splice(0, 1)[0];
 	if(path){
-		browser.tabs.executeScript({ file: path , allFrames: true }).then(function(){
+		browser.tabs.executeScript(tab.id, { file: path /*, allFrames: true*/ }).then(function(){
 			me.syncLoadScripts(filePaths, tab, callback);
 		});
 	}else{
@@ -127,28 +126,29 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				title: apiSpecs[spec].name,
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
+
+					console.log(me.areScriptsLoadedInTab(tab.id));
           
-            //CONSULTAR
-				    if(me.areScriptsLoadedInTab(tab.id))
-						me.retrieveExtenralResults(tab, info, apiSpecs);
+            		//Acá adentro solo es loggueable si se anula el cierre de popups
+				    if(me.areScriptsLoadedInTab(tab.id)){
+				    	console.log("reutilizando instancias");
+						me.sendExtenralResults(tab, info, apiSpecs);
+				    }
 				    else me.loadVisalizers(tab, function(){ 
-						me.retrieveExtenralResults(tab, info, apiSpecs);
+				    	console.log("instanciando");
+						me.sendExtenralResults(tab, info, apiSpecs);
 						me.toggleLoadedScriptsInTab(tab.id);
 					}); 
 				}
 			});
 			menu.apiSpec= apiSpecs[spec];
-
-			console.log("apiSpecs[spec]", apiSpecs[spec]);
-
 	  	}
 	}, function onError(error) {
 		console.log(`Error: ${error}`);
 	});
 }
-SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
-  console.log("retrieveExtenralResults");
-  console.log(1);
+SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
+  console.log("sendExtenralResults");
 
 	this.presentationParams = {
 		"resultsName": apiSpecs[info.menuItemId].results.name,
@@ -158,7 +158,7 @@ SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
 		"visualizer": "Datatables",
 		"tabId": tab.id
 	};
-  console.log(this.presentationParams);
+
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
@@ -170,7 +170,6 @@ SearchTool.prototype.retrieveExtenralResults = function(tab, info, apiSpecs) {
 }
 SearchTool.prototype.presentResults = function(results) {
 	  console.log("presentResults");
-  console.log(2);
 
 	//console.log(results);
 	this.presentationParams.results = results;
