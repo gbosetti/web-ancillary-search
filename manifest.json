@@ -28,6 +28,7 @@
       "background/browsers-standarization.js", 
       "background/BrowserUiManager.js", 
       "background/SearchTool.js", 
+      "background/Sidebar.js",
       "background/TemplatesCreator.js",
       "background/main.js"]
   },

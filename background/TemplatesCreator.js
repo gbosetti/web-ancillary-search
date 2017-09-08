@@ -1,5 +1,10 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
+  this.sidebar = new Sidebar()
+}
+TemplatesCreator.prototype.toggleSidebar = function() {
+
+position: fixed; top: 20px; right: 35px; bottom: 20px; margin: 0px; padding: 0px; z-index: 99999999; box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.3); background: rgb(246, 246, 246) none repeat scroll 0% 0%;
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
