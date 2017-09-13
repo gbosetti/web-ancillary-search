@@ -1,6 +1,5 @@
 function BrowserUiManager(){
   /* PROPERTIES
-
     this.browserActionsClicks;
     this.templatesCreator;
     this.searchTool;

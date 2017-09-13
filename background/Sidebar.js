@@ -1,43 +1,62 @@
-function Sidebar(){
-	this.createUI();
-	this.state = new ClosedSidebar();
+function SidebarManager(){
+	this.status = {};
+	//this.status = 
 }
-Sidebar.prototype.toggle = function() {
-	// body...
+SidebarManager.prototype.toggle = function(tab) { //PUBLIC
+	//browser.tabs.sendMessage(tab.id, {call: "toggle"});
+	//just trying new stuff
+	this.open();
 };
-Sidebar.prototype.open = function() {
+SidebarManager.prototype.getStatusForTab = function(tab) {
+	if (this.status[tab.id] != undefined)
+		return this.status[tab.id];
 
+	this.status[tab.id] = new NoLoadedSidebar(this);
 };
-Sidebar.prototype.close = function() {
-	// body...
+SidebarManager.prototype.open = function() {
+
+	var me = this;
+	this.getCurrentTab(function(tab){
+
+		me.getStatusForTab(tab).open(tab);
+	});
 };
-Sidebar.prototype.createUI = function() {
+SidebarManager.prototype.getCurrentTab = function(callback) {
 
-	var container = this.createContainer();
-	document.body.appendChild(container);
+	try{
+		browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+			callback(tabs[0]);
+		}
+	}catch(err){ console.log(err); }	
 };
-Sidebar.prototype.createContainer = function() {
-	
-	var container = document.createElement("div");
-		container.style.position = "fixed";
-		container.style.top = "20px";
-		container.style.right = "35px";
-		container.style.bottom = "20px";
-		container.style.margin = "0px";
-		container.style.padding = "0px";
-		container.style.zIndex = "99999999";
-		container.style.boxShadow = "3px 3px 20px rgba(0, 0, 0, 0.3)";
-		container.style.background = "rgb(246, 246, 246) none repeat scroll 0% 0%";
-
-	return container;
+SidebarManager.prototype.close = function() {
+	browser.tabs.sendMessage(tab.id, {call: "close"});
 };
-
-
-
-function SidebarStatus(){}
-function OpenSidebar(){
-	SidebarStatus.call(this)
+SidebarManager.prototype.loadInCurrentTab = function() {
+	this.status.loadInCurrentTab();
 }
-function ClosedSidebar(){
-	SidebarStatus.call(this)
+
+function SidebarManagerStatus(context){
+	this.open = function(tab){
+		this.sendOpenMessage(tab);
+	};
+	this.sendOpenMessage = function(tab){
+		browser.tabs.sendMessage(tab.id, {call: "open"});
+	};
+}
+
+function LoadedSidebar(context){
+	SidebarStatus.call(this, context);
+}
+
+function NoLoadedSidebar(context){
+	SidebarStatus.call(this, context);
+
+	var status = this;
+	this.open = function(tab){
+		browser.tabs.executeScript(tab.id, { file: "/content_scripts/sidebar.js"}).then(function () {
+	        context.status = new LoadedSidebar(context);
+	        status.sendOpenMessage(tab);
+	    });
+	};
 }
