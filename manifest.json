@@ -28,16 +28,16 @@
       "background/browsers-standarization.js", 
       "background/BrowserUiManager.js", 
       "background/SearchTool.js", 
-      "background/Sidebar.js",
+      "background/SidebarManager.js",
       "background/TemplatesCreator.js",
       "background/main.js"]
   },
 
-  "sidebar_action": {
-    "default_icon": "icons/logo-disabled-64.png",
-    "default_title" : "Augmented Search Services",
-    "default_panel": "sidebar/manage-services.html"
-  },
+  // "sidebar_action": {
+  //   "default_icon": "icons/logo-disabled-64.png",
+  //   "default_title" : "Augmented Search Services",
+  //   "default_panel": "sidebar/manage-services.html"
+  // },
 
   "permissions": [
     "activeTab",
