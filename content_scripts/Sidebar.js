@@ -35,6 +35,8 @@ Sidebar.prototype.createContainer = function() {
 		container.style.padding = "0px";
 		container.style.zIndex = "99999999";
 		container.style.boxShadow = "3px 3px 20px rgba(0, 0, 0, 0.3)";
+		container.style.width = "300px";
+		container.style.margin = "1px solid gray";
 	return container;
 };
 Sidebar.prototype.toolAcronym = function() {
@@ -60,28 +62,18 @@ Sidebar.prototype.createCloseButton = function() {
 Sidebar.prototype.createIframe = function() {
 	
 	var frame = document.createElement("iframe");
-		frame.style.top = "0px";
-		frame.style.right = "0px";
-		frame.style.bottom = "0px";
 		frame.style.margin = "0px";
+		frame.style.border = "0px";
+		frame.style.position = "absolute";
+		frame.style.top = "0";
+		frame.style.bottom = "0";
+		frame.style.left = "0";
+		frame.style.right = "0";
+		frame.style.height = "100%";
+		frame.style.width = "100%";
 		frame.style.padding = "0px";
 
 	return frame;
-};
-Sidebar.prototype.create = function() {
-	
-	var container = document.createElement("div");
-		container.style.position = "fixed";
-		container.style.top = "10px";
-		container.style.right = "10px";
-		container.style.bottom = "10px";
-		container.style.margin = "0px";
-		container.style.padding = "0px";
-		container.style.zIndex = "99999999";
-		container.style.boxShadow = "3px 3px 20px rgba(0, 0, 0, 0.3)";
-		container.style.background = "white";
-
-	return container;
 };
 
 function SidebarStatus(context){
@@ -96,10 +88,8 @@ function OpenSidebar(context){
 	this.close = function() {
 		context.widget.style.display = "none";
 		context.status = new ClosedSidebar(context);
-		console.log(context.status);
 	};
 	this.toggle = function() {
-		console.log("toggle from open");
 		this.close();
 	};
 }
