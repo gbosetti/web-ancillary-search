@@ -21,7 +21,6 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
-
 		//var me = this;
 		//iframe.onload = function(){ /* TODO: change PresentationState */ }
 		iframe.src = browser.extension.getURL("/content_scripts/index.html");

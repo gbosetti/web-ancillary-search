@@ -1,6 +1,15 @@
 function SidebarManager(){
 	this.status = {};
 }
+SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
+
+	this.getCurrentTab(function(tab){
+		browser.tabs.sendMessage(tab.id, {
+			call: "loadUrl", 
+			args: { url: browser.extension.getURL("/content_scripts/sidebar/welcome.html") }
+		});
+	});
+}
 SidebarManager.prototype.toggle = function() { //PUBLIC
 
 	var me = this;

@@ -5,7 +5,7 @@
   "description": "...",
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
 
-  // THIS IS COMMENTED SO IT CAN BE INTERPRETED BY GOOGLE CHROME :(
+  // COMMENT "GECKO" SO IT CAN BE INTERPRETED BY GOOGLE CHROME
   "applications": {
     "gecko": {
       "strict_min_version": "55.0a1"
@@ -33,12 +33,6 @@
       "background/main.js"]
   },
 
-  // "sidebar_action": {
-  //   "default_icon": "icons/logo-disabled-64.png",
-  //   "default_title" : "Augmented Search Services",
-  //   "default_panel": "sidebar/manage-services.html"
-  // },
-
   "permissions": [
     "activeTab",
     "tabs",
@@ -48,6 +42,7 @@
   ],
 
   "web_accessible_resources": [
-    "/content_scripts/index.html"
+    "/content_scripts/index.html",
+    "/content_scripts/sidebar/*"
   ]
 }

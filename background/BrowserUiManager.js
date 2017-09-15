@@ -1,21 +1,20 @@
 function BrowserUiManager(){
-  /* PROPERTIES
-    this.browserActionsClicks;
-    this.templatesCreator;
-    this.searchTool;
-  */
   this.initialize();
 }
-BrowserUiManager.prototype.toggleSidebar = function() {
-
-  this.templatesCreator.toggleSidebar();
-};
 BrowserUiManager.prototype.initialize = function() {
 
   this.browserActionsClicks = {};
   //this.mainMenu = this.createExtensionMainMenu(); No tiene sentido porque después te lo mueve como quiere
   this.templatesCreator = new TemplatesCreator();
   this.searchTool = new SearchTool();
+};
+BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
+
+  this.templatesCreator.onFrameReadyForLoadingUrl();
+}
+BrowserUiManager.prototype.toggleSidebar = function() {
+
+  this.templatesCreator.toggleSidebar();
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;

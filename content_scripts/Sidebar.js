@@ -1,6 +1,8 @@
 function Sidebar(){
+	this.widget;
 	this.createUI();
-	this.status = new OpenSidebar(this);
+	this.status = new ClosedSidebar(this);
+	//this.open();
 }
 Sidebar.prototype.toggle = function() { 
 	this.status.toggle();
@@ -10,6 +12,13 @@ Sidebar.prototype.open = function() {
 };
 Sidebar.prototype.close = function() {
 	this.status.close();
+};
+Sidebar.prototype.getIframe = function() {
+	return this.widget.children[1];
+};
+Sidebar.prototype.loadUrl = function(data) {
+
+	this.getIframe().src = data.url;
 };
 Sidebar.prototype.createUI = function() {
 
@@ -21,6 +30,7 @@ Sidebar.prototype.createUI = function() {
 	fragment.appendChild(this.widget);
 	document.body.appendChild(fragment);
 	//document.body.appendChild(this.widget);
+	//"/content_scripts/sidebar/welcome.html"
 };
 Sidebar.prototype.createContainer = function() {
 	
@@ -62,6 +72,7 @@ Sidebar.prototype.createCloseButton = function() {
 Sidebar.prototype.createIframe = function() {
 	
 	var frame = document.createElement("iframe");
+		frame.id = this.toolAcronym() + "-sidebar-frame";
 		frame.style.margin = "0px";
 		frame.style.border = "0px";
 		frame.style.position = "absolute";
@@ -78,7 +89,7 @@ Sidebar.prototype.createIframe = function() {
 
 function SidebarStatus(context){
 	this.sidebar = context;
-	this.open = function(){};
+	this.open = function(){ console.log("default 'open'"); };
 	this.close = function(){};
 }
 
@@ -99,9 +110,9 @@ function ClosedSidebar(context){
 	this.open = function() {
 		this.sidebar.widget.style.display = "";
 		context.status = new OpenSidebar(context);
+		browser.runtime.sendMessage({ call: "onFrameReadyForLoadingUrl" });
 	};
 	this.toggle = function() {
-		console.log("toggle from close");
 		this.open();
 	};
 }
@@ -111,6 +122,6 @@ function ClosedSidebar(context){
 var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call + " (content_scripts/sidebar.js)");
+	console.log("calling " + request.call + " (content_scripts/.../sidebar.js)");
 	sidebar[request.call](request.args);
 });
