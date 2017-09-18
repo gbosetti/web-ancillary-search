@@ -3,63 +3,45 @@
     <head> 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="lib/css/service-name.css">
-		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.css">
-		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.min.css">
-	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
+		<link rel="stylesheet" type="text/css" href="../vendor/bootswatch/united/bootstrap.min.css">
 
-		<title i18n-data="ass">Augmented Search Services</title>
+		<!--<script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>-->
 	</head>
-	<body>
-		<div class="container">
-			<div class="row main">
-				<div class="panel-heading" style="padding-bottom: 0px;">
-	               <div class="panel-title text-center">
-	               		<h2 class="title" i18n-data="new_service">New service</h2> <hr />
-	               	</div>
-	            </div> 
-				
-	            <div class="container">    
-                    <form class="sidebar-form">     
-               		
-						<div class="well">
-							<button type="button" class="close" data-dismiss="alert">
-								<span class="glyphicon glyphicon-info-sign"></span>
-							</button>
-							<span i18n-data="name_the_service"></span>
-						</div>
-		                <!-- :::::::::: INPUT :::::::::: -->
-					    <div class="form-group">
-					        <label for="search-service-name" i18n-data="service_name">Service name</label>
-					        <input id="search-service-name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" i18n-params="" required="true"></input>
-					    </div>
-					    <nav> 
-					        <ul class="pager">
-					            <!--<li class="previous active pull-left">
-					                <button type="button" class="btn btn-primary">
-					                    <span class="glyphicon glyphicon-trash"></span>
-					                    <span id="discard-materializable-label" class="pager-option-label">Discard</span>
-					                </button>
-					            </li>-->
-					            <li class="next active pull-right">
-					                <button id="save-result" type="button" class="btn btn-primary" >
-					                    <span i18n-data="next">Next</span>
-					                    <span class="glyphicon glyphicon-triangle-right"></span>
-					                </button>
-					            </li>
-					        </ul>
-					    </nav> 
-		            </form>
-    			</div>
-			</div>
+	<body class="dotted">
+		<div class="panel-heading">
+           <div class="panel-title text-center">
+           		<h2 class="title" i18n-data="new_service">New service</h2>
+           	</div>
+        </div> 
+		
+        <div class="container">    
+            <form class="sidebar-form">     
+       		
+				<div class="well">
+					<button type="button" class="close" data-dismiss="alert">
+						<span class="glyphicon glyphicon-info-sign"></span>
+					</button>
+					<span i18n-data="name_the_service"></span>
+				</div>
+                <!-- :::::::::: INPUT :::::::::: -->
+			    <div class="form-group">
+			        <label for="search-service-name" i18n-data="service_name">Service name</label>
+			        <input id="search-service-name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true"></input>
+			    </div>
+			    <nav> 
+			        <ul class="pager">
+			        	<!-- YOU CAN NOT ADD BEHAVIOUR HERE -->
+			            <li class="next active pull-right">
+			                <button id="save-result" type="button" class="btn btn-primary">
+			                    <span i18n-data="next">Next</span>
+			                    <span class="glyphicon glyphicon-triangle-right"></span>
+			                </button>
+			            </li>
+			        </ul>
+			    </nav> 
+            </form>
 		</div>
-
-		<script type="text/javascript">
-			document.querySelector("#search-service-name").setAttribute("i18n-params", window.location.host.split('.')[0]);
-			$(document).ready(function(){
-				$('[data-toggle="tooltip"]').tooltip();   
-			});
-		</script>
 	</body>
 </html>

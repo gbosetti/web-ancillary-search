@@ -79,10 +79,7 @@ Sidebar.prototype.localize = function(doc) {
 	elemsToTranslate.forEach(function(elem){
 		var label = elem.getAttribute("i18n-data");
 		var targetAttr = elem.getAttribute("i18n-target-attr") || "innerHTML";
-		var substitutions = window[elem.getAttribute("i18n-params")];
-
-		console.log(targetAttr, label, substitutions);
-		elem[targetAttr] = browser.i18n.getMessage(label, substitutions);
+		elem[targetAttr] = browser.i18n.getMessage(label);
 	});
 }
 Sidebar.prototype.createIframe = function() {
