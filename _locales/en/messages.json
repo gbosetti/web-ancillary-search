@@ -1,19 +1,24 @@
 {
-  "annotateAsConcept": {
-    "message": "result"
+  "new_service":{
+    "message": "New search service"
   },
-  "annotateAsProperty": {
-    "message": "result's property"
+  "service_name":{
+    "message": "Service name"
   },
-  "searchTrigger": {
-    "message": "search trigger"
+  "example_acronym":{
+    "message": "e.g. Amazon"
   },
-  "searchInput": {
-    "message": "search input"
+  "name_the_service":{
+    "message": "Please, select a name matching the <a href='#' data-toggle='tooltip' title='A web site allowing you to search for information on the World Wide Web (e.g. Google, Amazon, etc)'>search engine</a> you will wrapp"
   },
-  "defineAs": {
-    "message": "Define as..."
+  "next":{
+    "message": "Next"
   },
+  "back":{
+    "message": "Back"
+  },
+
+
   "singleMatch":{
     "message": "match"
   },

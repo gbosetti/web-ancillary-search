@@ -29,8 +29,6 @@ Sidebar.prototype.createUI = function() {
 
 	fragment.appendChild(this.widget);
 	document.body.appendChild(fragment);
-	//document.body.appendChild(this.widget);
-	//"/content_scripts/sidebar/welcome.html"
 };
 Sidebar.prototype.createContainer = function() {
 	
@@ -52,6 +50,9 @@ Sidebar.prototype.createContainer = function() {
 Sidebar.prototype.toolAcronym = function() {
 	return "andes";
 }
+/*Sidebar.prototype.openNewBrowserTab = function(url) {
+	window.open(url);
+}*/
 Sidebar.prototype.createCloseButton = function() {
 
 	var sidebar = this;
@@ -69,6 +70,21 @@ Sidebar.prototype.createCloseButton = function() {
 
 	return btn;
 }
+Sidebar.prototype.localize = function(doc) {
+
+	var elemsToTranslate = doc.querySelectorAll("[i18n-data]");
+	if(elemsToTranslate.length == 0)
+		return;
+
+	elemsToTranslate.forEach(function(elem){
+		var label = elem.getAttribute("i18n-data");
+		var targetAttr = elem.getAttribute("i18n-target-attr") || "innerHTML";
+		var substitutions = window[elem.getAttribute("i18n-params")];
+
+		console.log(targetAttr, label, substitutions);
+		elem[targetAttr] = browser.i18n.getMessage(label, substitutions);
+	});
+}
 Sidebar.prototype.createIframe = function() {
 	
 	var frame = document.createElement("iframe");
@@ -83,6 +99,11 @@ Sidebar.prototype.createIframe = function() {
 		frame.style.height = "100%";
 		frame.style.width = "100%";
 		frame.style.padding = "0px";
+
+		var me = this;
+		frame.onload = function(){
+			me.localize(this.contentWindow.document);
+		}
 
 	return frame;
 };

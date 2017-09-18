@@ -1,0 +1,31 @@
+{
+  "new_service":{
+    "message": "Nouveau service de recherche"
+  },
+  "service_name":{
+    "message": "Nom du service"
+  },
+  "example_acronym":{
+    "message": "ex. Amazon"
+  },
+  "name_the_service":{
+    "message": "Veuillez sélectionner un nom correspondant au <a href='#' data-toggle='tooltip' title='Un site Web qui vous permet de rechercher des informations sur le World Wide Web (par exemple Google, Amazon, etc.)'>moteur de recherche</a> que vous allez envelopper"
+  },
+  "next":{
+    "message": "Suivant"
+  },
+  "back":{
+    "message": "Précédent"
+  },
+
+
+  "singleMatch":{
+    "message": "correspondance"
+  },
+  "multipleMatches":{
+    "message": "correspondances"
+  },
+  "ass":{
+  	"message": "Augmented Search Services"
+  }
+}
