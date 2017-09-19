@@ -22,6 +22,10 @@ Sidebar.prototype.loadUrl = function(data) {
 	var me = this;
 	this.getIframe().addEventListener('load', function(){
 		me.localize(this.contentWindow.document);
+		this.contentWindow.andes = {
+			name: "Clonnable sidebar!!!"
+		};
+
 		me.loadContentScripts(data.filePaths, this.contentWindow.document);
 	});
 };

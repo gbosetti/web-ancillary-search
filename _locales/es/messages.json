@@ -6,7 +6,7 @@
     "message": "Nombre del servicio"
   },
   "example_acronym":{
-    "message": "ej. Amazon"
+    "message": "ej."
   },
   "name_the_service":{
     "message": "Seleccioná un nombre que coincida con el <a href='#' data-toggle='tooltip' title='Un sitio Web qu ete permite hacer búsquedas de información en la World Wide Web (ej. Google, Amazon, etc.)'>motor de búsqueda</a> que vas a wrappear"
