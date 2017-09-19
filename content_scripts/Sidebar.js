@@ -20,12 +20,31 @@ Sidebar.prototype.loadUrl = function(data) {
 
 	this.getIframe().src = data.url;
 };
+Sidebar.prototype.syncLoadScripts = function(filePaths, tab, callback) {
+
+	var me = this, path = filePaths.splice(0, 1)[0];
+	if(path){
+		
+
+		this.getIframe().
+		//browser.tabs.executeScript(tab.id, { file: path /*, allFrames: true*/ }).then(function(){
+			me.syncLoadScripts(filePaths, tab, callback);
+		//});
+	}else{
+		if(callback) callback();
+	}	
+};
 Sidebar.prototype.createUI = function() {
 
 	var fragment = document.createDocumentFragment(); //for performance
 	this.widget = this.createContainer();
 	this.widget.appendChild(this.createCloseButton());
-	this.widget.appendChild(this.createIframe());
+
+	var me = this;
+	var frame = this.createIframe(function(){
+		me.localize(this.contentWindow.document);
+	});
+	this.widget.appendChild(frame);
 
 	fragment.appendChild(this.widget);
 	document.body.appendChild(fragment);
@@ -82,7 +101,7 @@ Sidebar.prototype.localize = function(doc) {
 		elem[targetAttr] = browser.i18n.getMessage(label);
 	});
 }
-Sidebar.prototype.createIframe = function() {
+Sidebar.prototype.createIframe = function(callback) {
 	
 	var frame = document.createElement("iframe");
 		frame.id = this.toolAcronym() + "-sidebar-frame";
@@ -96,11 +115,7 @@ Sidebar.prototype.createIframe = function() {
 		frame.style.height = "100%";
 		frame.style.width = "100%";
 		frame.style.padding = "0px";
-
-		var me = this;
-		frame.onload = function(){
-			me.localize(this.contentWindow.document);
-		}
+		frame.onload = callback;
 
 	return frame;
 };

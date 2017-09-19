@@ -180,24 +180,8 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 
 ResultsVisualizer.prototype.loadVisalizerDependencies = function(dependencies, doc, callback) {
 
-  	this.syncLoadScripts(dependencies.js, doc, callback);
+  	ContentResourcesLoader.syncLoadScripts(dependencies.js, doc, callback);
   	//this.syncLoadStyles()
-}
-ResultsVisualizer.prototype.syncLoadScripts = function(filePaths, doc, callback) {
-
-	var me=this, path = filePaths.splice(0, 1)[0];
-	if(path){
-
-		var script = doc.createElement('script');
-		script.onload = function() {
-		  me.syncLoadScripts(filePaths, doc, callback);
-		};
-		doc.getElementsByTagName('head')[0].appendChild(script);
-		script.src = browser.extension.getURL(path);
-
-	}else{
-		if(callback) callback();
-	}	
 }
 
 

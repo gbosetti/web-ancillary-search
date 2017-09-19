@@ -10,10 +10,11 @@ function SearchTool(){
 SearchTool.prototype.loadVisalizers = function(tab, callback) {
 	//Esto es para crear el iframe draggable, no las visualizaciones de adentro del iframe
 
-  	this.syncLoadScripts([
+  	BackgroundResourcesLoader.syncLoadScripts([
   		"/content_scripts/vendor/jquery/dist/jquery.min.js",
   		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
   		"/content_scripts/XPathInterpreter.js",
+  		"/content_scripts/ContentResourcesLoader.js",
   		"/content_scripts/visualizations.js"
   	], tab, callback);
 }
@@ -24,17 +25,6 @@ SearchTool.prototype.toggleLoadedScriptsInTab = function(tabId) {
 
   this.loadedScriptsByTabs[tabId] = !this.areScriptsLoadedInTab(tabId);
 };
-SearchTool.prototype.syncLoadScripts = function(filePaths, tab, callback) {
-
-	var me = this, path = filePaths.splice(0, 1)[0];
-	if(path){
-		browser.tabs.executeScript(tab.id, { file: path /*, allFrames: true*/ }).then(function(){
-			me.syncLoadScripts(filePaths, tab, callback);
-		});
-	}else{
-		if(callback) callback();
-	}	
-}
 SearchTool.prototype.createContextMenus = function() {
 
   //por ahora una sola entarda

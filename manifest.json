@@ -27,6 +27,7 @@
     "scripts": [
       "background/browsers-standarization.js", 
       "background/BrowserUiManager.js", 
+      "background/BackgroundResourcesLoader.js",
       "background/SearchTool.js", 
       "background/SidebarManager.js",
       "background/TemplatesCreator.js",

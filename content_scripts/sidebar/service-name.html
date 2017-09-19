@@ -5,9 +5,24 @@
 		<link rel="stylesheet" type="text/css" href="lib/css/service-name.css">
 		<link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
 		<link rel="stylesheet" type="text/css" href="../vendor/bootswatch/united/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="lib/css/validate.css"/>
 
-		<!--<script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
-		<script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>-->
+		<script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+		<script type="text/javascript">
+			$('form').validate({    
+                rules: {
+                    search_service_name: {
+                        minlength: 2,
+                        required: true
+                    }
+                }
+            });
+            document.querySelector(".next > a").onclick = function(){   
+                if($("form").valid())
+                    alert("impec!");
+            }
+		</script>
 	</head>
 	<body class="dotted">
 		<div class="panel-heading">
@@ -27,8 +42,8 @@
 				</div>
                 <!-- :::::::::: INPUT :::::::::: -->
 			    <div class="form-group">
-			        <label for="search-service-name" i18n-data="service_name">Service name</label>
-			        <input id="search-service-name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true"></input>
+			        <label for="search_service_name" i18n-data="service_name">Service name</label>
+			        <input id="search_service_name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true"></input>
 			    </div>
 			    <nav> 
 			        <ul class="pager">

@@ -67,7 +67,11 @@ function NoLoadedSidebar(context){
 		this.open(tab);
 	};
 	this.open = function(tab){
-		browser.tabs.executeScript(tab.id, { file: "/content_scripts/Sidebar.js"}).then(function () {
+
+		BackgroundResourcesLoader.syncLoadScripts([
+	  		"/content_scripts/ContentResourcesLoader.js",
+	  		"/content_scripts/Sidebar.js"
+	  	], tab, function () {
 	        context.status[tab.id] = new LoadedSidebar(context);
 	        status.sendOpenMessage(tab);
 	    });
