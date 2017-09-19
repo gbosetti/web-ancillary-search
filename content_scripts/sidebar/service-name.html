@@ -9,20 +9,6 @@
 
 		<script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
 		<script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>
-		<script type="text/javascript">
-			$('form').validate({    
-                rules: {
-                    search_service_name: {
-                        minlength: 2,
-                        required: true
-                    }
-                }
-            });
-            document.querySelector(".next > a").onclick = function(){   
-                if($("form").valid())
-                    alert("impec!");
-            }
-		</script>
 	</head>
 	<body class="dotted">
 		<div class="panel-heading">

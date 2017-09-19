@@ -6,7 +6,12 @@ SidebarManager.prototype.onFrameReadyForLoadingUrl = function() {
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "loadUrl", 
-			args: { url: browser.extension.getURL("/content_scripts/sidebar/service-name.html") }
+			args: { 
+				url: browser.extension.getURL("/content_scripts/sidebar/service-name.html"),
+				filePaths: [
+					"/content_scripts/sidebar/lib/js/service-name.js"
+				] 
+			}
 		});
 	});
 }
