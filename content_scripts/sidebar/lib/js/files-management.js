@@ -1,3 +1,5 @@
+/* NOT BEING USED - THERE IS A SIMILAR CLASS AT BACKGROUND/STORAGEMANAGEMENT.JS THAT CAN BE REUSED
+
 	function FilesManager(){
 		this.getFile = function(spec) {};
 	};
@@ -6,8 +8,6 @@
 		FilesManager.call(this);
 		this.getFile = function(key, callback) { // name at	
 
-			/*if (!(browser.storage.local.get(key)))
-				browser.storage.local.set({"key": key});*/
 			var me = this;
 			this.getFileAsync(key, function(file){
 				
@@ -72,4 +72,4 @@
 
 			return this.file.xpath;
 		};
-	};
+	};*/

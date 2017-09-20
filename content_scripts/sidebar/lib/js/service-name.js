@@ -48,6 +48,8 @@ var ui = new UI();
 
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call + " (content_scripts/.../service-name.js)");
-	if(ui[request.call]) ui[request.call](request.args);
+	if(ui[request.call]){
+		console.log("calling " + request.call + " (.../service-name.js)");
+		ui[request.call](request.args);
+	}
 });

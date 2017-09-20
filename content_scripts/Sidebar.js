@@ -31,7 +31,7 @@ Sidebar.prototype.loadUrl = function(data) {
 };
 Sidebar.prototype.loadContentScripts = function(filePaths, doc) {
 	
-	ContentResourcesLoader.syncLoadScripts(filePaths, doc, function(){
+	new ContentResourcesLoader().syncLoadScripts(filePaths, doc, function(){
 		console.log("done!");
 	});
 };
@@ -153,6 +153,8 @@ function ClosedSidebar(context){
 var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call + " (content_scripts/.../sidebar.js)");
-	if(sidebar[request.call]) sidebar[request.call](request.args);
+	if(sidebar[request.call]) {
+		console.log("calling " + request.call + " (.../sidebar.js)");
+		sidebar[request.call](request.args);
+	}
 });

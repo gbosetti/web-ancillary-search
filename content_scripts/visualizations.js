@@ -4,7 +4,6 @@ function ResultsVisualizer(){
 }
 ResultsVisualizer.prototype.showResults = function(data) {
 
-	console.log("TAB: " + data.tabId);
 	var panel = this.buildPanel(data);
 	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
 
@@ -180,7 +179,7 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 
 ResultsVisualizer.prototype.loadVisalizerDependencies = function(dependencies, doc, callback) {
 
-  	ContentResourcesLoader.syncLoadScripts(dependencies.js, doc, callback);
+  	new ContentResourcesLoader().syncLoadScripts(dependencies.js, doc, callback);
   	//this.syncLoadStyles()
 }
 
@@ -306,8 +305,8 @@ Datatables.prototype.getDocumentPath = function(unwrappedWindow){
 var presenter = new ResultsVisualizer();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call + " (content_scripts/visualizations.js)");
-	presenter[request.call](request.args);
-
-
+	if(presenter[request.call]) {
+		console.log("calling " + request.call + " (.../visualizations.js)");
+		presenter[request.call](request.args);
+	}
 });

@@ -11,11 +11,11 @@ SearchTool.prototype.loadVisalizers = function(tab, callback) {
 	//Esto es para crear el iframe draggable, no las visualizaciones de adentro del iframe
 
   	BackgroundResourcesLoader.syncLoadScripts([
-  		"/content_scripts/vendor/jquery/dist/jquery.min.js",
-  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
-  		"/content_scripts/XPathInterpreter.js",
-  		"/content_scripts/ContentResourcesLoader.js",
-  		"/content_scripts/visualizations.js"
+  		new BackgroundResource("/content_scripts/vendor/jquery/dist/jquery.min.js"),
+  		new BackgroundResource("/content_scripts/vendor/jquery-ui/jquery-ui.min.js"),
+  		new BackgroundResource("/content_scripts/XPathInterpreter.js"),
+  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
+  		new BackgroundResource("/content_scripts/visualizations.js")
   	], tab, callback);
 }
 SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
@@ -116,16 +116,12 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				title: apiSpecs[spec].name,
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
-
-					console.log(me.areScriptsLoadedInTab(tab.id));
           
             		//Acá adentro solo es loggueable si se anula el cierre de popups
 				    if(me.areScriptsLoadedInTab(tab.id)){
-				    	console.log("reutilizando instancias");
 						me.sendExtenralResults(tab, info, apiSpecs);
 				    }
 				    else me.loadVisalizers(tab, function(){ 
-				    	console.log("instanciando");
 						me.sendExtenralResults(tab, info, apiSpecs);
 						me.toggleLoadedScriptsInTab(tab.id);
 					}); 
@@ -138,7 +134,6 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 	});
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
-  console.log("sendExtenralResults");
 
 	this.presentationParams = {
 		"resultsName": apiSpecs[info.menuItemId].results.name,
@@ -159,7 +154,6 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 	});
 }
 SearchTool.prototype.presentResults = function(results) {
-	  console.log("presentResults");
 
 	//console.log(results);
 	this.presentationParams.results = results;

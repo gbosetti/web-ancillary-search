@@ -84,8 +84,8 @@ function NoLoadedSidebar(context){
 	this.open = function(tab){
 
 		BackgroundResourcesLoader.syncLoadScripts([
-	  		"/content_scripts/ContentResourcesLoader.js",
-	  		"/content_scripts/Sidebar.js"
+	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
+	  		new BackgroundResource("/content_scripts/Sidebar.js")
 	  	], tab, function () {
 	        context.status[tab.id] = new LoadedSidebar(context);
 	        status.sendOpenMessage(tab);
