@@ -154,5 +154,5 @@ var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
 	console.log("calling " + request.call + " (content_scripts/.../sidebar.js)");
-	sidebar[request.call](request.args);
+	if(sidebar[request.call]) sidebar[request.call](request.args);
 });

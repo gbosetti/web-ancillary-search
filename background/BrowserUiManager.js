@@ -16,6 +16,10 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
+BrowserUiManager.prototype.adaptPlaceholder = function() {
+
+  this.templatesCreator.adaptPlaceholder();
+};
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
 };

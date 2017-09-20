@@ -1,25 +1,44 @@
-$('form').validate({    
-    rules: {
-        search_service_name: {
-            minlength: 2,
-            required: true
-        }
-    }
-});
-document.querySelector(".next > button").onclick = function(){   
-    if($("form").valid())
-        alert("impec!");
+function UI(){
+	this.initialize();
 }
-document.querySelector("#search_service_name").setAttribute(
-	"placeholder", 
-	document.querySelector("#search_service_name").getAttribute("placeholder") + " Amazon"
-	//window.parent.window.location.host <- no permissions
-);
-
-//The only way I ound to communicate the iframe content to the outside
-browser.runtime.sendMessage({
-	call: "loadXpaths",
-	args: {
-		name: "hola"
+UI.prototype.initialize = function() {
+	this.loadValidationBehaviour();
+	this.loadNavigationTriggers();
+	this.callPlaceholderNameAdaptation();
+};
+UI.prototype.loadValidationBehaviour = function() {
+	$('form').validate({    
+	    rules: {
+	        search_service_name: {
+	            minlength: 2,
+	            required: true
+	        }
+	    }
+	});
+};
+UI.prototype.loadNavigationTriggers = function() {
+	document.querySelector(".next > button").onclick = function(){   
+	    if($("form").valid())
+	        alert("impec!");
 	}
+};
+UI.prototype.callPlaceholderNameAdaptation = function() {
+	//The only way I ound to communicate the iframe content to the outside
+	browser.runtime.sendMessage({
+		call: "adaptPlaceholder"
+	});
+};
+UI.prototype.adaptPlaceholderExample = function(data) {
+	document.querySelector("#search_service_name").setAttribute(
+		"placeholder", 
+		document.querySelector("#search_service_name").getAttribute("placeholder") + " " + data.domainName
+	);
+};
+
+var ui = new UI();
+
+browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
+
+	console.log("calling " + request.call + " (content_scripts/.../service-name.js)");
+	if(ui[request.call]) ui[request.call](request.args);
 });

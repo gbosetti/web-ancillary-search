@@ -22,6 +22,16 @@ SidebarManager.prototype.toggle = function() { //PUBLIC
 		me.getStatusForTab(tab).toggle(tab);
 	});
 };
+SidebarManager.prototype.adaptPlaceholder = function() {
+
+	this.getCurrentTab(function(tab){
+		browser.tabs.sendMessage(tab.id, {
+			call: "adaptPlaceholderExample", 
+			args: {domainName: tab.url.split(".")[1] }
+		});
+
+	});
+};
 SidebarManager.prototype.getStatusForTab = function(tab) {
 	if (this.status[tab.id] == undefined)
 		this.status[tab.id] = new NoLoadedSidebar(this);

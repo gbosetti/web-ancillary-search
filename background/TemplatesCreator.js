@@ -23,6 +23,10 @@ TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
   this.disableDomSelection(tab);
 }
+TemplatesCreator.prototype.adaptPlaceholder = function() {
+
+  this.sidebar.adaptPlaceholder();
+};
 TemplatesCreator.prototype.disableDomSelection = function(tab) {
 
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
