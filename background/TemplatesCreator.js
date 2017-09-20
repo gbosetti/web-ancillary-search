@@ -2,6 +2,7 @@ function TemplatesCreator(){
   this.targetElement = undefined;
   console.log("instantiating sidebar...");
   this.sidebar = new SidebarManager();
+  this.storage = new StorageFilesManager();
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
@@ -26,6 +27,18 @@ TemplatesCreator.prototype.disableHarvesting = function(tab) {
 TemplatesCreator.prototype.adaptPlaceholder = function() {
 
   this.sidebar.adaptPlaceholder();
+};
+TemplatesCreator.prototype.saveService = function(data) {
+
+  this.storage.getFileAsync(data); //createEmptyFile
+};
+TemplatesCreator.prototype.loadInputControlSelection = function() {
+
+  console.log("loading next form");
+};
+TemplatesCreator.prototype.createNewServiceFromData = function(data) {
+
+  this.storage.createFileWithData(data);
 };
 TemplatesCreator.prototype.disableDomSelection = function(tab) {
 

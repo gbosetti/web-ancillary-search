@@ -16,9 +16,21 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
-BrowserUiManager.prototype.adaptPlaceholder = function() {
+BrowserUiManager.prototype.saveService = function(data) {
 
-  this.templatesCreator.adaptPlaceholder();
+  this.templatesCreator.saveService(data);
+};
+BrowserUiManager.prototype.createNewServiceFromData = function(data) {
+
+  this.templatesCreator.createNewServiceFromData(data.service);
+};
+BrowserUiManager.prototype.loadInputControlSelection = function(data) {
+
+  this.templatesCreator.loadInputControlSelection(data);
+};
+BrowserUiManager.prototype.adaptPlaceholder = function(data) {
+
+  this.templatesCreator.adaptPlaceholder(data);
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;

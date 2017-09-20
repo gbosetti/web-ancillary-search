@@ -26,6 +26,7 @@
   "background": {
     "scripts": [
       "background/browsers-standarization.js", 
+      "background/StorageManagement.js",
       "background/BrowserUiManager.js", 
       "background/BackgroundResourcesLoader.js",
       "background/SearchTool.js", 

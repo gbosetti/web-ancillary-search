@@ -18,8 +18,17 @@ UI.prototype.loadValidationBehaviour = function() {
 };
 UI.prototype.loadNavigationTriggers = function() {
 	document.querySelector(".next > button").onclick = function(){   
-	    if($("form").valid())
-	        alert("impec!");
+	    if($("form").valid()){
+	    	browser.runtime.sendMessage({ 
+	    		call: "createNewServiceFromData",
+	    		args: {
+	    			service: {
+	    				name: document.querySelector("#search_service_name").value
+	    			}
+	    		}
+	    	});
+	        browser.runtime.sendMessage({ call: "loadInputControlSelection" });
+	    }
 	}
 };
 UI.prototype.callPlaceholderNameAdaptation = function() {
