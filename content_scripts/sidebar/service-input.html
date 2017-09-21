@@ -1,50 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
     <head> 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="lib/css/service-input.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
+    <link rel="stylesheet" type="text/css" href="../vendor/bootswatch/united/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/validate.css"/>
 
-		<!-- NOTE: SCRIPTS AS JQUERY CAN NOT BE IMPORTED FROM CDN TO THE SIDEBAR. YOU NEED A LOCAL COPY -->
-		<script src="vendor/jquery/dist/jquery.min.js"></script>
-
-        <!-- TOGGLE -->
-        <link href="vendor/bootstrap-toggle/css/bootstrap-toggle.min.css" rel="stylesheet">
-        <script src="vendor/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-
-		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
-		<link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
-		<link rel="stylesheet" type="text/css" href="lib/css/concept-definition.css">
-
-		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.css">
-		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.min.css">
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
-    
-    <script type="text/javascript" src="lib/js/input-definition.js"></script>
-	</head>
-	<body>
-		<title></title>
-    	<div class="panel-heading" style="padding-bottom: 0px;">
-           <div class="panel-title text-center">
-           		<h3 class="title">Input definition</h3>
-           		<hr />
-           	</div>
-        </div> 
-		<div class="container">   
-            <form class="sidebar-form">     
-               		
-                <!-- :::::::::: SEARCH ENTRY BOX :::::::::: -->
-                <div class="form-group">
-                    <label for="search-engine-entry">The control has been selected</label>
-                    <input id="input-control" data-width="100" checked data-toggle="toggle" type="checkbox" data-onstyle="warning">
-                </div>  
-
-                <div class="checkbox">
-                  <label>
-                    <input data-toggle="toggle" type="checkbox">
-                  </label>
-                </div>
-            </form>
+    <script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+  </head>
+  <body class="dotted">
+    <div class="panel-heading">
+		<div class="panel-title text-center">
+		  <h2 class="title" i18n-data="the_input_control">The input control</h2>
 		</div>
-	</body>
+	</div> 
+
+	<div class="container">    
+		<form class="sidebar-form">     
+			<div class="well">
+				<button type="button" class="close" data-dismiss="alert">
+				<span class="glyphicon glyphicon-info-sign"></span>
+				</button>
+				<span i18n-data="select_the_input_control"></span>
+			</div>
+			    <!-- :::::::::: INPUT :::::::::: -->
+			<div class="form-group">
+			  	<label for="search_service_name" i18n-data="selected_input_control">Service name</label>
+			  	<div id="preview-of-property">
+		            <img id="property-preview-image" class="image-preview" src="lib/img/no-preview.png"/> 
+		        </div>
+			</div>
+			<nav> 
+			  <ul class="pager">
+			    <!-- YOU CAN NOT ADD BEHAVIOUR HERE -->
+			    	<li class="previous active pull-left">
+						<button id="save-result" type="button" class="btn btn-primary">
+						  	<span i18n-data="back">Back</span>
+						  	<span class="glyphicon glyphicon-triangle-left"></span>
+						</button>
+					</li>
+			      	<li class="next active pull-right">
+			          	<button id="save-result" type="button" class="btn btn-primary">
+			              	<span i18n-data="next">Next</span>
+			              	<span class="glyphicon glyphicon-triangle-right"></span>
+			          	</button>
+			      	</li>
+			  </ul>
+			</nav> 
+        </form>
+    </div>
+  </body>
 </html>

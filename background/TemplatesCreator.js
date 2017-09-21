@@ -32,11 +32,9 @@ TemplatesCreator.prototype.saveService = function(data) {
 
   this.storage.getFileAsync(data); //createEmptyFile
 };
-TemplatesCreator.prototype.loadUrlAtSidebar = function(url) {
+TemplatesCreator.prototype.loadUrlAtSidebar = function(url, filePaths) {
 
-	this.sidebar.loadChromeUrl(
-		"/content_scripts/sidebar/service-input.html", 
-		["/content_scripts/sidebar/lib/js/service-input.js"]); 
+	this.sidebar.loadChromeUrl(url, filePaths); 
 };
 TemplatesCreator.prototype.createNewServiceFromData = function(data) {
 

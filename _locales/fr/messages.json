@@ -11,6 +11,19 @@
   "name_the_service":{
     "message": "Veuillez sélectionner un nom correspondant au <a href='#' data-toggle='tooltip' title='Un site Web qui vous permet de rechercher des informations sur le World Wide Web (par exemple Google, Amazon, etc.)'>moteur de recherche</a> que vous allez envelopper"
   },
+
+
+  "the_input_control": {
+    "message": "The input control"
+  },
+  "select_the_input_control": {
+    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a href='#' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercherPlease'>contrôle d'entrée</a> du formulaire de recherche."
+  },
+  "selected_input_control": {
+    "message": "Selected input control"
+  }, 
+
+
   "next":{
     "message": "Suivant"
   },
@@ -25,6 +38,8 @@
   "multipleMatches":{
     "message": "correspondances"
   },
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }

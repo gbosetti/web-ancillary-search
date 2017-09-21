@@ -3,8 +3,10 @@ function SidebarManager(){
 }
 SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
-	this.loadChromeUrl("/content_scripts/sidebar/service-name.html", 
-		["/content_scripts/sidebar/lib/js/service-name.js"]); 
+	this.loadChromeUrl("/content_scripts/sidebar/service-name.html", [
+		"/content_scripts/sidebar/lib/js/ui-commons.js",
+		"/content_scripts/sidebar/lib/js/service-name.js"
+	]); 
 }
 SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBLIC
 
@@ -32,7 +34,6 @@ SidebarManager.prototype.adaptPlaceholder = function() {
 			call: "adaptPlaceholderExample", 
 			args: {domainName: tab.url.split(".")[1] }
 		});
-
 	});
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {

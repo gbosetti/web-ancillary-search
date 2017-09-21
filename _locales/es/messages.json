@@ -11,6 +11,19 @@
   "name_the_service":{
     "message": "Seleccioná un nombre que coincida con el <a href='#' data-toggle='tooltip' title='Un sitio Web qu ete permite hacer búsquedas de información en la World Wide Web (ej. Google, Amazon, etc.)'>motor de búsqueda</a> que vas a wrappear"
   },
+
+
+  "the_input_control": {
+    "message": "El control de entrada"
+  },
+  "select_the_input_control": {
+    "message": "Señalá y hacé click en el elemento de la página que identifiques como el <a href='#' data-toggle='tooltip' title='Aquel control sobre el que escribís lo que querés buscar'>control de entrada</a> del formulario de búsqueda."
+  },
+  "selected_input_control": {
+    "message": "Elemento seleccionado"
+  }, 
+
+
   "next":{
     "message": "Siguiente"
   },
@@ -25,6 +38,8 @@
   "multipleMatches":{
     "message": "coincidencias"
   },
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }
