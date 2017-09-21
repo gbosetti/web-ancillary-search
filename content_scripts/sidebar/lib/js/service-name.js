@@ -27,7 +27,10 @@ UI.prototype.loadNavigationTriggers = function() {
 	    			}
 	    		}
 	    	});
-	        browser.runtime.sendMessage({ call: "loadInputControlSelection" });
+	        browser.runtime.sendMessage({ 
+	        	call: "loadUrlAtSidebar",
+	        	args: { url: "/content_scripts/sidebar/service-input.js" }
+	        });
 	    }
 	}
 };

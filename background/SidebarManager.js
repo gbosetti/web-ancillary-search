@@ -3,18 +3,21 @@ function SidebarManager(){
 }
 SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
+	this.loadChromeUrl("/content_scripts/sidebar/service-name.html", 
+		["/content_scripts/sidebar/lib/js/service-name.js"]); 
+}
+SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBLIC
+
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "loadUrl", 
 			args: { 
-				url: browser.extension.getURL("/content_scripts/sidebar/service-name.html"),
-				filePaths: [
-					"/content_scripts/sidebar/lib/js/service-name.js"
-				] 
+				"url": browser.extension.getURL(chromeUrl),
+				"filePaths": filePaths
 			}
 		});
 	});
-}
+};
 SidebarManager.prototype.toggle = function() { //PUBLIC
 
 	var me = this;

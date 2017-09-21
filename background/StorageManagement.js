@@ -37,10 +37,14 @@ function StorageFilesManager(){
 
 function File(data){
 	for (var key in data) {
-		this[key] = data[key]
-	}
+		this[key] = data[key];
+	};
+	this.save = function(){};
 }
 
 function StorageFile(data){
 	File.call(this, data);
+	this.save = function(){
+		console.log("saving");
+	};
 }

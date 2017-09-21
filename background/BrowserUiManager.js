@@ -16,9 +16,9 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
-BrowserUiManager.prototype.saveService = function(data) {
+BrowserUiManager.prototype.loadUrlAtSidebar = function(data) {
 
-  this.templatesCreator.saveService(data);
+  this.templatesCreator.loadUrlAtSidebar(data.url);
 };
 BrowserUiManager.prototype.createNewServiceFromData = function(data) {
 
