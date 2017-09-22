@@ -17,7 +17,7 @@
     "message": "The input control"
   },
   "select_the_input_control": {
-    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a href='#' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercherPlease'>contrôle d'entrée</a> du formulaire de recherche."
+    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a href='#' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercher'>contrôle d'entrée</a> du formulaire de recherche."
   },
   "selected_input_control": {
     "message": "Selected input control"

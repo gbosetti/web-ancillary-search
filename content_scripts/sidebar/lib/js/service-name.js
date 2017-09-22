@@ -1,11 +1,9 @@
 function ServiceNameUI(){
-	console.log("calling UI");
-	//constructor at the end
 	UI.call(this);
 	
 	this.loadSubformBehaviour = function() {
-		console.log("subform spec behav");
 		this.callPlaceholderNameAdaptation();
+		this.focusElement("#search_service_name");
 	};
 	this.callPlaceholderNameAdaptation = function() {
 		//The only way I ound to communicate the iframe content to the outside
@@ -14,7 +12,6 @@ function ServiceNameUI(){
 		});
 	};
 	this.getValidationRules = function() {
-		console.log("returning validation rules");
 		return {
 	        "search_service_name": {
 	            "minlength": 2,
@@ -23,26 +20,16 @@ function ServiceNameUI(){
 	    };
 	};
 	this.loadNextNavigationButton = function() {
-		console.log("NEXT BUTTON!");
+		var me = this;
 		document.querySelector(".next > button").onclick = function(){   
 		    if($("form").valid()){
-		    	browser.runtime.sendMessage({ 
-		    		call: "createNewServiceFromData",
-		    		args: {
-		    			service: {
-		    				name: document.querySelector("#search_service_name").value
-		    			}
-		    		}
-		    	});
-		        browser.runtime.sendMessage({ 
-		        	call: "loadUrlAtSidebar",
-		        	args: { 
-		        		url: "/content_scripts/sidebar/service-input.html",
-		        		filePaths: [
-		        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-							"/content_scripts/sidebar/lib/js/service-input.js"
-						] 
-			        }
+		    	me.createNewServiceFromData(document.querySelector("#search_service_name").value);
+		        me.loadUrlAtSidebar({ 
+	        		url: "/content_scripts/sidebar/service-input.html",
+	        		filePaths: [
+	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
+						"/content_scripts/sidebar/lib/js/service-input.js"
+					] 
 			    });
 		    }
 		}
@@ -53,12 +40,9 @@ function ServiceNameUI(){
 			document.querySelector("#search_service_name").getAttribute("placeholder") + " " + data.domainName
 		);
 	};
-
-	this.initialize();
 };
 
-var ui = new ServiceNameUI();
-
+var ui = new ServiceNameUI().initialize();
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
 	if(ui[request.call]){

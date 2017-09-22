@@ -1,6 +1,5 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
-  console.log("instantiating sidebar...");
   this.sidebar = new SidebarManager();
   this.storage = new StorageFilesManager();
 }
