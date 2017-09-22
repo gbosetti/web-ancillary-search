@@ -2,6 +2,7 @@ function TemplatesCreator(){
   this.targetElement = undefined;
   this.sidebar = new SidebarManager();
   this.storage = new StorageFilesManager();
+  this.pageSelector = new BackgroundPageSelector();
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
@@ -44,9 +45,9 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
   browser.tabs.sendMessage(tab.id, {call: "disableContextElementSelection"});
 }
-TemplatesCreator.prototype.enableHarvesting = function(tab) {
+TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
 
-  this.enableDomSelection(tab);
+	this.pageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection);
 }
 TemplatesCreator.prototype.loadDataForConceptDefinition = function() {
 
@@ -62,20 +63,4 @@ TemplatesCreator.prototype.loadDataForConceptDefinition = function() {
       call: "loadPreview",
       args: this.targetElement.preview
   });
-}
-TemplatesCreator.prototype.loadDomHighlightingExtras = function(tab) {
-
-  var me = this;
-  browser.tabs.insertCSS(tab.id, { file: "/content_scripts/highlighting-dom-elements.css"});
-  browser.tabs.executeScript(tab.id, { file: "/content_scripts/XPathInterpreter.js"}).then(function () {
-
-      browser.tabs.executeScript(tab.id, { file: "/content_scripts/enable_harvesting.js"}).then(function () {
-        me.enableHarvesting(tab);
-      });
-  });
-}
-TemplatesCreator.prototype.enableDomSelection = function(tab) {
-
-  browser.tabs.sendMessage(tab.id, {call: "enableHighlight"});
-  browser.tabs.sendMessage(tab.id, {call: "enableContextElementSelection"});
 }

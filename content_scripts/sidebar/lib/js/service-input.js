@@ -3,6 +3,21 @@ function ServiceInputUI(){
 	UI.call(this);
 	this.userDefInputXpath;
 	
+	this.loadSubformBehaviour = function() {
+		this.enableElementSelection();
+	};
+	this.enableElementSelection = function() {
+		browser.runtime.sendMessage({ 
+    		"call": "enableElementSelection",
+    		"args": {
+    			targetElementSelector: "input",
+    			onElementSelection: "onInputSelection"
+    		}
+    	});
+	};
+	this.onInputSelection = function(data){
+		console.log("doing stuff with the selected input", data);
+	}
 	this.isElementSelected = function(elemType) {
 		return (this.userDefInputXpath)? true : false;
 	};

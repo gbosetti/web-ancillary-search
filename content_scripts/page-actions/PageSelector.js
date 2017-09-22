@@ -1,11 +1,10 @@
 //TODO: somehow, the file is realoded and that makes it impossible to remove listeners :(
 console.log("\n\n\n********* LOADING THE FILE *********\n\n\n");
 
-function DomUiManager(){
-
-	this.createEventListeners();
+function PageSelector(){
+	//this.createEventListeners();
 };
-DomUiManager.prototype.createEventListeners = function(){
+/*PageSelector.prototype.createEventListeners = function(){
 
 	
 	//Thiss is created separately so we can attach and detach them
@@ -36,16 +35,16 @@ DomUiManager.prototype.createEventListeners = function(){
 		man.addHighlightingClass(evt.target);
 	};
 };
-DomUiManager.prototype.addHighlightingClass = function(elem){
+PageSelector.prototype.addHighlightingClass = function(elem){
 
 	elem.classList.add('andes-highlighted-element');
 };
-DomUiManager.prototype.getMatchedElementsQuantity = function(xpath){
+PageSelector.prototype.getMatchedElementsQuantity = function(xpath){
 
 	var elems = (new window["XPathInterpreter"]()).getElementsByXpath(xpath, document);
 	return (elems && elems.length && elems.length > 0)? elems.length : 0;
 };
-DomUiManager.prototype.labelXPaths = function(xpaths, baseXpath){
+PageSelector.prototype.labelXPaths = function(xpaths, baseXpath){
 
 
 	var labeledXpaths = [];
@@ -69,13 +68,9 @@ DomUiManager.prototype.labelXPaths = function(xpaths, baseXpath){
 	});
 	return labeledXpaths;
 };
-DomUiManager.prototype.createCTemplateThumbnail = function(element) { 
+PageSelector.prototype.createCTemplateThumbnail = function(element) { 
 	try{
-		/*var hElems = document.getElementsByClassName("andes-highlighted-element");
-		for (var i = 0; i < hElems.length; i++) {
-			hElems[i].classList.remove("andes-highlighted-element");
-		}*/
-		
+
 	    var canvas = document.createElement("canvas");
 		    canvas.width = element.offsetWidth;
 		    canvas.height = element.offsetHeight;
@@ -91,57 +86,103 @@ DomUiManager.prototype.createCTemplateThumbnail = function(element) {
 		return;
 	}
 }
-DomUiManager.prototype.removeHighlightingClass = function(elem){
+PageSelector.prototype.removeHighlightingClass = function(elem){
 
 	if(elem.classList.contains("andes-highlighted-element")) 
 		elem.classList.remove('andes-highlighted-element');
 };
-DomUiManager.prototype.getDomElementXPaths = function(elem){
+PageSelector.prototype.getDomElementXPaths = function(elem){
 
 	return (new window["XPathInterpreter"]()).getMultipleXPaths(elem, elem.ownerDocument);
 };
-DomUiManager.prototype.addHighlightingEventListeners = function(elem){
+PageSelector.prototype.addHighlightingEventListeners = function(elem){
 
 	elem.addEventListener("mouseover", this.highlightElement);
 	elem.addEventListener("mouseout", this.unhighlightElement);
 };
-DomUiManager.prototype.removeHighlightingEventListeners = function(elem){
+PageSelector.prototype.removeHighlightingEventListeners = function(elem){
 
 	elem.removeEventListener("mouseover", this.highlightElement);
 	elem.removeEventListener("mouseout", this.unhighlightElement);
+};*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PageSelector.prototype.getAllVisibleDomElements = function(){
+	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em )"); //:not(.first)
 };
-DomUiManager.prototype.enableHighlight = function(){
+PageSelector.prototype.enableElementSelection = function(data){
 	
 	var me = this, elems = this.getAllVisibleDomElements(); 	
 	elems.forEach(function(elem) { 
-    	me.addHighlightingEventListeners(elem);
+		me.darkify(elem);
     });
+
+    var selectableElements = document.querySelectorAll(data.targetElementSelector);
+    selectableElements.forEach(function(elem) { 
+		me.undarkify(elem);
+    });
+
+   
+
+
+    //me.addSelectionEventListener(elem);
 };
-DomUiManager.prototype.enableContextElementSelection = function(){
+PageSelector.prototype.darkify = function(elem){
+	
+	if(!elem.classList.contains("andes-blurred")){
+		elem.classList.add("andes-blurred");
+	}
+};
+PageSelector.prototype.undarkify = function(elem){
+	
+	var element = elem;
+	while(element.parentNode) {
+		if(element.classList.contains("andes-blurred")){
+			console.log("removing the class", element);
+			element.classList.remove("andes-blurred")
+		}
+
+		element = element.parentNode;
+	}	
+};
+/*PageSelector.prototype.enableContextElementSelection = function(){
 	
 	var me = this, elems = this.getAllVisibleDomElements(); 	
 	elems.forEach(function(elem) { 
     	elem.addEventListener("contextmenu", me.selectContextualizedElement);
     });
 };
-DomUiManager.prototype.disableContextElementSelection = function(){
+PageSelector.prototype.disableContextElementSelection = function(){
 	
 	var me = this, elems = this.getAllVisibleDomElements(); 	
 	elems.forEach(function(elem) { 
     	elem.removeEventListener("contextmenu", me.selectContextualizedElement);
     });
 };
-DomUiManager.prototype.getAllVisibleDomElements = function(){
-	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre");
-};
-DomUiManager.prototype.disableHighlight = function(){
+PageSelector.prototype.disableHighlight = function(){
 
 	var me = this, elems = this.getAllVisibleDomElements(); 
 	elems.forEach(function(elem) { 
     	me.removeHighlightingEventListeners(elem);
     });
 };
-DomUiManager.prototype.removeHighlightings = function(){
+PageSelector.prototype.removeHighlightings = function(){
 
 	var me = this, elems = this.getAllVisibleDomElements(); 
 	elems.forEach(function(elem) { 
@@ -149,7 +190,7 @@ DomUiManager.prototype.removeHighlightings = function(){
     	me.removeHighlightingClass(elem);
     });
 };
-DomUiManager.prototype.highlightMatchingElements = function(data){
+PageSelector.prototype.highlightMatchingElements = function(data){
 
 	var elems = (new window.XPathInterpreter()).getElementsByXpath(data.xpath, document);
 	this.removeHighlightings();
@@ -157,12 +198,14 @@ DomUiManager.prototype.highlightMatchingElements = function(data){
 	for (var i = elems.length - 1; i >= 0; i--) {
 		this.addHighlightingClass(elems[i]);
 	}
-};
+};*/
 
-var ui = new DomUiManager();
+var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
-	console.log("calling " + request.call + " (content_scripts/enable_harvesting.js)");
-	//Se lo llama con: browser.tabs.sendMessage
-	ui[request.call](request.args);
+	if(pageManager[request.call]){
+		console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		//Se lo llama con: browser.tabs.sendMessage
+		pageManager[request.call](request.args);
+	}
 });

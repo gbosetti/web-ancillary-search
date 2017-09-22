@@ -1,0 +1,19 @@
+.andes-loading {
+    display:    block;
+    position:   fixed;
+    z-index:    9999999;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/loading.gif') 
+                50% 50% 
+                no-repeat;
+}
+.andes-blurred{
+	background: rgba(30, 30, 30, 0.75) !important;
+	color: rgba(30, 30, 30, 0.75) !important;
+	border: none !important;
+	filter: grayscale(100%) !important;
+}

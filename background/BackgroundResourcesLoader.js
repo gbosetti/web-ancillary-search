@@ -1,21 +1,22 @@
 function BackgroundResourcesLoader(){}
 BackgroundResourcesLoader.syncLoadScripts = function(files, tab, callback) {
 
-	var me = this, file = files.splice(0, 1)[0];
-	if(file){
-		//if(file.isLoadedAt(tab)){ 
-			browser.tabs.executeScript(tab.id, { "file": file.path /*, allFrames: true*/ }).then(function(){
-				me.syncLoadScripts(files, tab, callback);
-			});
-		//}
-		//else me.syncLoadScripts(files, tab, callback);
-	}else{
-		if(callback) callback();
-	}	
+	this.syncLoadFiles(files, tab, "executeScript", callback); 
 };
 BackgroundResourcesLoader.syncLoadStyles = function(files, tab, callback) {
 
-	//TO MERGE 
+	this.syncLoadFiles(files, tab, "insertCSS", callback); 
+};
+BackgroundResourcesLoader.syncLoadFiles = function(files, tab, fileTypeMessage, callback) {
+
+	var me = this, file = files.splice(0, 1)[0];
+	if(file){
+		browser.tabs[fileTypeMessage](tab.id, { "file": file.path }).then(function(){
+			me.syncLoadFiles(files, tab, fileTypeMessage, callback);
+		});
+	}else{
+		if(callback) callback();
+	}	
 };
 
 

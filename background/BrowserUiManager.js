@@ -55,6 +55,15 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
 
   this.templatesCreator.disableHarvesting(tab);
 };
+BrowserUiManager.prototype.enableElementSelection = function(data) {
+  
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+
+    me.templatesCreator.enableElementSelection(tab, data.targetElementSelector, data.onElementSelection);
+  });
+  
+};
 BrowserUiManager.prototype.enableBrowserAction = function(tab) {
   this.changeBrowserActionIcon({
       16: "icons/logo-disabled-16.png",
@@ -65,14 +74,6 @@ BrowserUiManager.prototype.enableBrowserAction = function(tab) {
   browser.sidebarAction.setPanel({ 
     panel: browser.extension.getURL("/sidebar/manage-services.html")   
   }); 
-  
-  /*if(this.getBrowserActionClicksInTab(tab.id) == 1) {
-    
-    this.openSidebar();
-    //this.templatesCreator.loadDomHighlightingExtras(tab); // This can be done every time a tab is opened and you avoid using this if
-  }*/
-
-  //else this.templatesCreator.enableHarvesting(tab);
 };
 BrowserUiManager.prototype.openSidebar = function() {
 
