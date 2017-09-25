@@ -12,6 +12,10 @@ TemplatesCreator.prototype.toggleSidebar = function() {
 		me.pageSelector.preventDomElementsBehaviour(tab);
 	});
 }
+TemplatesCreator.prototype.onElementSelection = function(xpaths, prevSrc) { 
+
+  this.sidebar.onElementSelection(xpaths, prevSrc);
+}
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.sidebar.onFrameReadyForLoadingUrl();

@@ -2,7 +2,7 @@ function ServiceInputUI(){
 
 	UI.call(this);
 	this.userDefInputXpath;
-	
+
 	this.loadSubformBehaviour = function() {
 		this.enableElementSelection();
 	};
@@ -11,12 +11,23 @@ function ServiceInputUI(){
     		"call": "enableElementSelection",
     		"args": {
     			targetElementSelector: "input",
-    			onElementSelection: "onInputSelection"
+    			onElementSelection: "onElementSelection"
     		}
     	});
 	};
-	this.onInputSelection = function(data){
+	this.onElementSelection = function(data){
 		console.log("doing stuff with the selected input", data);
+		this.showPreview();
+		this.loadPreview(data.previewSource);
+		this.userDefInputXpath = data.xpaths;
+	}
+	this.showPreview = function(data){
+		document.querySelectorAll(".hidden").forEach(function(elem){
+			elem.classList.remove("hidden");
+		});
+	}
+	this.loadPreview = function(src){
+		document.querySelector("#property-preview-image").src = src;
 	}
 	this.isElementSelected = function(elemType) {
 		return (this.userDefInputXpath)? true : false;
@@ -42,4 +53,13 @@ function ServiceInputUI(){
 	};
 };
 
-new ServiceInputUI().initialize();
+
+
+var serviceInput = new ServiceInputUI().initialize();
+browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
+
+	if(serviceInput[request.call]) {
+		console.log("calling " + request.call + " (.../service-input.js)");
+		serviceInput[request.call](request.args);
+	}
+});

@@ -8,6 +8,10 @@ BrowserUiManager.prototype.initialize = function() {
   this.templatesCreator = new TemplatesCreator();
   this.searchTool = new SearchTool();
 };
+BrowserUiManager.prototype.onElementSelection = function(data) { 
+
+  this.templatesCreator.onElementSelection(data.xpaths, data.previewSource);
+}
 BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.templatesCreator.onFrameReadyForLoadingUrl();

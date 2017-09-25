@@ -20,6 +20,19 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 		});
 	});
 };
+SidebarManager.prototype.onElementSelection = function(xpaths, previewSource) { 
+
+	this.getCurrentTab(function(tab){
+		console.log("notifying page-side: onElementSelection");
+		browser.tabs.sendMessage(tab.id, {
+			call: "onElementSelection", 
+			args: {
+				"xpaths": xpaths,
+				"previewSource": previewSource
+			}
+		});
+	});
+}
 SidebarManager.prototype.toggle = function(callback) { //PUBLIC
 
 	var me = this;

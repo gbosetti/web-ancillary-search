@@ -3,6 +3,7 @@ console.log("\n\n\n********* LOADING THE FILE *********\n\n\n");
 
 function PageSelector(){
 	//this.createEventListeners();
+	this.highlightingClass = "andes-highlighted";
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
 	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
@@ -31,9 +32,13 @@ PageSelector.prototype.getCurrentSidebarElements = function(){
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 	var elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
-		elem.addEventListener("click", function(evt){
-			evt.preventDefault();
-			evt.stopImmediatePropagation();
+		
+		["click", "keydown", "keyup", "keypress", "mouseup", "mousedown"].forEach(function(eventToPrevent){
+
+			elem.addEventListener(eventToPrevent, function(evt){
+				evt.preventDefault();
+				evt.stopImmediatePropagation();
+			});
 		});
 	});
 };
@@ -44,7 +49,7 @@ PageSelector.prototype.getTargetElements = function(selector){
 PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
-    this.makeTargetElementsSelectable(data.targetElementSelector);
+    this.makeTargetElementsSelectable(data.targetElementSelector, data.onElementSelection);
     this.undarkifySidebarElements();
     this.darkify(document.body); 
 };
@@ -55,26 +60,59 @@ PageSelector.prototype.darkifyAllDomElements = function(){
 		me.darkify(elem);
     });
 }
-PageSelector.prototype.makeTargetElementsSelectable = function(selector){
+PageSelector.prototype.makeTargetElementsSelectable = function(selector, onElementSelection){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
-		me.addClassToParentLevel(elem, "andes-highlighted", 1);
-		
-		elem.addEventListener("click", function(){
-			alert("clicked!");
+		me.highlight(elem);
+
+		elem.addEventListener("click", function(evt){
+
+			evt.stopImmediatePropagation();
+
+			browser.runtime.sendMessage({ 
+				"call": onElementSelection,
+				"args": {
+					"selectors": (new XPathInterpreter()).getMultipleXPaths(this),
+					"previewSource": me.generatePreview(this)
+				}
+			});
 		})	
     });	
 }
-PageSelector.prototype.addClassToParentLevel = function(elem, className, deepeness){
+PageSelector.prototype.generatePreview = function(element){
 
-	var element = elem, level=0;
-	while(level < deepeness && element.parentNode) {
-		if(!element.classList.contains(className)) element.classList.add(className);
-		element = element.parentNode;
-		level++;
-	}	
+	try{
+		this.removeHighlighting();
+
+	    var canvas = document.createElement("canvas");
+	    canvas.width = element.offsetWidth;
+	    canvas.height = element.offsetHeight;
+	    var ctx = canvas.getContext("2d");
+	    var box = element.getBoundingClientRect();
+	    ctx.drawWindow(document.defaultView, parseInt(box.left)+
+	    	document.defaultView.scrollX,parseInt(box.top)+
+	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
+
+	    element.classList.add(this.highlightingClass);
+	    return canvas.toDataURL();
+	}catch(err){
+		console.log(err.message);
+		return;
+	}
+}
+PageSelector.prototype.highlight = function(elem){
+
+	if(!elem.classList.contains(this.highlightingClass)) 
+		elem.classList.add(this.highlightingClass);
+}
+PageSelector.prototype.removeHighlighting = function(){
+
+	var hElems = document.getElementsByClassName(this.highlightingClass);
+	for (var i = 0; i < hElems.length; i++) {
+		hElems[i].classList.remove(this.highlightingClass);
+	}
 }
 PageSelector.prototype.undarkifySidebarElements = function(){
 
@@ -121,23 +159,6 @@ PageSelector.prototype.darkify = function(elem){
 		elem.classList.add("andes-blurred");
 	}
 };
-/*PageSelector.prototype.undarkifyToParentLevel = function(elem, deepeness){
-	
-	var element = elem, level=0;
-	while(level < deepeness && element.parentNode) {
-		this.undarkify(element);
-		element = element.parentNode;
-		level++;
-	}	
-};
-PageSelector.prototype.undarkifyToRoot = function(elem){
-	
-	var element = elem;
-	while(element.parentNode) {
-		this.undarkify(element);
-		element = element.parentNode;
-	}	
-};*/
 PageSelector.prototype.undarkify = function(elem){
 	
 	if(elem.classList.contains("andes-blurred")){
