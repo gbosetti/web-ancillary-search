@@ -25,6 +25,11 @@ BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callb
   		new BackgroundResource("/content_scripts/page-actions/PageSelector.js")
   	], tab, callback);
 };
+BackgroundPageSelector.prototype.enablePageRegularBehaviour = function(tab) { 
+
+	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" });
+	browser.tabs.sendMessage(tab.id, { "call": "removeEventBlockers" });
+}
 BackgroundPageSelector.prototype.sendPreventDomElementsBehaviour = function(tab){
 	browser.tabs.sendMessage(tab.id, {
     	"call": "preventDomElementsBehaviour"

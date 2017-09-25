@@ -124,6 +124,7 @@ function OpenSidebar(context){
 	this.close = function() {
 		context.widget.style.display = "none";
 		context.status = new ClosedSidebar(context);
+		browser.runtime.sendMessage({ call: "enablePageRegularBehaviour" });
 	};
 	this.toggle = function() {
 		this.close();

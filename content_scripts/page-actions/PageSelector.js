@@ -4,28 +4,12 @@ console.log("\n\n\n********* LOADING THE 'PAGE SELECTOR' FILE *********\n\n\n");
 function PageSelector(){
 	//this.createEventListeners();
 	this.highlightingClass = "andes-highlighted";
-	this.clearBackground = "andes-clear-background";
+	this.clearBackgroundClass = "andes-clear-background";
+	this.obfuscatedClass = "andes-blurred";
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
 	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 };
-/*PageSelector.prototype.getAllVisibleDomElementsButSidebar = function(){
-	var elems = document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //*:not(#andes-sidebar)
-	var sidebarElems = document.querySelector("#andes-sidebar").querySelectorAll("*");
-
-	console.log(elems);
-	sidebarElems.forEach(function(sidebarElem){
-
-		for (var i = elems.length - 1; i >= 0; i--) {
-			if(elems[i] == sidebarElem){
-				console.log(elems[i]);
-				elems.splice(i, 1);
-				return;
-			}
-		}
-	});
-	return elems;
-};*/
 PageSelector.prototype.getCurrentSidebarElements = function(){
 	
 	return document.querySelector("#andes-sidebar").querySelectorAll("*");
@@ -85,7 +69,8 @@ PageSelector.prototype.makeTargetElementsSelectable = function(selector, onEleme
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
-		this.changeHighlightingForClearBackground();
+		this.unhighlight(element);
+		this.addClearBackground(element);
 
 	    var canvas = document.createElement("canvas");
 	    canvas.width = element.offsetWidth;
@@ -96,7 +81,7 @@ PageSelector.prototype.generatePreview = function(element){
 	    	document.defaultView.scrollX,parseInt(box.top)+
 	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
 
-	    this.removeClassFromMatchingElements(this.clearBackground);
+	    this.removeClearBackground(element);
 	    this.highlight(element);
 
 	    return canvas.toDataURL();
@@ -107,20 +92,21 @@ PageSelector.prototype.generatePreview = function(element){
 }
 PageSelector.prototype.highlight = function(elem){
 
-	if(!elem.classList.contains(this.highlightingClass)) 
-		elem.classList.add(this.highlightingClass);
+	this.addStyleClass(elem, this.highlightingClass);  
 }
-PageSelector.prototype.changeHighlightingForClearBackground = function(){
+PageSelector.prototype.removeFullSelectionStyle = function(){
 
-	var hElems = document.getElementsByClassName(this.highlightingClass);
-	for (var i = 0; i < hElems.length; i++) {
-		hElems[i].classList.remove(this.highlightingClass);
-		hElems[i].classList.add(this.clearBackground);
-	}
+	this.removeClassFromMatchingElements(this.obfuscatedClass);
+	this.removeClassFromMatchingElements(this.highlightingClass);
+	this.removeClassFromMatchingElements(this.clearBackgroundClass);
+}
+PageSelector.prototype.removeEventBlockers = function(){
+
+	console.log("Removing event blockers");
 }
 PageSelector.prototype.removeClassFromMatchingElements = function(className){
 
-	var hElems = document.getElementsByClassName(className);
+	var hElems = document.querySelectorAll("." + className);
 	for (var i = 0; i < hElems.length; i++) {
 		hElems[i].classList.remove(className);
 	}
@@ -138,16 +124,36 @@ PageSelector.prototype.isAVisibleElement = function(elem){
 	return (elem.style.display != "none" && elem.getBoundingClientRect().width != 0)? true : false;
 }
 PageSelector.prototype.darkify = function(elem){
+
+	this.addStyleClass(elem, this.obfuscatedClass);
+};
+PageSelector.prototype.addClearBackground = function(elem){
 	
-	if(!elem.classList.contains("andes-blurred")){
-		elem.classList.add("andes-blurred");
+	this.addStyleClass(elem, this.clearBackgroundClass);
+};
+PageSelector.prototype.addStyleClass = function(elem, className){
+	
+	if(!elem.classList.contains(className)){
+		elem.classList.add(className);
+	}
+};
+PageSelector.prototype.removeStyleClass = function(elem, className){
+	
+	if(elem.classList.contains(className)){
+		elem.classList.remove(className);
 	}
 };
 PageSelector.prototype.undarkify = function(elem){
 	
-	if(elem.classList.contains("andes-blurred")){
-		elem.classList.remove("andes-blurred")
-	}	
+	this.removeStyleClass(elem, this.obfuscatedClass);
+};
+PageSelector.prototype.unhighlight = function(elem){
+	
+	this.removeStyleClass(elem, this.highlightingClass);	
+};
+PageSelector.prototype.removeClearBackground = function(elem){
+	
+	this.removeStyleClass(elem, this.clearBackgroundClass);	
 };
 
 var pageManager = new PageSelector();

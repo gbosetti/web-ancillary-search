@@ -59,6 +59,13 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
 
   this.templatesCreator.disableHarvesting(tab);
 };
+BrowserUiManager.prototype.enablePageRegularBehaviour = function() {
+  
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.enablePageRegularBehaviour(tab);
+  });
+};
 BrowserUiManager.prototype.enableElementSelection = function(data) {
   
   var me = this;

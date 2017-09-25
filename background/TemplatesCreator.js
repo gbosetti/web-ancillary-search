@@ -16,6 +16,10 @@ TemplatesCreator.prototype.onElementSelection = function(xpaths, prevSrc) {
 
   this.sidebar.onElementSelection(xpaths, prevSrc);
 }
+TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
+
+  this.pageSelector.enablePageRegularBehaviour(tab);
+}
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.sidebar.onFrameReadyForLoadingUrl();
