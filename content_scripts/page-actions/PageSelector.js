@@ -4,6 +4,7 @@ console.log("\n\n\n********* LOADING THE 'PAGE SELECTOR' FILE *********\n\n\n");
 function PageSelector(){
 	//this.createEventListeners();
 	this.highlightingClass = "andes-highlighted";
+	this.clearBackground = "andes-clear-background";
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
 	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
@@ -84,7 +85,7 @@ PageSelector.prototype.makeTargetElementsSelectable = function(selector, onEleme
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
-		this.removeHighlighting();
+		this.changeHighlightingForClearBackground();
 
 	    var canvas = document.createElement("canvas");
 	    canvas.width = element.offsetWidth;
@@ -95,7 +96,9 @@ PageSelector.prototype.generatePreview = function(element){
 	    	document.defaultView.scrollX,parseInt(box.top)+
 	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
 
-	    element.classList.add(this.highlightingClass);
+	    this.removeClassFromMatchingElements(this.clearBackground);
+	    this.highlight(element);
+
 	    return canvas.toDataURL();
 	}catch(err){
 		console.log(err.message);
@@ -107,11 +110,19 @@ PageSelector.prototype.highlight = function(elem){
 	if(!elem.classList.contains(this.highlightingClass)) 
 		elem.classList.add(this.highlightingClass);
 }
-PageSelector.prototype.removeHighlighting = function(){
+PageSelector.prototype.changeHighlightingForClearBackground = function(){
 
 	var hElems = document.getElementsByClassName(this.highlightingClass);
 	for (var i = 0; i < hElems.length; i++) {
 		hElems[i].classList.remove(this.highlightingClass);
+		hElems[i].classList.add(this.clearBackground);
+	}
+}
+PageSelector.prototype.removeClassFromMatchingElements = function(className){
+
+	var hElems = document.getElementsByClassName(className);
+	for (var i = 0; i < hElems.length; i++) {
+		hElems[i].classList.remove(className);
 	}
 }
 PageSelector.prototype.undarkifySidebarElements = function(){
@@ -126,33 +137,6 @@ PageSelector.prototype.isAVisibleElement = function(elem){
 
 	return (elem.style.display != "none" && elem.getBoundingClientRect().width != 0)? true : false;
 }
-/*PageSelector.prototype.showSelectionPopup = function(elem){
-
-    var popup = this.createPopup(elem); 
-	elem.ownerDocument.body.appendChild(popup);
-
-	return popup;
-};
-PageSelector.prototype.createPopup = function(elem){
-
-	var me=this;
-    var menu = document.createElement("div");
-		menu.style["z-index"] = "2147483647";
-
-		var bounds = elem.getBoundingClientRect();
-
-		menu.style["width"] = bounds.width - 50;
-		menu.style["height"] = bounds.height;
-		menu.style["margin-bottom"] = "20px !important";
-		menu.style["overflow"] = "hidden !important";
-		menu.style["box-shadow"] = "5px 5px rgba(0,0,0,0.5)";
-		menu.style["color"] = "white";
-		menu.style["display"] = "table";
-
-		elem.parentNode.appendChild(menu);
-
-	return menu;
-};*/
 PageSelector.prototype.darkify = function(elem){
 	
 	if(!elem.classList.contains("andes-blurred")){

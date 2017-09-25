@@ -12,7 +12,8 @@
                 no-repeat;
 }
 
-* > .andes-highlighted { 
+* > .andes-highlighted, 
+* > .andes-clear-background { 
     background: white !important; 
     border-radius: 5px !important;
 }
