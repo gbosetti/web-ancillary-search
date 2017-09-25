@@ -25,48 +25,48 @@ BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callb
   		new BackgroundResource("/content_scripts/page-actions/PageSelector.js")
   	], tab, callback);
 };
+BackgroundPageSelector.prototype.sendPreventDomElementsBehaviour = function(tab){
+	browser.tabs.sendMessage(tab.id, {
+    	"call": "preventDomElementsBehaviour"
+    });
+};
+BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection){
+	browser.tabs.sendMessage(tab.id, {
+    	"call": "enableElementSelection",
+    	"args":{
+    		"targetElementSelector": targetElementSelector,
+    		"onElementSelection": onElementSelection
+    	}
+    });
+};
 
 function PageSelectorStatus(context){
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){};
 	this.preventDomElementsBehaviour = function(tab){};
-	this.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection){
-		browser.tabs.sendMessage(tab.id, {
-	    	"call": "enableElementSelection",
-	    	"args":{
-	    		"targetElementSelector": targetElementSelector,
-	    		"onElementSelection": onElementSelection
-	    	}
-	    });
-	};
 }
 function UnloadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
-	var me = this;
 	this.preventDomElementsBehaviour = function(tab){
+		
+		context.status[tab.id] = new LoadedPageSelector(context);
 		context.loadDomHighlightingExtras(tab, function(){
-			browser.tabs.sendMessage(tab.id, {
-		    	"call": "preventDomElementsBehaviour"
-		    });
+			context.sendPreventDomElementsBehaviour(tab);
 		});
-		context.status = new LoadedPageSelector(context);
 	};
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
+
+		context.status[tab.id] = new LoadedPageSelector(context);
 		context.loadDomHighlightingExtras(tab, function(){
-			me.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
+			context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
 		});
-		context.status = new LoadedPageSelector(context);
 	};
 }
 function LoadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
-	var me = this;
 	this.preventDomElementsBehaviour = function(tab){
-		browser.tabs.sendMessage(tab.id, {
-	    	"call": "preventDomElementsBehaviour"
-	    });
-		context.status = new LoadedPageSelector(context);
+		context.sendPreventDomElementsBehaviour(tab);
 	};
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
-		me.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
+		context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
 	};
 }

@@ -4,9 +4,10 @@ function ServiceInputUI(){
 	this.userDefInputXpath;
 
 	this.loadSubformBehaviour = function() {
-		this.enableElementSelection();
+		this.enableDomElementSelection();
 	};
-	this.enableElementSelection = function() {
+	this.enableDomElementSelection = function() {
+
 		browser.runtime.sendMessage({ 
     		"call": "enableElementSelection",
     		"args": {
@@ -16,7 +17,7 @@ function ServiceInputUI(){
     	});
 	};
 	this.onElementSelection = function(data){
-		console.log("doing stuff with the selected input", data);
+
 		this.showPreview();
 		this.loadPreview(data.previewSource);
 		this.userDefInputXpath = data.xpaths;

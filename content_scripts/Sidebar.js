@@ -27,9 +27,7 @@ Sidebar.prototype.loadUrl = function(data) {
 };
 Sidebar.prototype.loadContentScripts = function(filePaths, doc) {
 	
-	new ContentResourcesLoader().syncLoadScripts(filePaths, doc, function(){
-		console.log("done!");
-	});
+	new ContentResourcesLoader().syncLoadScripts(filePaths, doc);
 };
 Sidebar.prototype.createUI = function(filePaths) {
 

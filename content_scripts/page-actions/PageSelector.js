@@ -1,5 +1,5 @@
 //TODO: somehow, the file is realoded and that makes it impossible to remove listeners :(
-console.log("\n\n\n********* LOADING THE FILE *********\n\n\n");
+console.log("\n\n\n********* LOADING THE 'PAGE SELECTOR' FILE *********\n\n\n");
 
 function PageSelector(){
 	//this.createEventListeners();
