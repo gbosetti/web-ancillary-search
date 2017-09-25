@@ -20,11 +20,11 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 		});
 	});
 };
-SidebarManager.prototype.toggle = function() { //PUBLIC
+SidebarManager.prototype.toggle = function(callback) { //PUBLIC
 
 	var me = this;
 	this.getCurrentTab(function(tab){
-		me.getStatusForTab(tab).toggle(tab);
+		me.getStatusForTab(tab).toggle(tab, callback);
 	});
 };
 SidebarManager.prototype.adaptPlaceholder = function() {
@@ -73,8 +73,9 @@ function SidebarManagerStatus(context){
 
 function LoadedSidebar(context){
 	SidebarManagerStatus.call(this, context);
-	this.toggle = function(tab){
+	this.toggle = function(tab, callback){
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
+		if(callback) callback(tab);
 	};
 }
 
@@ -82,8 +83,9 @@ function NoLoadedSidebar(context){
 	SidebarManagerStatus.call(this, context);
 
 	var status = this;
-	this.toggle = function(tab){
+	this.toggle = function(tab, callback){
 		this.open(tab);
+		if(callback) callback(tab);
 	};
 	this.open = function(tab){
 

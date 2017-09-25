@@ -6,7 +6,11 @@ function TemplatesCreator(){
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
-  this.sidebar.toggle();
+	var me = this;
+	this.sidebar.toggle(function(tab){
+		//so the user can't change the page while the sidebar is open
+		me.pageSelector.preventDomElementsBehaviour(tab);
+	});
 }
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 

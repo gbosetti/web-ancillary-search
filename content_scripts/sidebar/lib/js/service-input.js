@@ -26,7 +26,7 @@ function ServiceInputUI(){
 		var me = this;
 		document.querySelector(".prev > button").onclick = function(){   
 
-	    	if(me.isElementSelected("input")){
+	    	if(me.isElementSelected("input:not([style*='display:none'])")){
 	    		me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
     			});

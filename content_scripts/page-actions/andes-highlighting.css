@@ -11,9 +11,26 @@
                 50% 50% 
                 no-repeat;
 }
+
+* > .andes-highlighted { 
+    background: white !important; 
+    border-radius: 5px !important;
+}
+.andes-highlighted:hover{
+    cursor: pointer;
+}
+.andes-highlighted:hover{
+    background: orange !important;
+    border: 1px solid orange !important;
+    border-radius: 5px !important;
+    box-shadow: 0px 0px 2px 1px orange !important;
+}
+
 .andes-blurred{
-	background: rgba(30, 30, 30, 0.75) !important;
+	background: rgba(129, 129, 129, 0.5) !important;
 	color: rgba(30, 30, 30, 0.75) !important;
 	border: none !important;
-	filter: grayscale(100%) !important;
+}
+.andes-blurred img{
+    filter: grayscale(100%) !important;
 }
