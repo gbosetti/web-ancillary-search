@@ -13,15 +13,45 @@
   },
 
 
+
   "the_input_control": {
     "message": "El control de entrada"
   },
   "select_the_input_control": {
-    "message": "Señalá y hacé click en el elemento de la página que identifiques como el <a href='#' data-toggle='tooltip' title='Aquel control sobre el que escribís lo que querés buscar'>control de entrada</a> del formulario de búsqueda."
+    "message": "Señalá y hacé click en el elemento de la página que identifiques como el control que <b>dispara</b> una búsqueda."
   },
   "selected_input_control": {
     "message": "Elemento seleccionado"
   }, 
+
+
+
+  "trigger_mechanism": {
+    "message": "Mecanismo de activación de búsqueda"
+  },
+  "trigger_mechanism_instructions": {
+    "message": "Seleccioná el mecanismo que utiliza el motor de búsqueda de la página para recuperar resultados de búsqueda."
+  },
+  "the_trigger_control": {
+    "message": "Disparador de búsqueda"
+  },
+  "select_the_trigger_control": {
+    "message": "Seleccioná el "
+  },
+  "err_select_an_element": {
+    "message": "No seleccionaste ningún elemento de la página. Por favor, hacé click en el elemento que mejor represente lo requerido en este formulario."
+  },
+  "click_on_control_to_trigger": {
+    "message": "Cliquear un control (botón, link, etc.)"
+  },
+  "press_enter_to_trigger": {
+    "message": "Presionar enter"
+  },
+  "type_and_wait_to_trigger": {
+    "message": "Tipear y esperar"
+  },
+
+
 
 
   "next":{
@@ -30,6 +60,7 @@
   "back":{
     "message": "Anterior"
   },
+
 
 
   "singleMatch":{

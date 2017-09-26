@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="lib/css/service-input.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
+    <link rel="stylesheet" type="text/css" href="../vendor/bootswatch/united/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/validate.css"/>
+
+    <script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+  </head>
+  <body class="dotted">
+    <div class="panel-heading">
+		<div class="panel-title text-center">
+		  <h2 class="title" i18n-data="the_trigger_control">The trigger control</h2>
+		</div>
+	</div> 
+
+	<div class="container">    
+		<form class="sidebar-form">     
+			<div class="well">
+				<button type="button" class="close" data-dismiss="alert">
+				<span class="glyphicon glyphicon-info-sign"></span>
+				</button>
+				<span i18n-data="trigger_mechanism_instructions"></span>
+			</div>
+			<!-- :::::::::: SELECT :::::::::: -->
+		    <div class="form-group">
+		        <label for="trigger_mechanism" i18n-data="trigger_mechanism">Search trigger mechanism</label>
+		        <select id="trigger_mechanism" class="form-control">
+		        	<option i18n-data="click_on_control_to_trigger" value="ClickBasedTrigger"></option>
+		        	<option i18n-data="press_enter_to_trigger" value="EnterBasedTrigger"></option>
+		        	<option i18n-data="type_and_wait_to_trigger" value="TypeAndWaitBasedTrigger"></option>
+		        </select>
+		    </div>
+		    <div id="trigger_mechanism_params_area">
+		    	
+		    	<!-- :::::::::: SPECIAL AREA FOR THE SPECIALIZED STRATEGY CONTROLS (BETTER IF DYNAMIC) :::::::::: -->
+				<div class="form-group hidden">
+				  	<label for="" i18n-data="selected_input_control">Service name</label>
+				  	<div id="preview-of-property">
+			            <img id="property-preview-image" class="image-preview" src="lib/img/no-preview.png"/> 
+			        </div>
+				</div>
+				<div class="warning-message hidden">
+					<div class="form-group">
+				        <label class="error" i18n-data="err_select_an_element"></label>
+				    </div>
+				</div>
+
+		    </div>
+			
+			<nav class="hidden"> 
+			  <ul class="pager">
+			    <!-- YOU CAN NOT ADD BEHAVIOUR HERE -->
+			    	<li class="prev active pull-left">
+						<button type="button" class="btn btn-primary">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						  	<span i18n-data="back">Back</span>
+						</button>
+					</li>
+			      	<li class="next active pull-right">
+			          	<button type="button" class="btn btn-primary">
+			              	<span i18n-data="next">Next</span>
+			              	<span class="glyphicon glyphicon-triangle-right"></span>
+			          	</button>
+			      	</li>
+			  </ul>
+			</nav> 
+        </form>
+    </div>
+  </body>
+</html>

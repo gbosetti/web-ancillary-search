@@ -7,14 +7,29 @@ function UI(){
 		this.loadSubformBehaviour();
 		return this;
 	};
+	this.enableDomElementSelection = function(control, callbackMessage) {
+
+		browser.runtime.sendMessage({ 
+    		"call": "enableElementSelection",
+    		"args": {
+    			targetElementSelector: control,
+    			onElementSelection: callbackMessage
+    		}
+    	});
+	};
 	this.loadValidationBehaviour = function() {
 
 		var rules = this.getValidationRules();
 		if(rules) $('form').validate({  "rules": rules });
 	};
 	this.focusElement = function(selector) {
-
 		document.querySelector(selector).focus();
+	};
+	this.showFormElement = function(selector){
+		document.querySelector(selector).display = "";
+	};
+	this.hideFormElement = function(selector){
+		document.querySelector(selector).display = "none";
 	};
 	this.getValidationRules = function() {};
 	this.loadNavigationTriggers = function() {

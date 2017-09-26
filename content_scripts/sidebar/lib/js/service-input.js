@@ -4,17 +4,7 @@ function ServiceInputUI(){
 	this.userDefInputXpath;
 
 	this.loadSubformBehaviour = function() {
-		this.enableDomElementSelection();
-	};
-	this.enableDomElementSelection = function() {
-
-		browser.runtime.sendMessage({ 
-    		"call": "enableElementSelection",
-    		"args": {
-    			targetElementSelector: "input",
-    			onElementSelection: "onElementSelection"
-    		}
-    	});
+		this.enableDomElementSelection("input", "onElementSelection");
 	};
 	this.onElementSelection = function(data){
 
@@ -38,11 +28,11 @@ function ServiceInputUI(){
 		var me = this;
 		document.querySelector(".prev > button").onclick = function(){   
 
-	    	if(me.isElementSelected("input:not([style*='display:none'])")){
+	    	/*if(me.isElementSelected("input:not([style*='display:none'])")){
 	    		me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
     			});
-	    	}
+	    	}*/
 	    	me.loadUrlAtSidebar({ 
         		url: "/content_scripts/sidebar/service-name.html",
         		filePaths: [
@@ -50,6 +40,25 @@ function ServiceInputUI(){
 					"/content_scripts/sidebar/lib/js/service-name.js"
 				] 
         	});
+		};
+	};
+	this.loadNextNavigationButton = function() {
+
+		var me = this;
+		document.querySelector(".next > button").onclick = function(){   
+
+			//if(this.userDefInputXpath){
+	    		/*me.saveDataForCurrentService({
+    				inputXpath: me.userDefInputXpath
+    			});*/
+		    	me.loadUrlAtSidebar({ 
+	        		url: "/content_scripts/sidebar/service-trigger.html",
+	        		filePaths: [
+	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
+						"/content_scripts/sidebar/lib/js/service-trigger.js"
+					] 
+	        	});
+		    //};
 		};
 	};
 };
