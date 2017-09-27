@@ -12,6 +12,13 @@ BrowserUiManager.prototype.onElementSelection = function(data) {
 
   this.templatesCreator.onElementSelection(data.xpaths, data.previewSource);
 }
+BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
+  });
+}
 BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.templatesCreator.onFrameReadyForLoadingUrl();

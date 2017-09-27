@@ -45,7 +45,6 @@
   ],
 
   "web_accessible_resources": [
-    "/content_scripts/index.html",
-    "/content_scripts/sidebar/*"
+    "/content_scripts/*"
   ]
 }

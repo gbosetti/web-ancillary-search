@@ -1,14 +1,31 @@
+/*TODO: hay que buscar mejores nombres para los mensajes de esta clase. showResults no est'a cargando los results; lo termina haciendo onExtraDependenciesLoaded. */
+
 function ResultsVisualizer(){
 	this.visualizer; //= visualizer || new Datatables(); //strategy
 	this.presentationState = new WaitingForRequest(this);
 }
 ResultsVisualizer.prototype.showResults = function(data) {
 
-	var panel = this.buildPanel(data);
-	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
+	this.panel = this.buildPanel(data);
+	this.results = data.results;
 
-	this.presentData(data.results, panel.childNodes[1].children[0]);
+	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
+	this.loadExtraDependencies();
 };
+ResultsVisualizer.prototype.onExtraDependenciesLoaded = function(){
+
+	this.presentData(this.results, this.panel.childNodes[1].children[0]);
+}
+ResultsVisualizer.prototype.loadExtraDependencies = function(){
+
+  	browser.runtime.sendMessage({
+		call: "loadVisalizerDependencies",
+		args: {
+			"dependencies": this.getDependencies(),
+			"callbackMessage": "onExtraDependenciesLoaded"
+		}
+	});
+}
 ResultsVisualizer.prototype.presentData = function(results, targetPanel){
 
 	this.visualizer.presentData(results, targetPanel);
@@ -20,9 +37,8 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
-		//var me = this;
 		//iframe.onload = function(){ /* TODO: change PresentationState */ }
-		iframe.src = browser.extension.getURL("/content_scripts/index.html");
+		iframe.src = browser.extension.getURL("/content_scripts/visualizations/index.html");
 	
 	return iframe;
 }
@@ -130,6 +146,7 @@ ResultsVisualizer.prototype.createResultsBox = function(unwrappedWindow, title){
 }
 ResultsVisualizer.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
 
+	//TODO: refactoring > createHeader(title): HtmlDivElement
 	var resultsHeader = unwrappedWindow.document.createElement("div");
 		resultsHeader.innerHTML = title;
 		resultsHeader.style["color"] = "white";
@@ -145,6 +162,7 @@ ResultsVisualizer.prototype.createResultsBoxHeader = function(unwrappedWindow, t
 		resultsHeader.style["padding"] = "15px";
 		resultsHeader.style["border-radius"] = "5px 5px 0px 0px";
 
+	//TODO: refactoring > createCloseButton(): Span
 	var closeButton = unwrappedWindow.document.createElement("span");
 		closeButton.innerHTML = "✕";
 		closeButton.style["background-color"] = "rgba(0, 0, 0, 0.15)";
@@ -177,14 +195,8 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
     	return resultsBody;
 }
 
-ResultsVisualizer.prototype.loadVisalizerDependencies = function(dependencies, doc, callback) {
 
-  	new ContentResourcesLoader().syncLoadScripts(dependencies.js, doc, callback);
-  	//this.syncLoadStyles()
-}
-
-
-// Estados
+// STATE PATTERN!!!
 //TODO: implementar con estados, cada cual chequea lo que corresponde 
 function PresentationStatus(context){
 	this.context = context;
@@ -225,23 +237,14 @@ function Datatables(visualizer){
 Datatables.prototype.getDependencies = function(visualizer) {
 	return {
 		"js": [
-			"/content_scripts/vendor/jquery/dist/jquery.min.js",
-			"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
 			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
 			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
-	  	],
-		"css": [
-			"/content_scripts/vendor/datatables/media/css/jquery.dataTables.min.css", 
-			"/content_scripts/vendor/datatables-responsive/css/responsive.dataTables.min.css",
-			"/content_scripts/vendor/bootstrap/dist/css/bootstrap.min.css"
-		]
+	  	]
 	};
 };
 Datatables.prototype.presentData = function(concepts, iframe) {
 
-	//TODO: apply state pattern
-	// ============================================ console is not useful in this context
-
+	//TODO: APPLY STATE PATTERN
 	var me = this;
 	var checkForIframe = setInterval(function(){ 
 		var panel = iframe.contentWindow.document.querySelector("#results");
@@ -249,52 +252,47 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 		if(panel){
 			clearInterval(checkForIframe);
 
-			me.visualizer.loadVisalizerDependencies(
-				me.getDependencies(),
-				iframe.contentWindow.document,
-				function(){
+			//TODO: cambiar esto para que recupere resultados posta
+			concepts = [{name: "Pepe", surname: "Argento"}, {name: "María Elena", surname: "Fusenecco"}];
 
-					concepts.forEach(function(concept){
-						for(prop in concept){
-							var conceptDomElement = iframe.contentWindow.document.createElement("div");
-								conceptDomElement.innerHTML = prop + ": " + concept[prop];
-							panel.appendChild(conceptDomElement);
-						};
-						
-					});
-					iframe.contentWindow.document.body.style.background = "red";
-				}
-			);
+			var table = me.createTable(concepts, iframe.contentWindow.document);
+			panel.appendChild(table);
+			me.initializeDatatable(document, table);	
 		}
 	}, 3000);
-	//panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
 };
+Datatables.prototype.initializeDatatable = function(doc, table) {
+	
+	doc.defaultView["$"](table).DataTable();
+};
+Datatables.prototype.createTable = function(concepts, doc){
 
-/*Datatables.prototype.presentData = function(concepts, iframe) {
-
-	//TODO: apply state pattern
-
-	var checkForIframe = setInterval(function(){ 
-		var panel = iframe.contentWindow.document.querySelector("#results");
-		console.log(panel);
-
-		if(panel){
-			clearInterval(checkForIframe);
-			concepts.forEach(function(concept){
-
-				for(prop in concept){
-					var conceptDomElement = document.createElement("div");
-						conceptDomElement.innerHTML = prop + ": " + concept[prop];
-					panel.appendChild(conceptDomElement);
-				};
-			});
+	//TODO: refactoring. Este m'etodo es muy largo. ej. createHeader createBody populateBody etc
+	var table = doc.createElement("table");
+	var tableBody = doc.createElement("tbody");
+	var tableHead = doc.createElement("thead");
+	var trHead= doc.createElement("tr");
+		for (prop in concepts[0]){
+			var titleProp = doc.createElement("td");
+			titleProp.innerHTML = prop;
+			trHead.appendChild(titleProp);
 		}
-	}, 3000);
-	//panel.appendChild(this.createSpecializedVisualizationBox(document.defaultView));
-};*/
-Datatables.prototype.getDocumentPath = function(unwrappedWindow){
+		concepts.forEach(function(concept){
+			var conceptDomElement = doc.createElement("tr");
+			for(prop in concept){
+				var propDomElement = doc.createElement("td");
+				propDomElement.innerHTML =  concept[prop];
+				conceptDomElement.appendChild(propDomElement);
+			};
+		
+			tableHead.appendChild(trHead);
+			tableBody.appendChild(conceptDomElement);
+			table.appendChild(tableHead);
+			table.appendChild(tableBody);
 
-	return "./visualizers/datatables/datatables-visualization.html";
+		});
+
+		return table;
 }
 
 

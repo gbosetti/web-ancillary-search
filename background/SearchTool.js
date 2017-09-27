@@ -15,8 +15,26 @@ SearchTool.prototype.loadVisalizers = function(tab, callback) {
   		new BackgroundResource("/content_scripts/vendor/jquery-ui/jquery-ui.min.js"),
   		new BackgroundResource("/content_scripts/XPathInterpreter.js"),
   		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
-  		new BackgroundResource("/content_scripts/visualizations.js")
+  		new BackgroundResource("/content_scripts/visualizations/visualizations.js")
   	], tab, callback);
+}
+SearchTool.prototype.loadVisalizerDependencies = function(tab, dependencies, callbackMessage) {
+
+	//BEHAVIOUR
+	for (var i = dependencies.js.length - 1; i >= 0; i--) {
+		dependencies.js[i] = new BackgroundResource(dependencies.js[i]);
+	}
+  	BackgroundResourcesLoader.syncLoadScripts(dependencies.js, tab, function(){
+  		browser.tabs.sendMessage(tab.id, {
+			call: callbackMessage
+		});
+  	});
+
+  	//STYLE
+  	/*for (var i = dependencies.css.length - 1; i >= 0; i--) {
+		dependencies.css[i] = new BackgroundResource(dependencies.css[i]);
+	}
+  	BackgroundResourcesLoader.syncLoadStyles(dependencies.css, tab);*/
 }
 SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
   return this.loadedScriptsByTabs[tabId]? this.loadedScriptsByTabs[tabId] : false;
