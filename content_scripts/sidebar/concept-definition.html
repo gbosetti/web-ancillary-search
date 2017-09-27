@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+		<link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
+		<link rel="stylesheet" type="text/css" href="lib/css/concept-definition.css">
+		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="https://bootswatch.com/united/bootstrap.min.css">
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+		<script type="text/javascript" src="lib/js/files-management.js"></script>
+		<script type="text/javascript" src="lib/js/TemplatesCreator.js"></script>
+		<script type="text/javascript" src="lib/js/concept-definition.js"></script>
+
+		<title>result definition</title>
+	</head>
+	<body>
+		<title></title>
+    	<div class="panel-heading" style="padding-bottom: 0px;">
+           <div class="panel-title text-center">
+           		<h3 class="title">Result definition</h3>
+           		<hr />
+           	</div>
+        </div> 
+		<div class="container">
+			<form id="edit-result-form">  
+			    <!-- :::::::::: NAME :::::::::: -->
+			    <div class="form-group">
+			        <label for="edit-result-name">Name</label>
+			        <input id="edit-result-name" name="edit-result-name" type="text" class="form-control" placeholder="E.g. Scholar Article" required="true"></input>
+			    </div>
+			    <!-- :::::::::: XPATH :::::::::: --> 
+			    <div class="form-group">
+			        <label for="edit-result-xpath">Selector</label>
+			        <select id="edit-result-xpath" class="form-control">
+			        </select>
+			    </div>
+			    <!-- :::::::::: PREVIEW :::::::::: --> 
+			    <div class="form-group">
+			        <label for="preview-of-result">Preview</label>
+			        <div id="preview-of-result" class="image-preview-container">
+			            <img id="result-preview-image" class="image-preview" /> 
+			        </div>
+			    </div>
+			    <div class="">
+			        <a href="" class="pull-right" style="font-size: 12px;color: blue;">   Advanced settings</a>
+			        <br>
+			    </div>
+			    <!--<nav> 
+			        <ul class="pager">
+			            <li class="previous active">
+			                <button type="button" class="btn btn-primary">
+			                    <span class="glyphicon glyphicon-trash"></span>
+			                    <span id="discard-materializable-label" class="pager-option-label">Discard</span>
+			                </button>
+			            </li>
+			            <li class="next active">
+			                <button id="save-result" type="button" class="btn btn-primary" >
+			                    <span>Save</span>
+			                    <span class="glyphicon glyphicon-floppy-disk"></span>
+			                </button>
+			            </li>
+			        </ul>
+			    </nav> -->
+			</form>
+		</div>
+	</body>
+</html>

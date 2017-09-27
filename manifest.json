@@ -1,0 +1,50 @@
+{
+  "manifest_version": 2,
+  "name": "Augmented Search Services",
+  "version": "1.0",
+  "description": "...",
+  "homepage_url": "https://sites.google.com/site/webancillarysearches/",
+
+  // COMMENT "GECKO" SO IT CAN BE INTERPRETED BY GOOGLE CHROME
+  "applications": {
+    "gecko": {
+      "strict_min_version": "55.0a1"
+    }
+  },
+
+  "default_locale": "en",
+
+  "browser_action": { //Note that your extension can have only one browser action
+    "default_icon": {
+      "16": "icons/logo-disabled-16.png",
+      "64": "icons/logo-disabled-64.png"
+    },
+    "default_title": "Augmented Search Services",
+    "browser_style": true
+  },
+
+  "background": {
+    "scripts": [
+      "background/browsers-standarization.js", 
+      "background/StorageManagement.js",
+      "background/BrowserUiManager.js", 
+      "background/BackgroundResourcesLoader.js",
+      "background/SearchTool.js", 
+      "background/SidebarManager.js",
+      "background/BackgroundPageSelector.js",
+      "background/TemplatesCreator.js",
+      "background/main.js"]
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "<all_urls>",
+    "contextMenus"
+  ],
+
+  "web_accessible_resources": [
+    "/content_scripts/*"
+  ]
+}

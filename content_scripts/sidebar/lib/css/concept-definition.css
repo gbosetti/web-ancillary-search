@@ -1,0 +1,13 @@
+.image-preview-container{
+    background-color: #EEE;
+    padding: 5px;
+    border-radius: 5px;
+}
+.image-preview{
+    max-height: 200px;
+    width: auto !important;
+    max-width: 100%;
+    box-shadow: 0px 0px 2px #555;
+    display: block;
+    margin: auto;
+}
