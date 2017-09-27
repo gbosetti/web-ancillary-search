@@ -1,12 +1,39 @@
-function SidebarManager(){
+function SidebarManager(defaultFile, defaultDependencies, listeners){
+
+	this.defaultFile = defaultFile;
+	this.defaultDependencies = defaultDependencies;
 	this.status = {};
+	this.listeners = [];
+	this.addListeners(listeners);
+}
+SidebarManager.prototype.addListeners = function(listeners) { 
+
+	for (var i = listeners.length - 1; i >= 0; i--) {
+		this.addListener(listeners[i]);
+	}
+}
+SidebarManager.prototype.addListener = function(listener) { 
+
+	this.listeners.push(listener);
+}
+SidebarManager.prototype.notifyListeners = function() { 
+
+	var me = this;
+	this.getCurrentTab(function(tab){
+		for (var i = me.listeners.length - 1; i >= 0; i--) {
+			me.listeners[i].onSidebarStatusChange(me.status[tab.id], tab);
+		}
+	});
 }
 SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
-	this.loadChromeUrl("/content_scripts/sidebar/service-name.html", [
-		"/content_scripts/sidebar/lib/js/ui-commons.js",
-		"/content_scripts/sidebar/lib/js/service-name.js"
-	]); 
+	this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
+	this.notifyListeners();
+}
+SidebarManager.prototype.onSidebarClosed = function() { 
+
+	this.close();
+	this.notifyListeners();
 }
 SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBLIC
 
@@ -70,17 +97,24 @@ SidebarManager.prototype.getCurrentTab = function(callback) {
 	}catch(err){ console.log(err); }	
 };
 SidebarManager.prototype.close = function() {
-	browser.tabs.sendMessage(tab.id, {call: "close"});
+	var me = this;
+	this.getCurrentTab(function(tab){
+		me.getStatusForTab(tab).close(tab);
+	});
 };
 
 function SidebarManagerStatus(context){
 	this.open = function(tab){
 		this.sendOpenMessage(tab);
 	};
+	this.close = function(tab){	};
 	this.sendOpenMessage = function(tab){
 		browser.tabs.sendMessage(tab.id, {call: "open"});
 	};
-	this.toggle = function(tab){};
+	this.isOpen = function(){
+		return false;
+	};
+	this.toggle = function(tab, callback){};
 }
 
 function LoadedSidebar(context){
@@ -89,6 +123,21 @@ function LoadedSidebar(context){
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
 	};
+}
+function LoadedClosedSidebar(context){
+	LoadedSidebar.call(this, context);
+	this.isOpen = function(){
+		return false;
+	};
+}
+function LoadedOpenSidebar(context){
+	LoadedSidebar.call(this, context);
+	this.isOpen = function(){
+		return true;
+	};
+	this.close = function(tab){
+		context.status[tab.id] = new LoadedClosedSidebar(context);
+	}
 }
 
 function NoLoadedSidebar(context){
@@ -105,7 +154,7 @@ function NoLoadedSidebar(context){
 	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
 	  		new BackgroundResource("/content_scripts/Sidebar.js")
 	  	], tab, function () {
-	        context.status[tab.id] = new LoadedSidebar(context);
+	        context.status[tab.id] = new LoadedOpenSidebar(context);
 	        status.sendOpenMessage(tab);
 	    });
 	};

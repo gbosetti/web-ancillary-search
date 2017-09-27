@@ -50,6 +50,9 @@
   "type_and_wait_to_trigger": {
     "message": "Tipear y esperar"
   },
+  "selected_trigger_control": {
+    "message": "Disparador de búsqueda seleccionado"
+  }, 
 
 
 

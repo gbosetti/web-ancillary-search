@@ -26,8 +26,10 @@ sudo npm install -g bower
 
 ## Loading and debugging the extension in Firefox ##
 
-Download dependencies. Open a console at the sidebar/ folder (in the root dir) and execute:
+Download dependencies. Open a console on the project's "background" folder and execute:
 bower install
+
+Repeat the command on the project's "content_scripts" folder.
 
 Open "about:debugging" in Firefox, click "Load Temporary Add-on" and select any file in your add-on's directory. It will be installed until you restart Firefox. 
 

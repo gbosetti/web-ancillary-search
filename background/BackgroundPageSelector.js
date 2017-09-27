@@ -10,6 +10,9 @@ BackgroundPageSelector.prototype.getStatusByTab = function(tab) {
 BackgroundPageSelector.prototype.preventDomElementsBehaviour = function(tab) {
 	this.getStatusByTab(tab).preventDomElementsBehaviour(tab);
 };
+BackgroundPageSelector.prototype.restoreDomElementsBehaviour = function(tab) {
+	this.getStatusByTab(tab).restoreDomElementsBehaviour(tab);
+};
 BackgroundPageSelector.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
 	this.getStatusByTab(tab).enableElementSelection(tab, targetElementSelector, onElementSelection);
 };
@@ -35,6 +38,11 @@ BackgroundPageSelector.prototype.sendPreventDomElementsBehaviour = function(tab)
     	"call": "preventDomElementsBehaviour"
     });
 };
+BackgroundPageSelector.prototype.sendRestoreDomElementsBehaviour = function(tab){
+	browser.tabs.sendMessage(tab.id, {
+    	"call": "restoreDomElementsBehaviour"
+    });
+};
 BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection){
 	browser.tabs.sendMessage(tab.id, {
     	"call": "enableElementSelection",
@@ -48,6 +56,7 @@ BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targ
 function PageSelectorStatus(context){
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){};
 	this.preventDomElementsBehaviour = function(tab){};
+	this.restoreDomElementsBehaviour = function(tab){};
 }
 function UnloadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
@@ -56,6 +65,13 @@ function UnloadedPageSelector(context){
 		context.status[tab.id] = new LoadedPageSelector(context);
 		context.loadDomHighlightingExtras(tab, function(){
 			context.sendPreventDomElementsBehaviour(tab);
+		});
+	};
+	this.restoreDomElementsBehaviour = function(tab){
+		
+		context.status[tab.id] = new LoadedPageSelector(context);
+		context.loadDomHighlightingExtras(tab, function(){
+			context.sendRestoreDomElementsBehaviour(tab);
 		});
 	};
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
@@ -70,6 +86,9 @@ function LoadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
 	this.preventDomElementsBehaviour = function(tab){
 		context.sendPreventDomElementsBehaviour(tab);
+	};
+	this.restoreDomElementsBehaviour = function(tab){
+		context.sendRestoreDomElementsBehaviour(tab);
 	};
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
 		context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);

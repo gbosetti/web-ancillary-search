@@ -1,15 +1,28 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
-  this.sidebar = new SidebarManager();
+  this.sidebar = new SidebarManager(
+    "/content_scripts/sidebar/service-name.html", 
+    [
+      "/content_scripts/sidebar/lib/js/ui-commons.js",
+      "/content_scripts/sidebar/lib/js/service-name.js"
+    ],
+    [this]
+  ); 
   this.storage = new StorageFilesManager();
   this.pageSelector = new BackgroundPageSelector();
+}
+TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
+
+  if(sidebarStatus.isOpen())
+    this.pageSelector.preventDomElementsBehaviour(tab);
+  else this.pageSelector.restoreDomElementsBehaviour(tab);
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
 	var me = this;
 	this.sidebar.toggle(function(tab){
 		//so the user can't change the page while the sidebar is open
-		me.pageSelector.preventDomElementsBehaviour(tab);
+		//me.pageSelector.preventDomElementsBehaviour(tab);
 	});
 }
 TemplatesCreator.prototype.onElementSelection = function(xpaths, prevSrc) { 
@@ -23,6 +36,10 @@ TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) {
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.sidebar.onFrameReadyForLoadingUrl();
+}
+TemplatesCreator.prototype.onSidebarClosed = function() { 
+
+  this.sidebar.onSidebarClosed();
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 

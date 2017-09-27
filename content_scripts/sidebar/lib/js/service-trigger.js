@@ -5,9 +5,10 @@ function ClickBasedTrigger(client){
 	TriggerMechanism.call(this, client);
 
 	this.loadParamsConfigControls = function(){
-		//client.enableDomElementSelection("button, a, img", "onElementSelection");
-		client.addParamsConfigurationControls(document.createTextNode("ClickBasedTrigger"));
-	}
+		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
+		client.addParamsConfigurationControls(preview);
+		client.enableDomElementSelection("button, a, img", "onElementSelection");
+	};
 }
 function EnterBasedTrigger(client){
 	TriggerMechanism.call(this, client);
@@ -45,9 +46,8 @@ function ServiceInputUI(){
 		document.querySelector('#trigger_mechanism').onclick = function(){
 
 			me.clearTriggeringStrategyParamsArea();
-
-			var strategy = new window[this.value](me);
-			me.loadParamsConfigControls(strategy.loadParamsConfigControls());
+			me.currentTriggerStrategy = new window[this.value](me);
+			me.currentTriggerStrategy.loadParamsConfigControls();
 		};
 	};
 	this.clearTriggeringStrategyParamsArea = function(){

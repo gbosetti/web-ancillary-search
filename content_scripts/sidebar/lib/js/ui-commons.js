@@ -17,6 +17,25 @@ function UI(){
     		}
     	});
 	};
+	this.createPreviewControl = function(previewElemId, description){
+
+		var formGroup = document.createElement("div");
+			formGroup.setAttribute("class", "form-group hidden");
+
+		var label = document.createElement("label");
+			label.innerHTML = description;
+			formGroup.appendChild(label);
+
+		var imgContainer = document.createElement("div");
+		var previewImage = document.createElement("img");
+			previewImage.setAttribute("id", previewElemId);
+			previewImage.setAttribute("class", "image-preview");
+			previewImage.setAttribute("src", "lib/img/no-preview.png");
+		imgContainer.appendChild(previewImage);
+		formGroup.appendChild(imgContainer);
+
+		return formGroup;
+	};
 	this.loadValidationBehaviour = function() {
 
 		var rules = this.getValidationRules();

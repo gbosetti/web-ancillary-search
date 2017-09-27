@@ -23,6 +23,10 @@ BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() {
 
   this.templatesCreator.onFrameReadyForLoadingUrl();
 }
+BrowserUiManager.prototype.onSidebarClosed = function() { 
+
+  this.templatesCreator.onSidebarClosed();
+}
 BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();

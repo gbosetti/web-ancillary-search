@@ -6,6 +6,26 @@ function PageSelector(){
 	this.highlightingClass = "andes-highlighted";
 	this.clearBackgroundClass = "andes-clear-background";
 	this.obfuscatedClass = "andes-blurred";
+	this.loadListeners();
+};
+PageSelector.prototype.loadListeners = function(){
+	
+	this.selectionListener = function(evt){
+
+		evt.stopImmediatePropagation();
+
+		browser.runtime.sendMessage({ 
+			"call": onElementSelection,
+			"args": {
+				"selectors": (new XPathInterpreter()).getMultipleXPaths(this),
+				"previewSource": me.generatePreview(this)
+			}
+		});
+	};
+	this.preventActionsListener = function(evt){
+		evt.preventDefault();
+		evt.stopImmediatePropagation();
+	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
 	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
@@ -15,17 +35,27 @@ PageSelector.prototype.getCurrentSidebarElements = function(){
 	return document.querySelector("#andes-sidebar").querySelectorAll("*");
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
-	var elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
-		["click", "keydown", "keyup", "keypress", "mouseup", "mousedown"].forEach(function(eventToPrevent){
-
-			elem.addEventListener(eventToPrevent, function(evt){
-				evt.preventDefault();
-				evt.stopImmediatePropagation();
-			});
+		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
+			elem.addEventListener(eventToPrevent, me.preventActionsListener );
 		});
 	});
+};
+PageSelector.prototype.restoreDomElementsBehaviour = function(){
+	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+	elements.forEach(function(elem){
+		
+		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
+
+			elem.removeEventListener(eventToPrevent, me.preventActionsListener );
+		});
+	});
+};
+PageSelector.prototype.getEventsNamesToPrevent = function(){
+	
+	return ["click", "keydown", "keyup", "keypress", "mouseup", "mousedown"];
 };
 PageSelector.prototype.getTargetElements = function(selector){
 	
@@ -34,9 +64,14 @@ PageSelector.prototype.getTargetElements = function(selector){
 PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
-    this.makeTargetElementsSelectable(data.targetElementSelector, data.onElementSelection);
+    this.addSelectionListener(data.targetElementSelector, data.onElementSelection);
     this.undarkifySidebarElements();
     this.darkify(document.body); 
+};
+PageSelector.prototype.disableElementSelection = function(data){
+
+	this.undarkifyAllDomElements();
+    this.removeSelectionListener();
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -45,25 +80,27 @@ PageSelector.prototype.darkifyAllDomElements = function(){
 		me.darkify(elem);
     });
 }
-PageSelector.prototype.makeTargetElementsSelectable = function(selector, onElementSelection){
+PageSelector.prototype.undarkifyAllDomElements = function(){
+
+	var me = this, elems = this.getAllVisibleDomElements(); 
+	elems.forEach(function(elem) { 
+		me.undarkify(elem);
+    });
+}
+PageSelector.prototype.addSelectionListener = function(selector, onElementSelection){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.highlight(elem);
+		elem.addEventListener("click", this.selectionListener)	
+    });	
+}
+PageSelector.prototype.removeSelectionListener = function(selector){
 
-		elem.addEventListener("click", function(evt){
-
-			evt.stopImmediatePropagation();
-
-			browser.runtime.sendMessage({ 
-				"call": onElementSelection,
-				"args": {
-					"selectors": (new XPathInterpreter()).getMultipleXPaths(this),
-					"previewSource": me.generatePreview(this)
-				}
-			});
-		})	
+	var me = this;
+	this.getTargetElements(selector).forEach(function(elem) { 
+		elem.removeEventListener("click", this.selectionListener)	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){

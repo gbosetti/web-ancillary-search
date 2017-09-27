@@ -62,9 +62,6 @@ Sidebar.prototype.createContainer = function() {
 Sidebar.prototype.toolAcronym = function() {
 	return "andes";
 }
-/*Sidebar.prototype.openNewBrowserTab = function(url) {
-	window.open(url);
-}*/
 Sidebar.prototype.createCloseButton = function() {
 
 	var sidebar = this;
@@ -114,7 +111,7 @@ Sidebar.prototype.createIframe = function() {
 
 function SidebarStatus(context){
 	this.sidebar = context;
-	this.open = function(){ console.log("default 'open'"); };
+	this.open = function(){ };
 	this.close = function(){};
 }
 
@@ -124,7 +121,7 @@ function OpenSidebar(context){
 	this.close = function() {
 		context.widget.style.display = "none";
 		context.status = new ClosedSidebar(context);
-		browser.runtime.sendMessage({ call: "enablePageRegularBehaviour" });
+		browser.runtime.sendMessage({ call: "onSidebarClosed" });
 	};
 	this.toggle = function() {
 		this.close();

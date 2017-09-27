@@ -50,6 +50,9 @@
   "type_and_wait_to_trigger": {
     "message": "Il suffit de taper et d'attendre"
   },
+  "selected_trigger_control": {
+    "message": "Déclencheur sélectionné"
+  }, 
 
 
 
