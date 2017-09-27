@@ -19,5 +19,17 @@ function ContentResourcesLoader(){
 		}else{
 			if(callback) callback();
 		}		
-	}
+	};
+	this.syncLoadStyles = function(filePaths, doc, callback){
+		for (var i = filePaths.length - 1; i >= 0; i--) {
+
+			var link = doc.createElement('link');	
+			link.href = browser.extension.getURL(filePaths[i]);
+			link.rel="stylesheet";
+			link.type="text/css";
+			doc.getElementsByTagName('head')[0].appendChild(link);
+		}
+
+		if(callback) callback();
+	};
 }
