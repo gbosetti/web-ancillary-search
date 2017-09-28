@@ -30,7 +30,7 @@ PageSelector.prototype.loadListeners = function(){
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
-	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
+	return document.querySelectorAll("body, div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 };
 PageSelector.prototype.getCurrentSidebarElements = function(){
 	
@@ -73,7 +73,7 @@ PageSelector.prototype.enableElementSelection = function(data){
 PageSelector.prototype.disableElementSelection = function(data){
 
 	this.undarkifyAllDomElements();
-    this.removeSelectionListener();
+    this.removeSelectionListener(data.selector);
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -103,7 +103,7 @@ PageSelector.prototype.removeSelectionListener = function(selector){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
-		elem.removeEventListener("click", this.selectionListener)	
+		elem.removeEventListener("click", me.selectionListener)	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){

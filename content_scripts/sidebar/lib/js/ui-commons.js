@@ -17,6 +17,15 @@ function UI(){
     		}
     	});
 	};
+	this.disableDomElementSelection = function(selector) {
+
+		browser.runtime.sendMessage({ 
+    		"call": "disableElementSelection",
+    		"args": {
+    			"selector": selector
+    		}
+    	});
+	};
 	/*this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
 
 	    var formGroup = document.createElement("div");

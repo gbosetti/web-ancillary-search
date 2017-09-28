@@ -51,6 +51,7 @@ function ServiceInputUI(){
 	    		/*me.saveDataForCurrentService({
     				inputXpath: me.inputSelectors
     			});*/
+    			me.disableDomElementSelection("input");
 		    	me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-trigger.html",
 	        		filePaths: [

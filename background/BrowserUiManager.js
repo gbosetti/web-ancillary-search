@@ -81,10 +81,15 @@ BrowserUiManager.prototype.enableElementSelection = function(data) {
   
   var me = this;
   this.executeOnCurrentTab(function(tab){
-
     me.templatesCreator.enableElementSelection(tab, data.targetElementSelector, data.onElementSelection);
   });
+};
+BrowserUiManager.prototype.disableElementSelection = function(data) {
   
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.disableElementSelection(tab, data.selector);
+  });
 };
 BrowserUiManager.prototype.enableBrowserAction = function(tab) {
   this.changeBrowserActionIcon({

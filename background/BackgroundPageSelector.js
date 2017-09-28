@@ -20,6 +20,9 @@ BackgroundPageSelector.prototype.restoreDomElementsBehaviour = function(tab) {
 BackgroundPageSelector.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
 	this.getStatusByTab(tab).enableElementSelection(tab, targetElementSelector, onElementSelection);
 };
+BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
+	this.getStatusByTab(tab).disableElementSelection(tab, selector);
+};
 BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callback) {
 
 	BackgroundResourcesLoader.syncLoadStyles([
@@ -45,6 +48,14 @@ BackgroundPageSelector.prototype.sendPreventDomElementsBehaviour = function(tab)
 BackgroundPageSelector.prototype.sendRestoreDomElementsBehaviour = function(tab){
 	browser.tabs.sendMessage(tab.id, {
     	"call": "restoreDomElementsBehaviour"
+    });
+};
+BackgroundPageSelector.prototype.sendDisableSelectionMessage = function(tab, selector){
+	browser.tabs.sendMessage(tab.id, {
+    	"call": "disableElementSelection",
+    	"args": {
+    		"selector": selector
+    	}
     });
 };
 BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection){
@@ -85,6 +96,13 @@ function UnloadedPageSelector(context){
 			context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
 		});
 	};
+	this.disableElementSelection = function(tab, selector){
+
+		context.status[tab.id] = new LoadedPageSelector(context);
+		context.loadDomHighlightingExtras(tab, function(){
+			context.sendDisableSelectionMessage(tab, selector);
+		});
+	};
 }
 function LoadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
@@ -96,5 +114,8 @@ function LoadedPageSelector(context){
 	};
 	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
 		context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
+	};
+	this.disableElementSelection = function(tab, selector){
+		context.sendDisableSelectionMessage(tab, selector);
 	};
 }

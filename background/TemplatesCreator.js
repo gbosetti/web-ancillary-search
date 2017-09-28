@@ -9,21 +9,21 @@ function TemplatesCreator(){
     [this]
   ); 
   this.storage = new StorageFilesManager();
-  this.pageSelector = new BackgroundPageSelector();
+  this.backPageSelector = new BackgroundPageSelector();
   this.listenForTabChanges();
 }
 TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
 
   if(sidebarStatus.isOpen())
-    this.pageSelector.preventDomElementsBehaviour(tab);
-  else this.pageSelector.restoreDomElementsBehaviour(tab);
+    this.backPageSelector.preventDomElementsBehaviour(tab);
+  else this.backPageSelector.restoreDomElementsBehaviour(tab);
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
 	var me = this;
 	this.sidebarManager.toggleSidebar(function(tab){
 		//so the user can't change the page while the sidebar is open
-		//me.pageSelector.preventDomElementsBehaviour(tab);
+		//me.backPageSelector.preventDomElementsBehaviour(tab);
 	});
 }
 TemplatesCreator.prototype.listenForTabChanges = function() { 
@@ -32,7 +32,7 @@ TemplatesCreator.prototype.listenForTabChanges = function() {
   browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
     if(tabInfo.status == "complete"){
       me.sidebarManager.initializeStateForTab(tabId);
-      me.pageSelector.initializeStateForTab(tabId);
+      me.backPageSelector.initializeStateForTab(tabId);
     } 
   });
 }
@@ -42,7 +42,7 @@ TemplatesCreator.prototype.onElementSelection = function(selectors, prevSrc) {
 }
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 
-  this.pageSelector.enablePageRegularBehaviour(tab);
+  this.backPageSelector.enablePageRegularBehaviour(tab);
 }
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
@@ -87,7 +87,11 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
 }
 TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
 
-	this.pageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection);
+	this.backPageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection);
+}
+TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
+
+  this.backPageSelector.disableElementSelection(tab, selector);
 }
 TemplatesCreator.prototype.loadDataForConceptDefinition = function() {
 
