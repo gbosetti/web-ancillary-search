@@ -1,13 +1,45 @@
 function TriggerMechanism(client){
 	this.loadParamsConfigControls = function(){}
+	this.undoActionsOnDom = function(){};
+	this.areTriggerRequirementsMet = function(){ return false };
+	this.showMissingRequirementMessage = function(){
+		client.showErrorMessage("strategy-error", "#trigger_mechanism_params_area", this.getMissingRequirementLocalizedId());
+	};
+	this.getMissingRequirementLocalizedId = function(){ return "default_missing_requirement" };
+	this.removeErrorMessage = function(){
+		client.removeErrorMessage("strategy-error");
+	};
+	this.onElementSelection = function(data){ console.log("lalala "); };
+}
+function UnsetTrigger(client){
+	TriggerMechanism.call(this, client);
 }
 function ClickBasedTrigger(client){
 	TriggerMechanism.call(this, client);
 
+	this.triggerSelector;
+
 	this.loadParamsConfigControls = function(){
+		client.enableDomElementSelection("input, button, a, img", "onTriggerSelection");
 		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
 		client.addParamsConfigurationControls(preview);
-		client.enableDomElementSelection("button, a, img", "onElementSelection");
+	};
+	this.undoActionsOnDom = function(){
+		client.disableDomElementSelection("input, button, a, img", "onTriggerSelection");
+	};
+	this.getMissingRequirementLocalizedId = function(){
+		return "click_on_trigger_error"
+	};
+	this.areTriggerRequirementsMet = function(){
+		return (this.triggerSelector)? true : false;
+	};
+	this.onTriggerSelection = function(data){
+
+		console.log("cbt ");
+		client.showPreview();
+		client.loadPreview(data.previewSource);
+		this.triggerSelector = data.selectors;
+		this.removeErrorMessage();
 	};
 }
 function EnterBasedTrigger(client){
@@ -30,15 +62,15 @@ function ServiceInputUI(){
 
 	UI.call(this);
 	this.userDefInputXpath;
+	this.currentTriggerStrategy = new UnsetTrigger(this);
 
 	this.loadSubformBehaviour = function() {
 		this.associateTriggeringStrategiesBehaviour();
 	};
 	this.onElementSelection = function(data){
 
-		/*this.showPreview();
-		this.loadPreview(data.previewSource);
-		this.userDefInputXpath = data.selectors;*/
+		console.log("onElementSelection");
+		this.currentTriggerStrategy.onElementSelection(data);
 	}
 	this.associateTriggeringStrategiesBehaviour = function(){
 
@@ -46,9 +78,12 @@ function ServiceInputUI(){
 		document.querySelector('#trigger_mechanism').onchange = function(){
 
 			me.clearTriggeringStrategyParamsArea();
+			me.currentTriggerStrategy.undoActionsOnDom();
+
 			me.currentTriggerStrategy = new window[this.value](me);
 			me.currentTriggerStrategy.loadParamsConfigControls();
 		};
+		//document.querySelector('#trigger_mechanism').onchange();
 	};
 	this.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";
@@ -78,12 +113,18 @@ function ServiceInputUI(){
         	});
 		};
 	};
+	this.showMissingRequirementMessage = function(){
+		this.currentTriggerStrategy.showMissingRequirementMessage();
+	};
+	this.areTriggerRequirementsMet = function(){
+		return this.currentTriggerStrategy.areTriggerRequirementsMet();
+	};
 	this.loadNextNavigationButton = function() {
 
 		var me = this;
 		document.querySelector(".next > button").onclick = function(){   
 
-	    	if(this.triggerXpath){
+	    	if(me.areTriggerRequirementsMet()){
 	    		console.log(this.triggerXpath);
 	    		/*me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
@@ -96,7 +137,7 @@ function ServiceInputUI(){
 						"/content_scripts/sidebar/lib/js/service-name.js"
 					] 
 	        	});*/
-		    }else this.showFormElement(".warning-message");
+		    }else me.showMissingRequirementMessage("triggering-error", "");
 		};
 	};
 };

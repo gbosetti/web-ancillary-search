@@ -8,7 +8,6 @@ function ServiceInputUI(){
 	};
 	this.onElementSelection = function(data){
 
-		console.log("data", data);
 		this.showPreview();
 		this.loadPreview(data.previewSource);
 		this.inputSelectors = data.selectors;
@@ -21,9 +20,6 @@ function ServiceInputUI(){
 	this.loadPreview = function(src){
 		document.querySelector("#property-preview-image").src = src;
 	}
-	this.isElementSelected = function(elemType) {
-		return (this.inputSelectors)? true : false;
-	};
 	this.loadPrevNavigationButton = function() {
 
 		var me = this;

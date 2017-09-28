@@ -14,7 +14,9 @@ PageSelector.prototype.loadListeners = function(){
 	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
+		console.log("\n *** SELECTING ELEMENT");
 		evt.stopImmediatePropagation();
+		
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -24,6 +26,7 @@ PageSelector.prototype.loadListeners = function(){
 		});
 	};
 	this.preventActionsListener = function(evt){
+		console.log("\n *** PREVENING");
 		evt.preventDefault();
 		evt.stopImmediatePropagation();
 	};
@@ -31,26 +34,33 @@ PageSelector.prototype.loadListeners = function(){
 PageSelector.prototype.getAllVisibleDomElements = function(){
 	return document.querySelectorAll("body, div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 };
+PageSelector.prototype.getAllVisibleDomElementsButBody = function(){
+	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
+};
 PageSelector.prototype.getCurrentSidebarElements = function(){
 	
 	return document.querySelector("#andes-sidebar").querySelectorAll("*");
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
-	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+
+	console.log("\n *** ASKING TO LOAD PREVENTION");
+	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
-			elem.addEventListener(eventToPrevent, me.preventActionsListener );
+			elem.addEventListener(eventToPrevent, me.preventActionsListener, false);
 		});
 	});
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
-	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+
+	console.log("\n *** ASKING TO RESTORE");
+	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 
-			elem.removeEventListener(eventToPrevent, me.preventActionsListener );
+			elem.removeEventListener(eventToPrevent, me.preventActionsListener, false);
 		});
 	});
 };
@@ -64,6 +74,7 @@ PageSelector.prototype.getTargetElements = function(selector){
 };
 PageSelector.prototype.enableElementSelection = function(data){
 
+	console.log("\n *** ENABLING SELECTION");
 	this.darkifyAllDomElements();
     this.addSelectionListener(data.targetElementSelector, data.onElementSelection);
     this.undarkifySidebarElements();
@@ -71,6 +82,7 @@ PageSelector.prototype.enableElementSelection = function(data){
 };
 PageSelector.prototype.disableElementSelection = function(data){
 
+	console.log("\n *** DISABLING SELECTION");
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
     this.removeSelectionListener(data.selector);
@@ -98,19 +110,24 @@ PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 }
 PageSelector.prototype.addSelectionListener = function(selector, onElementSelection){
 
+	console.log("\n *** ASKING TO LOAD SELECTION");
+
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingClass(elem);
-		me.onElementSelectionMessage = onElementSelection;
-		elem.addEventListener("click", me.selectionListener)	
+		me.onElementSelectionMessage = onElementSelection; //callback
+		console.log(onElementSelection, "< adding listener\n\n");
+		elem.addEventListener("click", me.selectionListener, false)	
     });	
 }
 PageSelector.prototype.removeSelectionListener = function(selector){
 
+	console.log("\n *** ASKING TO REMOSE SELECTION");
+
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
-		elem.removeEventListener("click", me.selectionListener)	
+		elem.removeEventListener("click", me.selectionListener, false)	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){
@@ -207,7 +224,7 @@ var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
 	if(pageManager[request.call]){
-		console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
 		//Se lo llama con: browser.tabs.sendMessage
 		pageManager[request.call](request.args);
 	}

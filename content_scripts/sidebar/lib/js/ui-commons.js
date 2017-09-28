@@ -21,12 +21,13 @@ function UI(){
 
 		browser.runtime.sendMessage({ 
     		"call": "disableElementSelection",
-    		"args": {
-    			"selector": selector
-    		}
+    		"args": { "selector": selector }
     	});
 	};
-	/*this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
+	this.isElementSelected = function(elem) {
+		return (elem)? true : false;
+	};
+	this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
 
 	    var formGroup = document.createElement("div");
 	    	formGroup.setAttribute("class", "form-group");
@@ -40,7 +41,11 @@ function UI(){
 
 	    var referenceNode = document.querySelector(afterPositionSelector);
 	    referenceNode.parentElement.insertBefore(formGroup, referenceNode.nextSibling);
-	};*/
+	};
+	this.removeErrorMessage = function(id) {
+
+	    this.removeFormElement(id);
+	};
 	this.createPreviewControl = function(previewElemId, description){
 
 		var formGroup = document.createElement("div");
@@ -73,6 +78,11 @@ function UI(){
 	};
 	this.hideFormElement = function(selector){
 		document.querySelector(selector).display = "none";
+	};
+	this.removeFormElement = function(id) {
+
+	   if(document.querySelector(selector)) 
+	   	document.querySelector(selector).remove();
 	};
 	this.getValidationRules = function() {};
 	this.loadNavigationTriggers = function() {

@@ -21,10 +21,7 @@ TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) 
 TemplatesCreator.prototype.toggleSidebar = function() {
 
 	var me = this;
-	this.sidebarManager.toggleSidebar(function(tab){
-		//so the user can't change the page while the sidebar is open
-		//me.backPageSelector.preventDomElementsBehaviour(tab);
-	});
+	this.sidebarManager.toggleSidebar();
 }
 TemplatesCreator.prototype.listenForTabChanges = function() { 
 
