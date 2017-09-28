@@ -10,12 +10,14 @@ function PageSelector(){
 };
 PageSelector.prototype.loadListeners = function(){
 	
+	var me = this;
+	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
 		evt.stopImmediatePropagation();
 
 		browser.runtime.sendMessage({ 
-			"call": onElementSelection,
+			"call": me.onElementSelectionMessage,
 			"args": {
 				"selectors": (new XPathInterpreter()).getMultipleXPaths(this),
 				"previewSource": me.generatePreview(this)
@@ -93,7 +95,8 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.highlight(elem);
-		elem.addEventListener("click", this.selectionListener)	
+		me.onElementSelectionMessage = onElementSelection;
+		elem.addEventListener("click", me.selectionListener)	
     });	
 }
 PageSelector.prototype.removeSelectionListener = function(selector){
