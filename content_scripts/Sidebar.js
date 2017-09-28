@@ -140,7 +140,6 @@ function ClosedSidebar(context){
 	};
 }
 
-
 /////////////////////////////////////////////
 var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {

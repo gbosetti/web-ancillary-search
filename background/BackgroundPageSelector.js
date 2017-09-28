@@ -3,10 +3,14 @@ function BackgroundPageSelector(){
 }
 BackgroundPageSelector.prototype.getStatusByTab = function(tab) {
 	if (this.status[tab.id] == undefined)
-		this.status[tab.id] = new UnloadedPageSelector(this);
+		this.initializeStateForTab(tab.id);
 	
 	return this.status[tab.id];
 };
+BackgroundPageSelector.prototype.initializeStateForTab = function(tabId) { 
+
+	this.status[tabId] = new UnloadedPageSelector(this); 
+}
 BackgroundPageSelector.prototype.preventDomElementsBehaviour = function(tab) {
 	this.getStatusByTab(tab).preventDomElementsBehaviour(tab);
 };

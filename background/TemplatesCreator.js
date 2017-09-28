@@ -1,6 +1,6 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
-  this.sidebar = new SidebarManager(
+  this.sidebarManager = new SidebarManager(
     "/content_scripts/sidebar/service-name.html", 
     [
       "/content_scripts/sidebar/lib/js/ui-commons.js",
@@ -10,6 +10,7 @@ function TemplatesCreator(){
   ); 
   this.storage = new StorageFilesManager();
   this.pageSelector = new BackgroundPageSelector();
+  this.listenForTabChanges();
 }
 TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
 
@@ -20,14 +21,24 @@ TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) 
 TemplatesCreator.prototype.toggleSidebar = function() {
 
 	var me = this;
-	this.sidebar.toggle(function(tab){
+	this.sidebarManager.toggleSidebar(function(tab){
 		//so the user can't change the page while the sidebar is open
 		//me.pageSelector.preventDomElementsBehaviour(tab);
 	});
 }
+TemplatesCreator.prototype.listenForTabChanges = function() { 
+
+  var me = this;
+  browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
+    if(tabInfo.status == "complete"){
+      me.sidebarManager.initializeStateForTab(tabId);
+      me.pageSelector.initializeStateForTab(tabId);
+    } 
+  });
+}
 TemplatesCreator.prototype.onElementSelection = function(xpaths, prevSrc) { 
 
-  this.sidebar.onElementSelection(xpaths, prevSrc);
+  this.sidebarManager.onElementSelection(xpaths, prevSrc);
 }
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 
@@ -35,11 +46,11 @@ TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) {
 }
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
-  this.sidebar.onFrameReadyForLoadingUrl();
+  this.sidebarManager.onFrameReadyForLoadingUrl();
 }
 TemplatesCreator.prototype.onSidebarClosed = function() { 
 
-  this.sidebar.onSidebarClosed();
+  this.sidebarManager.onSidebarClosed();
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
@@ -55,7 +66,7 @@ TemplatesCreator.prototype.disableHarvesting = function(tab) {
 }
 TemplatesCreator.prototype.adaptPlaceholder = function() {
 
-  this.sidebar.adaptPlaceholder();
+  this.sidebarManager.adaptPlaceholder();
 };
 TemplatesCreator.prototype.saveService = function(data) {
 
@@ -63,7 +74,7 @@ TemplatesCreator.prototype.saveService = function(data) {
 };
 TemplatesCreator.prototype.loadUrlAtSidebar = function(url, filePaths) {
 
-	this.sidebar.loadChromeUrl(url, filePaths); 
+	this.sidebarManager.loadChromeUrl(url, filePaths); 
 };
 TemplatesCreator.prototype.createNewServiceFromData = function(data) {
 

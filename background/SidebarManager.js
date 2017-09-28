@@ -12,6 +12,10 @@ SidebarManager.prototype.addListeners = function(listeners) {
 		this.addListener(listeners[i]);
 	}
 }
+SidebarManager.prototype.initializeStateForTab = function(tabId) { 
+
+	this.status[tabId] = new NoLoadedSidebar(this); 
+}
 SidebarManager.prototype.addListener = function(listener) { 
 
 	this.listeners.push(listener);
@@ -59,11 +63,12 @@ SidebarManager.prototype.onElementSelection = function(xpaths, previewSource) {
 		});
 	});
 }
-SidebarManager.prototype.toggle = function(callback) { //PUBLIC
+SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 
 	var me = this;
 	this.getCurrentTab(function(tab){
-		me.getStatusForTab(tab).toggle(tab, callback);
+		//console.log("got current tab", tab);
+		me.getStatusForTab(tab).toggleSidebar(tab, callback);
 	});
 };
 SidebarManager.prototype.adaptPlaceholder = function() {
@@ -76,8 +81,10 @@ SidebarManager.prototype.adaptPlaceholder = function() {
 	});
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {
+
+	//console.log("getting current tab's status", this.status[tab.id]);
 	if (this.status[tab.id] == undefined)
-		this.status[tab.id] = new NoLoadedSidebar(this);
+		this.initializeStateForTab(tab.id);
 	
 	return this.status[tab.id];
 };
@@ -114,12 +121,12 @@ function SidebarManagerStatus(context){
 	this.isOpen = function(){
 		return false;
 	};
-	this.toggle = function(tab, callback){};
+	this.toggleSidebar = function(tab, callback){};
 }
 
 function LoadedSidebar(context){
 	SidebarManagerStatus.call(this, context);
-	this.toggle = function(tab, callback){
+	this.toggleSidebar = function(tab, callback){
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
 	};
@@ -144,7 +151,7 @@ function NoLoadedSidebar(context){
 	SidebarManagerStatus.call(this, context);
 
 	var status = this;
-	this.toggle = function(tab, callback){
+	this.toggleSidebar = function(tab, callback){
 		this.open(tab);
 		if(callback) callback(tab);
 	};
