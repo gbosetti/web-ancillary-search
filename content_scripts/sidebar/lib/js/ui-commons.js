@@ -17,6 +17,21 @@ function UI(){
     		}
     	});
 	};
+	/*this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
+
+	    var formGroup = document.createElement("div");
+	    	formGroup.setAttribute("class", "form-group");
+	    	formGroup.setAttribute("id", id);
+
+	    var label = document.createElement("label");
+	    	label.setAttribute("class", "error");
+	    	label.innerHTML = browser.i18n.getMessage(localizationString);
+
+	    formGroup.appendChild(label);
+
+	    var referenceNode = document.querySelector(afterPositionSelector);
+	    referenceNode.parentElement.insertBefore(formGroup, referenceNode.nextSibling);
+	};*/
 	this.createPreviewControl = function(previewElemId, description){
 
 		var formGroup = document.createElement("div");

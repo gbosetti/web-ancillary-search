@@ -41,7 +41,7 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
     if(element == undefined)
         return;
     if(parent == undefined)
-        parent = element.parentNode;
+        parent = element.ownerDocument;
 
     //var console = element.ownerDocument.defaultView.console; //.log("********************************", element, parent);
     for (var i = 0; i < this.engine.length; i++) {

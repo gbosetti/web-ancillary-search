@@ -38,7 +38,7 @@ function ServiceInputUI(){
 
 		/*this.showPreview();
 		this.loadPreview(data.previewSource);
-		this.userDefInputXpath = data.xpaths;*/
+		this.userDefInputXpath = data.selectors;*/
 	}
 	this.associateTriggeringStrategiesBehaviour = function(){
 

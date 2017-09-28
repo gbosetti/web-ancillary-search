@@ -36,9 +36,9 @@ TemplatesCreator.prototype.listenForTabChanges = function() {
     } 
   });
 }
-TemplatesCreator.prototype.onElementSelection = function(xpaths, prevSrc) { 
+TemplatesCreator.prototype.onElementSelection = function(selectors, prevSrc) { 
 
-  this.sidebarManager.onElementSelection(xpaths, prevSrc);
+  this.sidebarManager.onElementSelection(selectors, prevSrc);
 }
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 
@@ -92,11 +92,11 @@ TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementS
 TemplatesCreator.prototype.loadDataForConceptDefinition = function() {
 
   //console.log("selection", this.targetElement);
-  //console.log(this.targetElement.xpaths);
+  //console.log(this.targetElement.selectors);
 
   browser.runtime.sendMessage({
       call: "loadXpaths",
-      args: this.targetElement.xpaths
+      args: this.targetElement.selectors
   });
 
   browser.runtime.sendMessage({

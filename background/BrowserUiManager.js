@@ -10,7 +10,7 @@ BrowserUiManager.prototype.initialize = function() {
 };
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
-  this.templatesCreator.onElementSelection(data.xpaths, data.previewSource);
+  this.templatesCreator.onElementSelection(data.selectors, data.previewSource);
 }
 BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
 

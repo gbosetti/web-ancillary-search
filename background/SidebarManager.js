@@ -51,13 +51,13 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 		});
 	});
 };
-SidebarManager.prototype.onElementSelection = function(xpaths, previewSource) { 
+SidebarManager.prototype.onElementSelection = function(selectors, previewSource) { 
 
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "onElementSelection", 
 			args: {
-				"xpaths": xpaths,
+				"selectors": selectors,
 				"previewSource": previewSource
 			}
 		});

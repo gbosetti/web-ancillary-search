@@ -15,7 +15,7 @@ PageSelector.prototype.loadListeners = function(){
 	this.selectionListener = function(evt){
 
 		evt.stopImmediatePropagation();
-
+		console.log("\n\n selected:", this);
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {

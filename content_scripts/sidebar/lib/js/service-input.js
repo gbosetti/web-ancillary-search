@@ -1,16 +1,17 @@
 function ServiceInputUI(){
 
 	UI.call(this);
-	this.userDefInputXpath;
+	this.inputSelectors;
 
 	this.loadSubformBehaviour = function() {
 		this.enableDomElementSelection("input", "onElementSelection");
 	};
 	this.onElementSelection = function(data){
 
+		console.log("data", data);
 		this.showPreview();
 		this.loadPreview(data.previewSource);
-		this.userDefInputXpath = data.xpaths;
+		this.inputSelectors = data.selectors;
 	}
 	this.showPreview = function(data){
 		document.querySelectorAll(".hidden").forEach(function(elem){
@@ -21,18 +22,16 @@ function ServiceInputUI(){
 		document.querySelector("#property-preview-image").src = src;
 	}
 	this.isElementSelected = function(elemType) {
-		return (this.userDefInputXpath)? true : false;
+		return (this.inputSelectors)? true : false;
 	};
 	this.loadPrevNavigationButton = function() {
 
 		var me = this;
 		document.querySelector(".prev > button").onclick = function(){   
 
-	    	/*if(me.isElementSelected("input:not([style*='display:none'])")){
-	    		me.saveDataForCurrentService({
-    				inputXpath: me.userDefInputXpath
-    			});
-	    	}*/
+    		/*me.saveDataForCurrentService({
+				inputXpath: me.inputSelectors
+			});*/
 	    	me.loadUrlAtSidebar({ 
         		url: "/content_scripts/sidebar/service-name.html",
         		filePaths: [
@@ -47,9 +46,10 @@ function ServiceInputUI(){
 		var me = this;
 		document.querySelector(".next > button").onclick = function(){   
 
-			//if(this.userDefInputXpath){
+			console.log(me.inputSelectors);
+			if(me.inputSelectors){
 	    		/*me.saveDataForCurrentService({
-    				inputXpath: me.userDefInputXpath
+    				inputXpath: me.inputSelectors
     			});*/
 		    	me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-trigger.html",
@@ -58,7 +58,7 @@ function ServiceInputUI(){
 						"/content_scripts/sidebar/lib/js/service-trigger.js"
 					] 
 	        	});
-		    //};
+		    } 
 		};
 	};
 };
