@@ -15,7 +15,6 @@ PageSelector.prototype.loadListeners = function(){
 	this.selectionListener = function(evt){
 
 		evt.stopImmediatePropagation();
-		console.log("\n\n selected:", this);
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -73,6 +72,7 @@ PageSelector.prototype.enableElementSelection = function(data){
 PageSelector.prototype.disableElementSelection = function(data){
 
 	this.undarkifyAllDomElements();
+	this.removeElemsHighlightingClass(data.selector);
     this.removeSelectionListener(data.selector);
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
@@ -89,12 +89,19 @@ PageSelector.prototype.undarkifyAllDomElements = function(){
 		me.undarkify(elem);
     });
 }
+PageSelector.prototype.removeElemsHighlightingClass = function(selector){
+
+	var me = this, elems = document.querySelectorAll(selector); 
+	elems.forEach(function(elem) { 
+		me.removeHighlightingClass(elem);
+    });
+}
 PageSelector.prototype.addSelectionListener = function(selector, onElementSelection){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
-		me.highlight(elem);
+		me.addHighlightingClass(elem);
 		me.onElementSelectionMessage = onElementSelection;
 		elem.addEventListener("click", me.selectionListener)	
     });	
@@ -109,7 +116,7 @@ PageSelector.prototype.removeSelectionListener = function(selector){
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
-		this.unhighlight(element);
+		this.removeHighlightingClass(element);
 		this.addClearBackground(element);
 
 	    var canvas = document.createElement("canvas");
@@ -122,7 +129,7 @@ PageSelector.prototype.generatePreview = function(element){
 	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
 
 	    this.removeClearBackground(element);
-	    this.highlight(element);
+	    this.addHighlightingClass(element);
 
 	    return canvas.toDataURL();
 	}catch(err){
@@ -130,7 +137,7 @@ PageSelector.prototype.generatePreview = function(element){
 		return;
 	}
 }
-PageSelector.prototype.highlight = function(elem){
+PageSelector.prototype.addHighlightingClass = function(elem){
 
 	this.addStyleClass(elem, this.highlightingClass);  
 }
@@ -187,7 +194,7 @@ PageSelector.prototype.undarkify = function(elem){
 	
 	this.removeStyleClass(elem, this.obfuscatedClass);
 };
-PageSelector.prototype.unhighlight = function(elem){
+PageSelector.prototype.removeHighlightingClass = function(elem){
 	
 	this.removeStyleClass(elem, this.highlightingClass);	
 };

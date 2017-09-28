@@ -43,7 +43,7 @@ function ServiceInputUI(){
 	this.associateTriggeringStrategiesBehaviour = function(){
 
 		var me = this;
-		document.querySelector('#trigger_mechanism').onclick = function(){
+		document.querySelector('#trigger_mechanism').onchange = function(){
 
 			me.clearTriggeringStrategyParamsArea();
 			me.currentTriggerStrategy = new window[this.value](me);
