@@ -63,7 +63,7 @@ function ServiceInputUI(){
 
 
 var serviceInput = new ServiceInputUI().initialize();
-browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callServiceInputUIActions(request, sender, sendResponse) {
 
 	if(serviceInput[request.call]) {
 		console.log("calling " + request.call + " (.../service-input.js)");

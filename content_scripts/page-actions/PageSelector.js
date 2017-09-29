@@ -14,28 +14,28 @@ PageSelector.prototype.loadListeners = function(){
 	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
-		console.log("\n *** SELECTING ELEMENT");
 		evt.stopImmediatePropagation();
-		
+
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": (new XPathInterpreter()).getMultipleXPaths(this),
-				"previewSource": me.generatePreview(this)
+				"selectors": (new XPathInterpreter()).getMultipleXPaths(evt.target),
+				"previewSource": me.generatePreview(evt.target)
 			}
 		});
 	};
 	this.preventActionsListener = function(evt){
-		console.log("\n *** PREVENING");
+
+		me.executeAndesActions(this, evt);
 		evt.preventDefault();
 		evt.stopImmediatePropagation();
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
-	return document.querySelectorAll("body, div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
+	return document.querySelectorAll("body, input, div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 };
 PageSelector.prototype.getAllVisibleDomElementsButBody = function(){
-	return document.querySelectorAll("div, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
+	return document.querySelectorAll("div, input, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 };
 PageSelector.prototype.getCurrentSidebarElements = function(){
 	
@@ -43,7 +43,6 @@ PageSelector.prototype.getCurrentSidebarElements = function(){
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
-	console.log("\n *** ASKING TO LOAD PREVENTION");
 	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
@@ -54,7 +53,6 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
 
-	console.log("\n *** ASKING TO RESTORE");
 	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
@@ -74,15 +72,13 @@ PageSelector.prototype.getTargetElements = function(selector){
 };
 PageSelector.prototype.enableElementSelection = function(data){
 
-	console.log("\n *** ENABLING SELECTION");
 	this.darkifyAllDomElements();
-    this.addSelectionListener(data.targetElementSelector, data.onElementSelection);
+    this.addSelectionListener(data.targetElementSelector, data.onElementSelection, "click");
     this.undarkifySidebarElements();
     this.darkify(document.body); 
 };
 PageSelector.prototype.disableElementSelection = function(data){
 
-	console.log("\n *** DISABLING SELECTION");
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
     this.removeSelectionListener(data.selector);
@@ -108,31 +104,49 @@ PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 		me.removeHighlightingClass(elem);
     });
 }
-PageSelector.prototype.addSelectionListener = function(selector, onElementSelection){
+PageSelector.prototype.executeAndesActions = function(elem, evt){
 
-	console.log("\n *** ASKING TO LOAD SELECTION");
+	var actions = this.getAndesActions(elem);
+	for (var i = actions.length - 1; i >= 0; i--) {
+		if(evt.type.toUpperCase() == actions[i].event.toUpperCase())
+			this[actions[i].listener](evt);
+	}
+}
+PageSelector.prototype.getAndesActions = function(elem){
+
+	var actions = elem.getAttribute("andes-actions");
+	return (actions && actions.length)? actions=JSON.parse(actions): actions=[];
+}
+PageSelector.prototype.addAndesAction = function(elem, action){
+
+	var actions = this.getAndesActions(elem);
+		actions.push(action);
+
+	elem.setAttribute("andes-actions", JSON.stringify(actions))
+}
+PageSelector.prototype.addSelectionListener = function(selector, onElementSelection, onEvent){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingClass(elem);
 		me.onElementSelectionMessage = onElementSelection; //callback
-		console.log(onElementSelection, "< adding listener\n\n");
-		elem.addEventListener("click", me.selectionListener, false)	
+
+		me.addAndesAction(elem, {"listener": "selectionListener", "event": onEvent});
+		//elem.addEventListener("click", me.selectionListener);	
     });	
 }
 PageSelector.prototype.removeSelectionListener = function(selector){
 
-	console.log("\n *** ASKING TO REMOSE SELECTION");
-
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
-		elem.removeEventListener("click", me.selectionListener, false)	
+		elem.removeEventListener("click", me.selectionListener);	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
+		
 		this.removeHighlightingClass(element);
 		this.addClearBackground(element);
 
@@ -196,14 +210,14 @@ PageSelector.prototype.addClearBackground = function(elem){
 	this.addStyleClass(elem, this.clearBackgroundClass);
 };
 PageSelector.prototype.addStyleClass = function(elem, className){
-	
+
 	if(!elem.classList.contains(className)){
 		elem.classList.add(className);
 	}
 };
 PageSelector.prototype.removeStyleClass = function(elem, className){
 	
-	if(elem.classList.contains(className)){
+	if(elem.classList && elem.classList.contains(className)){
 		elem.classList.remove(className);
 	}
 };
@@ -224,7 +238,7 @@ var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
 	if(pageManager[request.call]){
-		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
 		//Se lo llama con: browser.tabs.sendMessage
 		pageManager[request.call](request.args);
 	}

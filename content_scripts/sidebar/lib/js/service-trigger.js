@@ -67,10 +67,10 @@ function ServiceInputUI(){
 	this.loadSubformBehaviour = function() {
 		this.associateTriggeringStrategiesBehaviour();
 	};
-	this.onElementSelection = function(data){
+	this.onTriggerSelection = function(data){
 
 		console.log("onElementSelection");
-		this.currentTriggerStrategy.onElementSelection(data);
+		this.currentTriggerStrategy.onTriggerSelection(data);
 	}
 	this.associateTriggeringStrategiesBehaviour = function(){
 
@@ -145,10 +145,11 @@ function ServiceInputUI(){
 
 
 var serviceInput = new ServiceInputUI().initialize();
-browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callServiceInputUIActions(request, sender, sendResponse) {
 
+	console.log("calling " + request.call + " (.../service-input.js)");
 	if(serviceInput[request.call]) {
-		console.log("calling " + request.call + " (.../service-input.js)");
+		
 		serviceInput[request.call](request.args);
 	}
 });
