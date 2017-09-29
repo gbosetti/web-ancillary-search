@@ -146,7 +146,6 @@ PageSelector.prototype.removeSelectionListener = function(selector){
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
-		
 		this.removeHighlightingClass(element);
 		this.addClearBackground(element);
 

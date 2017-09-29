@@ -9,16 +9,13 @@ function ServiceInputUI(){
 	this.onElementSelection = function(data){
 
 		this.showPreview();
-		this.loadPreview(data.previewSource);
+		this.loadPreview("#property-preview-image", data.previewSource);
 		this.inputSelectors = data.selectors;
 	}
 	this.showPreview = function(data){
 		document.querySelectorAll(".hidden").forEach(function(elem){
 			elem.classList.remove("hidden");
 		});
-	}
-	this.loadPreview = function(src){
-		document.querySelector("#property-preview-image").src = src;
 	}
 	this.loadPrevNavigationButton = function() {
 

@@ -35,9 +35,8 @@ function ClickBasedTrigger(client){
 	};
 	this.onTriggerSelection = function(data){
 
-		console.log("cbt ");
-		client.showPreview();
-		client.loadPreview(data.previewSource);
+		client.showFormElement("#user-selected-trigger-element");
+		client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
 		this.triggerSelector = data.selectors;
 		this.removeErrorMessage();
 	};
@@ -69,7 +68,6 @@ function ServiceInputUI(){
 	};
 	this.onTriggerSelection = function(data){
 
-		console.log("onElementSelection");
 		this.currentTriggerStrategy.onTriggerSelection(data);
 	}
 	this.associateTriggeringStrategiesBehaviour = function(){
@@ -83,7 +81,7 @@ function ServiceInputUI(){
 			me.currentTriggerStrategy = new window[this.value](me);
 			me.currentTriggerStrategy.loadParamsConfigControls();
 		};
-		//document.querySelector('#trigger_mechanism').onchange();
+		document.querySelector('#trigger_mechanism').onchange();
 	};
 	this.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";

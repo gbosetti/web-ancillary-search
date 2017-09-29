@@ -33,10 +33,14 @@ TemplatesCreator.prototype.listenForTabChanges = function() {
     } 
   });
 }
-TemplatesCreator.prototype.onElementSelection = function(selectors, prevSrc) { 
+TemplatesCreator.prototype.onElementSelection = function(selectors, previewSource) { 
 
-  this.sidebarManager.onElementSelection(selectors, prevSrc);
+  this.sidebarManager.onElementSelection(selectors, previewSource);
 }
+TemplatesCreator.prototype.onTriggerSelection = function(selectors, previewSource) { 
+
+  this.sidebarManager.onTriggerSelection(selectors, previewSource);
+};
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 
   this.backPageSelector.enablePageRegularBehaviour(tab);

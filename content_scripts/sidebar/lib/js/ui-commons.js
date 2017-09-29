@@ -27,6 +27,9 @@ function UI(){
 	this.isElementSelected = function(elem) {
 		return (elem)? true : false;
 	};
+	this.loadPreview = function(selector, src){
+		document.querySelector(selector).src = src;
+	};
 	this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
 
 	    var formGroup = document.createElement("div");
@@ -44,24 +47,27 @@ function UI(){
 	};
 	this.removeErrorMessage = function(id) {
 
-	    this.removeFormElement(id);
+	    this.removeFormElement("#" + id);
 	};
-	this.createPreviewControl = function(previewElemId, description){
+	this.createPreviewControl = function(previewElemId, localizedDescriptionId){
 
 		var formGroup = document.createElement("div");
+			formGroup.setAttribute("id", previewElemId);
 			formGroup.setAttribute("class", "form-group hidden");
 
 		var label = document.createElement("label");
-			label.innerHTML = description;
+			label.innerHTML = browser.i18n.getMessage(localizedDescriptionId);
 			formGroup.appendChild(label);
 
 		var imgContainer = document.createElement("div");
 		var previewImage = document.createElement("img");
-			previewImage.setAttribute("id", previewElemId);
+			previewImage.setAttribute("id", previewElemId + "-img");
 			previewImage.setAttribute("class", "image-preview");
 			previewImage.setAttribute("src", "lib/img/no-preview.png");
 		imgContainer.appendChild(previewImage);
 		formGroup.appendChild(imgContainer);
+
+		console.log(previewImage);
 
 		return formGroup;
 	};
@@ -74,12 +80,14 @@ function UI(){
 		document.querySelector(selector).focus();
 	};
 	this.showFormElement = function(selector){
-		document.querySelector(selector).display = "";
+		var elem = document.querySelector(selector);
+		elem.display = "";
+		if(elem.classList.contains("hidden")) elem.classList.remove("hidden");
 	};
 	this.hideFormElement = function(selector){
 		document.querySelector(selector).display = "none";
 	};
-	this.removeFormElement = function(id) {
+	this.removeFormElement = function(selector) {
 
 	   if(document.querySelector(selector)) 
 	   	document.querySelector(selector).remove();

@@ -63,6 +63,18 @@ SidebarManager.prototype.onElementSelection = function(selectors, previewSource)
 		});
 	});
 }
+SidebarManager.prototype.onTriggerSelection = function(selectors, previewSource) { 
+
+  	this.getCurrentTab(function(tab){
+		browser.tabs.sendMessage(tab.id, {
+			call: "onTriggerSelection", 
+			args: {
+				"selectors": selectors,
+				"previewSource": previewSource
+			}
+		});
+	});
+};
 SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 
 	var me = this;

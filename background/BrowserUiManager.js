@@ -11,7 +11,11 @@ BrowserUiManager.prototype.initialize = function() {
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
   this.templatesCreator.onElementSelection(data.selectors, data.previewSource);
-}
+};
+BrowserUiManager.prototype.onTriggerSelection = function(data) { 
+
+  this.templatesCreator.onTriggerSelection(data.selectors, data.previewSource);
+};
 BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
 
   var me = this;
