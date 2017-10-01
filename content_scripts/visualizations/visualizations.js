@@ -265,39 +265,45 @@ Datatables.prototype.initializeDatatable = function(doc, table) {
 	
 	doc.defaultView["$"](table).DataTable();
 };
+
 Datatables.prototype.createTable = function(concepts, doc){
-
-	//TODO: refactoring. Este m'etodo es muy largo. ej. createHeader createBody populateBody etc
 	var table = doc.createElement("table");
-	var tableBody = doc.createElement("tbody");
-	var tableHead = doc.createElement("thead");
-	var trHead= doc.createElement("tr");
-		for (prop in concepts[0]){
-			var titleProp = doc.createElement("td");
-			titleProp.innerHTML = prop;
-			trHead.appendChild(titleProp);
-		}
-		concepts.forEach(function(concept){
-			var conceptDomElement = doc.createElement("tr");
-			for(prop in concept){
-				var propDomElement = doc.createElement("td");
-				propDomElement.innerHTML =  concept[prop];
-				conceptDomElement.appendChild(propDomElement);
-			};
-		
-			tableHead.appendChild(trHead);
-			tableBody.appendChild(conceptDomElement);
-			table.appendChild(tableHead);
-			table.appendChild(tableBody);
-
-		});
-
+		table.appendChild(this.createTableHeader(concepts, doc));
+		table.appendChild(this.createTableBody(concepts, doc));
 		return table;
 }
 
 
+Datatables.prototype.createTableHeader = function(concepts, doc){
+	var tHead = doc.createElement("thead");
+	var tr= doc.createElement("tr");
+	//Create titles for Table
+	for (prop in concepts[0]){
+		var td = doc.createElement("td");
+		td.innerHTML = prop;
+		tr.appendChild(td);
+	}
+	tHead.appendChild(tr);
+	return tHead;
+}
 
+Datatables.prototype.createTableBody = function(concepts, doc){
+	var tBody = doc.createElement("tbody");
+	this.populateTableBody(concepts, tBody, doc);
+	return tBody;
+}
 
+Datatables.prototype.populateTableBody = function(concepts, tableBody, doc){
+	concepts.forEach(function(concept){
+	var conceptDomElement = doc.createElement("tr");
+		for(prop in concept){
+			var propDomElement = doc.createElement("td");
+			propDomElement.innerHTML =  concept[prop];
+			conceptDomElement.appendChild(propDomElement);
+		};
+		tableBody.appendChild(conceptDomElement);
+	});
+}
 
 /////////////////////////////////////////////
 var presenter = new ResultsVisualizer();
