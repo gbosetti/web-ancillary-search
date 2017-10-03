@@ -53,63 +53,40 @@ SearchTool.prototype.createContextMenus = function() {
 //This will be generated in the definition of each search service. It may also be retrieved from a server
 SearchTool.prototype.fakeApiDefinitions = function(){
   browser.storage.local.set({
-    youtube:  {    name:'Youtube',
-      url:'https://www.youtube.com/results?search_query=X',
+    ebay: {
+      name:'ebay',
+      url:'http://www.ebay.com/sch/i.html?_odkw=xm&LH_PrefLoc=3&_sop=15&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR11.TRC2.A0.H0.Xxx.TRS1&_nkw=xx&_sacat=0',
       keywords:'',
-      loadingResStrategy: "WriteAndClickForAjaxCall", 
+      loadingResStrategy: "WriteAndClickToReload", 
       contentScriptWhen: "ready",
-      entry:'//input[@id="masthead-search-term"]',
-      trigger:'//button[@id="search-btn"]',
+      entry:'//form//table//input',
+      trigger:'//form//table/tbody/tr/td[3]/input',
       results: {
-        name: 'Videos',
-        xpath:'//div[@id="results"]/ol/li[2]/ol/li',
+        name: 'Generics',
+        xpath:'//div[@id="ResultSetItems"]/ul/li',
         properties:[
           {
-            name:'Title',
-            xpath:'//h3',
-            extractor: "SingleNodeExtractor" //new SingleNodeExtractor()
+            name:'Name',
+            xpath:'//h3/a', 
+            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           },
           {
-            name:'Authors', 
-            xpath:'//div[contains(@class, "yt-lockup-description")]',
-            extractor: "SingleNodeExtractor" 
+            name: 'Price',
+            xpath: '//ul/li/span',
+            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           }
         ]
       },
       visualization:{
         colsDef: [{
-            title: "Title",
+            title: "Name",
             responsivePriority: 1
-          }, {
-            title: "Authors",
-            responsivePriority: 2
+          },{
+            title: "Price",
+            responsivePriority: 1
           }]
-      }},
-    google: {
-    	name:'Google Scholar',
-		url:'https://www.youtube.com/results?search_query=X',
-		keywords:'',
-		loadingResStrategy: "WriteAndClickForAjaxCall", 
-		contentScriptWhen: "ready",
-		entry:'//input[@id="masthead-search-term"]',
-		trigger:'//button[@id="search-btn"]',
-		results: {
-		name: 'Papers',
-		xpath:'//div[@id="results"]/ol/li[2]/ol/li',
-		properties:[
-		  {
-		    name:'Title',
-		    xpath:'//h3',
-		    extractor: "SingleNodeExtractor" //new SingleNodeExtractor()
-		  },
-		  {
-		    name:'Authors', 
-		    xpath:'//div[contains(@class, "yt-lockup-description")]',
-		    extractor: "SingleNodeExtractor" 
-		  }
-		]
-		}
-	   }
+      }
+    }
   });
 }
 SearchTool.prototype.createApisMenu = function(){
@@ -137,11 +114,11 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
           
             		//Acá adentro solo es loggueable si se anula el cierre de popups
 				    if(me.areScriptsLoadedInTab(tab.id)){
-						me.sendExtenralResults(tab, info, apiSpecs);
+					   	me.sendExtenralResults(tab, info, apiSpecs);
 				    }
 				    else me.loadVisalizers(tab, function(){ 
-						me.sendExtenralResults(tab, info, apiSpecs);
-						me.toggleLoadedScriptsInTab(tab.id);
+  						me.sendExtenralResults(tab, info, apiSpecs);
+  						me.toggleLoadedScriptsInTab(tab.id);
 					}); 
 				}
 			});
@@ -170,6 +147,7 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 			"callbackMethod": "presentResults"
 		}
 	});
+
 }
 SearchTool.prototype.presentResults = function(results) {
 

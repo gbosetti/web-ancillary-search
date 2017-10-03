@@ -53,26 +53,24 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 		}
 	});
 };
-ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 
+ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	var concepts = [], me= this;
 
 	domElements.forEach(function(domElem){
-
+		var concept = {};
 		propSpecs.forEach(function(prop){
 
 			var propValue = me.getSingleElement(prop.xpath, domElem);
 			if(propValue && propValue.textContent){
-			
-				var concept = {};
 					concept[prop.name] = propValue.textContent;
-				concepts.push(concept);
 			}
 		});
+		concepts.push(concept);
 	});
-
 	return concepts;
 }
+
 ResultsVisualizer.prototype.getExternalContent = function(url, selector){
 
    const req = new window.XMLHttpRequest();
@@ -192,7 +190,8 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
     	resultsBody.style["text-align"] = "center"; 
 
     	resultsBody.appendChild(this.createVisualizationFrame(unwrappedWindow));
-    	return resultsBody;
+
+	return resultsBody;
 }
 
 
@@ -238,8 +237,11 @@ Datatables.prototype.getDependencies = function(visualizer) {
 	return {
 		"js": [
 			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js"
+			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js",
+	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
 	  	]
+
+
 	};
 };
 Datatables.prototype.presentData = function(concepts, iframe) {
@@ -253,8 +255,10 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 			clearInterval(checkForIframe);
 
 			//TODO: cambiar esto para que recupere resultados posta
-			concepts = [{name: "Pepe", surname: "Argento"}, {name: "María Elena", surname: "Fusenecco"}];
+			
 
+			//concepts = [{name: "Pepe", surname: "Argento"}, {name: "María Elena", surname: "Fusenecco"}];
+			console.log(concepts);
 			var table = me.createTable(concepts, iframe.contentWindow.document);
 			panel.appendChild(table);
 			me.initializeDatatable(document, table);	
@@ -268,9 +272,10 @@ Datatables.prototype.initializeDatatable = function(doc, table) {
 
 Datatables.prototype.createTable = function(concepts, doc){
 	var table = doc.createElement("table");
+		table.className+="display";
 		table.appendChild(this.createTableHeader(concepts, doc));
 		table.appendChild(this.createTableBody(concepts, doc));
-		return table;
+	return table;
 }
 
 
