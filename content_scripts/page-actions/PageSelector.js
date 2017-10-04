@@ -50,6 +50,16 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 			elem.addEventListener(eventToPrevent, me.preventActionsListener, false);
 		});
 	});
+
+	//TODO: it is not working with "addEventListener". This is a problem because maybe we can not resore the original behaviour after this
+	document.querySelectorAll("form").forEach(function(form){ 
+		if(form.addEventListener){
+			form.onsubmit = function(evt){ 
+				console.log("preventing from ANDES");
+        		return false;
+    		}; 
+    	};
+    });
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
 

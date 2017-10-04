@@ -59,6 +59,15 @@
 
 
 
+  "results_tag": {
+    "message": "Quels types de résultats retourne ce moteur?"
+  },
+  "example_results_tag": {
+    "message": "ex. Livres"
+  },
+
+
+
   "next":{
     "message": "Suivant"
   },

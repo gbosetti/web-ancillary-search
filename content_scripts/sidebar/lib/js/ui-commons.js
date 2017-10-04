@@ -30,6 +30,9 @@ function UI(){
 	this.loadPreview = function(selector, src){
 		document.querySelector(selector).src = src;
 	};
+	this.hasErrorMessage = function(id){
+		return (document.querySelector("#" + id))? true: false;
+	};
 	this.showErrorMessage = function(id, afterPositionSelector, localizationString) {
 
 	    var formGroup = document.createElement("div");
@@ -66,9 +69,7 @@ function UI(){
 			previewImage.setAttribute("src", "lib/img/no-preview.png");
 		imgContainer.appendChild(previewImage);
 		formGroup.appendChild(imgContainer);
-
-		console.log(previewImage);
-
+		
 		return formGroup;
 	};
 	this.loadValidationBehaviour = function() {

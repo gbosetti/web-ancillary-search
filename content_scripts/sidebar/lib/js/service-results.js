@@ -3,17 +3,15 @@ function TriggerMechanism(client){
 	this.undoActionsOnDom = function(){};
 	this.areTriggerRequirementsMet = function(){ return false };
 	this.showMissingRequirementMessage = function(){
-		if(!client.hasErrorMessage("strategy-error")) //Avoiding extras
-			client.showErrorMessage("strategy-error", 
-				"#trigger_mechanism_params_area", 
-				this.getMissingRequirementLocalizedId());
+		if(!client.hasErrorMessage("strategy-error") //Avoiding extras
+			client.showErrorMessage("strategy-error", "#trigger_mechanism_params_area", this.getMissingRequirementLocalizedId());
 	};
 	this.getMissingRequirementLocalizedId = function(){ return "default_missing_requirement" };
 	this.removeErrorMessage = function(){
-		if(client.hasErrorMessage("strategy-error"))
+		if(client.hasErrorMessage("strategy-error")
 			client.removeErrorMessage("strategy-error");
 	};
-	this.onTriggerSelection = function(data){ console.log("lalala "); };
+	this.onElementSelection = function(data){ console.log("lalala "); };
 }
 function UnsetTrigger(client){
 	TriggerMechanism.call(this, client);
@@ -39,11 +37,9 @@ function ClickBasedTrigger(client){
 	};
 	this.onTriggerSelection = function(data){
 
-		console.log("\n***********************");
 		client.showFormElement("#user-selected-trigger-element");
 		client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
 		this.triggerSelector = data.selectors;
-		console.log("triggerSelector", this.triggerSelector);
 		this.removeErrorMessage();
 	};
 }

@@ -59,6 +59,15 @@
 
 
 
+  "results_tag": {
+    "message": "Kind of results"
+  },
+  "example_results_tag": {
+    "message": "e.g. Books"
+  },
+
+
+
   "next":{
     "message": "Next"
   },
