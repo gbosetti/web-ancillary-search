@@ -222,7 +222,6 @@ function WaitingForResults(){
 
 
 
-
 ////////////// Visualization strategies
 
 function Visualization(){}
@@ -249,66 +248,68 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 	//TODO: APPLY STATE PATTERN
 	var me = this;
 	var checkForIframe = setInterval(function(){ 
-		var panel = iframe.contentWindow.document.querySelector("#results");
-
-		if(panel){
+		var table = iframe.contentWindow.document.querySelector("#results");
+		if(table){
 			clearInterval(checkForIframe);
-
 			//TODO: cambiar esto para que recupere resultados posta
-			
-
-			//concepts = [{name: "Pepe", surname: "Argento"}, {name: "María Elena", surname: "Fusenecco"}];
-			console.log(concepts);
-			var table = me.createTable(concepts, iframe.contentWindow.document);
-			panel.appendChild(table);
-			me.initializeDatatable(document, table);	
+			me.initializeDatatable(document, table, iframe, concepts);
 		}
 	}, 3000);
 };
-Datatables.prototype.initializeDatatable = function(doc, table) {
-	
-	doc.defaultView["$"](table).DataTable();
-};
-
-Datatables.prototype.createTable = function(concepts, doc){
-	var table = doc.createElement("table");
-		table.className+="display";
-		table.appendChild(this.createTableHeader(concepts, doc));
-		table.appendChild(this.createTableBody(concepts, doc));
-	return table;
-}
-
-
-Datatables.prototype.createTableHeader = function(concepts, doc){
-	var tHead = doc.createElement("thead");
-	var tr= doc.createElement("tr");
-	//Create titles for Table
-	for (prop in concepts[0]){
-		var td = doc.createElement("td");
-		td.innerHTML = prop;
-		tr.appendChild(td);
+Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts) {
+	function format (d) {
+    // `d` is the original data object for the row
+    	return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	        '<tr>'+
+	            '<td>Name:</td>'+
+	            '<td>'+d.Name+'</td>'+
+	        '</tr>'+
+	        '<tr>'+
+	            '<td>Price:</td>'+
+	            '<td>'+d.Price+'</td>'+
+	        '</tr>'+
+	    '</table>';
 	}
-	tHead.appendChild(tr);
-	return tHead;
-}
 
-Datatables.prototype.createTableBody = function(concepts, doc){
-	var tBody = doc.createElement("tbody");
-	this.populateTableBody(concepts, tBody, doc);
-	return tBody;
-}
+	doc.defaultView["$"](doc).ready(function(){
+	var tableC =doc.defaultView["$"](table).DataTable({
+        "data": concepts,
+        "columns": [
+            {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
 
-Datatables.prototype.populateTableBody = function(concepts, tableBody, doc){
-	concepts.forEach(function(concept){
-	var conceptDomElement = doc.createElement("tr");
-		for(prop in concept){
-			var propDomElement = doc.createElement("td");
-			propDomElement.innerHTML =  concept[prop];
-			conceptDomElement.appendChild(propDomElement);
-		};
-		tableBody.appendChild(conceptDomElement);
+            //Add this from concept
+            { "title":"Name", "data": "Name"},
+            { "title":"Price","data": "Price" }
+        ],
+        "order": [[1, 'asc']]
 	});
+
+	var tbody = iframe.contentWindow.document.querySelector("#results > tbody");
+	doc.defaultView["$"](tbody).on('click', 'td.details-control', function () {
+		var tr = doc.defaultView["$"](this).closest('tr');
+      	var row = tableC.row( tr );
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+
+	 });
+});
+
 }
+
+
 
 /////////////////////////////////////////////
 var presenter = new ResultsVisualizer();
