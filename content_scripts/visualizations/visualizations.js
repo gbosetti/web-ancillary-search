@@ -4,20 +4,19 @@ function ResultsVisualizer(){
 	this.visualizer; //= visualizer || new Datatables(); //strategy
 	this.presentationState = new WaitingForRequest(this);
 }
-ResultsVisualizer.prototype.showResults = function(data) {
 
+ResultsVisualizer.prototype.showResults = function(data) {
 	this.panel = this.buildPanel(data);
 	this.results = data.results;
-
-	this.setVisualizer(new Datatables(this)); //window[data.visualizer]());
+	this.setVisualizer(new ViewImage(this)); //window[data.visualizer]());  //ver como definir un patron para que el usuario elija el tipo de visualización
 	this.loadExtraDependencies();
 };
+
 ResultsVisualizer.prototype.onExtraDependenciesLoaded = function(){
 
 	this.presentData(this.results, this.panel.childNodes[1].children[0]);
 }
 ResultsVisualizer.prototype.loadExtraDependencies = function(){
-
   	browser.runtime.sendMessage({
 		call: "loadVisalizerDependencies",
 		args: {
@@ -26,10 +25,12 @@ ResultsVisualizer.prototype.loadExtraDependencies = function(){
 		}
 	});
 }
+
 ResultsVisualizer.prototype.presentData = function(results, targetPanel){
 
 	this.visualizer.presentData(results, targetPanel);
 }
+
 ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	var iframe = unwrappedWindow.document.createElement('iframe');
@@ -42,6 +43,7 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 	
 	return iframe;
 }
+
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 	
 	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
@@ -64,6 +66,8 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 			var propValue = me.getSingleElement(prop.xpath, domElem);
 			if(propValue && propValue.textContent){
 					concept[prop.name] = propValue.textContent;
+			}else{
+				concept[prop.name] = propValue.src;
 			}
 		});
 		concepts.push(concept);
@@ -219,33 +223,94 @@ function WaitingForResults(){
 }
 
 
-
-
-
 ////////////// Visualization strategies
 
 function Visualization(){}
 
+
+function Multimedia(visualizer){
+	
+	Visualization.call(this);
+	this.visualizer = visualizer;
+
+}
+
+/*Multimedia.prototype.getDependencies = function(visualizer){
+	return {
+		"js": [
+	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
+	  	]
+	};
+};*/
+
+function ViewImage(visualizer){
+
+	Multimedia.call(this);
+	this.visualizer = visualizer
+	console.log("instanciaViewImage");
+}
+
+ViewImage.prototype.presentData = function(concepts, iframe){
+	console.log("entroacaa");
+	var me = this;
+	var checkForIframe = setInterval(function(){ 
+		var divImage = iframe.contentWindow.document.querySelector("#images");
+		if(divImage){
+			clearInterval(checkForIframe);
+			//TODO: cambiar esto para que recupere resultados posta
+			me.initialize(document, divImage, concepts);
+		}
+	}, 3000);
+
+}
+
+ViewImage.prototype.getDependencies = function(visualizer){
+
+	return {
+		
+		"js": [
+	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
+	  	]
+
+	};
+}
+
+ViewImage.prototype.initialize = function(doc, div, concepts){
+
+	concepts.forEach(function(image){
+		var img = doc.defaultView["$"](div).append($("img"));
+		/*console.log("entro2"+ img);
+		img.setAttribute("src", image[i]);
+		div.appendChild(img);
+		console.log("entro4");*/
+	
+	});
+
+}
 
 function Datatables(visualizer){
 
 	Visualization.call(this);
 	this.visualizer = visualizer;
 }
+
+
 Datatables.prototype.getDependencies = function(visualizer) {
+	
 	return {
+		
 		"js": [
 			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
 			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js",
 	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
 	  	]
 
-
 	};
 };
 Datatables.prototype.presentData = function(concepts, iframe) {
 
 	//TODO: APPLY STATE PATTERN
+	console.log("entro a PresentData del Datatable");
 	var me = this;
 	var checkForIframe = setInterval(function(){ 
 		var table = iframe.contentWindow.document.querySelector("#results");
@@ -256,7 +321,9 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 		}
 	}, 3000);
 };
+
 Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts) {
+	
 	function format (d) {
     // `d` is the original data object for the row
     	return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
