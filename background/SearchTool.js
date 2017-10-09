@@ -15,7 +15,7 @@ SearchTool.prototype.loadVisalizers = function(tab, callback) {
   		new BackgroundResource("/content_scripts/vendor/jquery-ui/jquery-ui.min.js"),
   		new BackgroundResource("/content_scripts/XPathInterpreter.js"),
   		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
-  		new BackgroundResource("/content_scripts/visualizations/visualizations.js")
+  		new BackgroundResource("/content_scripts/visualizations/lib/js/visualizations.js")
   	], tab, callback);
 }
 SearchTool.prototype.loadVisalizerDependencies = function(tab, dependencies, callbackMessage) {
