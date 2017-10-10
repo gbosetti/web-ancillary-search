@@ -1,18 +1,28 @@
 function UI(){
 
-	this.initialize = function() { //Do not call this methid from the constructor --> Loading error.
+	var me = this; //we need this
+	this.fileDescription = "default file, please override in subclass";
+	this.initialize = function(data) { //Do not call this methid from the constructor --> Loading error.
 
 		this.loadValidationBehaviour();
 		this.loadNavigationTriggers();
 		this.loadSubformBehaviour();
+
+		if(data) {
+			this.enableRuntimeListeners = data.enableRuntimeListeners;
+			this.disableRuntimeListeners = data.disableRuntimeListeners;
+		}
+		this.enableRuntimeListeners();
+
 		return this;
 	};
-	this.enableDomElementSelection = function(control, callbackMessage) {
+	this.enableDomElementSelection = function(controlsSelector, callbackMessage) {
 
+		//console.log("processing selection", controlsSelector, callbackMessage);
 		browser.runtime.sendMessage({ 
     		"call": "enableElementSelection",
     		"args": {
-    			targetElementSelector: control,
+    			targetElementSelector: controlsSelector,
     			onElementSelection: callbackMessage
     		}
     	});
@@ -101,6 +111,8 @@ function UI(){
 	this.loadPrevNavigationButton = function() {};
 	this.loadNextNavigationButton = function() {};
 	this.loadSubformBehaviour = function() {};
+	this.enableRuntimeListeners = function() {};
+	this.disableRuntimeListeners = function() {};
 	this.createNewServiceFromData = function(serviceName){
     	browser.runtime.sendMessage({ 
     		"call": "createNewServiceFromData",
@@ -125,5 +137,12 @@ function UI(){
         	"call": "loadUrlAtSidebar",
         	"args": loadingData
         });
+	};
+	this.callServiceInputUIActions = function(request, sender, sendResponse) {
+
+		if(me[request.call]) {
+			console.log("calling " + request.call + this.fileDescription);
+			me[request.call](request.args);
+		}
 	};
 };

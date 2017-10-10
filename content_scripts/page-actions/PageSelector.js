@@ -14,8 +14,7 @@ PageSelector.prototype.loadListeners = function(){
 	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
-		evt.stopImmediatePropagation();
-
+		//evt.stopImmediatePropagation();
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -26,7 +25,7 @@ PageSelector.prototype.loadListeners = function(){
 	};
 	this.preventActionsListener = function(evt){
 
-		me.executeAndesActions(this, evt);
+		me.executeAndesActions(evt);
 		evt.preventDefault();
 		evt.stopImmediatePropagation();
 	};
@@ -91,7 +90,7 @@ PageSelector.prototype.disableElementSelection = function(data){
 
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
-    this.removeSelectionListener(data.selector);
+    this.removeSelectionListener(data.selector, "click");
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -114,9 +113,9 @@ PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 		me.removeHighlightingClass(elem);
     });
 }
-PageSelector.prototype.executeAndesActions = function(elem, evt){
+PageSelector.prototype.executeAndesActions = function(evt){
 
-	var actions = this.getAndesActions(elem);
+	var actions = this.getAndesActions(evt.target);
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(evt.type.toUpperCase() == actions[i].event.toUpperCase())
 			this[actions[i].listener](evt);
@@ -141,16 +140,14 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 		me.undarkify(elem);	
 		me.addHighlightingClass(elem);
 		me.onElementSelectionMessage = onElementSelection; //callback
-
 		me.addAndesAction(elem, {"listener": "selectionListener", "event": onEvent});
-		//elem.addEventListener("click", me.selectionListener);	
     });	
 }
-PageSelector.prototype.removeSelectionListener = function(selector){
+PageSelector.prototype.removeSelectionListener = function(selector, onEvent){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
-		elem.removeEventListener("click", me.selectionListener);	
+		elem.removeEventListener(onEvent, me.selectionListener);	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){
