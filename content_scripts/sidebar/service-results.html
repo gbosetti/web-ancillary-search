@@ -13,7 +13,7 @@
   <body class="dotted">
     <div class="panel-heading">
 		<div class="panel-title text-center">
-		  <h2 class="title" i18n-data="the_trigger_control">The trigger control</h2>
+		  <h2 class="title" i18n-data="results_title"></h2>
 		</div>
 	</div> 
 
@@ -23,11 +23,11 @@
 				<button type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</button>
-				<span i18n-data="trigger_mechanism_instructions"></span>
+				<span i18n-data="results_instructions"></span>
 			</div>
 			<!-- :::::::::: TAG :::::::::: -->
             <div class="form-group">
-                <label for="results_tag" i18n-data="service_name"></label>
+                <label for="results_tag" i18n-data="results_tag"></label>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
                     <input id="results_tag" type="text" class="form-control" i18n-data="example_results_tag" i18n-target-attr="placeholder" required="true"></input>
@@ -36,7 +36,7 @@
 
             <!-- :::::::::: XPATH :::::::::: --> 
             <div class="form-group">
-                <label for="result-selector" data-l10n-id="materializable_selector"></label>
+                <label for="result-selector" i18n-data="results_occurrences"></label>
                 <select id="result-selector" class="form-control">
                     <option>11 occurrences</option>
                 </select>

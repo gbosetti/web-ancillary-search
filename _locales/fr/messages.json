@@ -59,11 +59,20 @@
 
 
 
+  "results_title": {
+    "message": "Identification des résultats"
+  },
+  "results_instructions": {
+    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez en tant que «conteneur» de chaque résultat renvoyé par le moteur de recherche. Ensuite étiquettez le type de résultat et indiquez le nombre d'instances que vous identifiez."
+  },
   "results_tag": {
-    "message": "Quels types de résultats retourne ce moteur?"
+    "message": "Type de résultat retourné par ce moteur"
   },
   "example_results_tag": {
     "message": "ex. Livres"
+  },
+  "results_occurrences": {
+    "message": "Nombre d'occurrences"
   },
 
 

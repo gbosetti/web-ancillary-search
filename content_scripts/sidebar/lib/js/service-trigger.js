@@ -39,11 +39,9 @@ function ClickBasedTrigger(client){
 	};
 	this.onTriggerSelection = function(data){
 
-		console.log("\n***********************");
 		client.showFormElement("#user-selected-trigger-element");
 		client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
 		this.triggerSelector = data.selectors;
-		console.log("triggerSelector", this.triggerSelector);
 		this.removeErrorMessage();
 	};
 }
@@ -135,6 +133,9 @@ function ServiceInputUI(){
 	    		/*me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
     			});*/
+
+    			me.disableRuntimeListeners();
+    			me.disableDomElementSelection("input, button, a, img");
 	    	
 		    	me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-results.html",
@@ -147,8 +148,6 @@ function ServiceInputUI(){
 		};
 	};
 };
-
-
 
 var serviceTrigger = new ServiceInputUI();
 	serviceTrigger.initialize({ //otherwise, if the browser is a collaborator, the class can not be clonned

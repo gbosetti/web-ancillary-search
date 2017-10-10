@@ -59,11 +59,20 @@
 
 
 
+  "results_title": {
+    "message": "Identification of results"
+  },
+  "results_instructions": {
+    "message": "Please, point and click on the element of the page you identify as «container» of each result returned by the search engine. Then label the result type and indicate the number of instances you identify."
+  },
   "results_tag": {
-    "message": "Kind of results"
+    "message": "Kind of results the engine retrieves"
   },
   "example_results_tag": {
     "message": "e.g. Books"
+  },
+  "results_occurrences": {
+    "message": "Number of occurrences"
   },
 
 

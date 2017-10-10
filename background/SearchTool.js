@@ -127,7 +127,6 @@ SearchTool.prototype.createApisMenu = function(){
 SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
   
 	var me = this, getApiSpecifications = browser.storage.local.get(null); //TODO: use the class: filereader
-
 	getApiSpecifications.then((apiSpecs) => {
 
 		for (spec in apiSpecs) {
@@ -138,7 +137,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
           
-            		//Acá adentro solo es loggueable si se anula el cierre de popups
+            //Acá adentro solo es loggueable si se anula el cierre de popups
 				    if(me.areScriptsLoadedInTab(tab.id)){
 					   	me.sendExtenralResults(tab, info, apiSpecs);
 				    }

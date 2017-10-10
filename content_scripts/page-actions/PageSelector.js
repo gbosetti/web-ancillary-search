@@ -14,7 +14,6 @@ PageSelector.prototype.loadListeners = function(){
 	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
-		//evt.stopImmediatePropagation();
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -62,14 +61,22 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
 
-	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
 		
-		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
+		me.undarkify(elem);
+		me.removeHighlightingClass(elem);
+		me.removeClearBackground(elem);
+		me.removeAugmentedActions(elem);
 
+		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 			elem.removeEventListener(eventToPrevent, me.preventActionsListener, false);
 		});
 	});
+};
+PageSelector.prototype.removeAugmentedActions = function(elem){
+	
+	elem.removeAttribute("andes-actions");
 };
 PageSelector.prototype.getEventsNamesToPrevent = function(){
 	
@@ -138,7 +145,9 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
+		me.addHighlightingOnHover(elem);
 		me.addHighlightingClass(elem);
+		//this.addClearBackground(element);
 		me.onElementSelectionMessage = onElementSelection; //callback
 		me.addAndesAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	
@@ -157,8 +166,8 @@ PageSelector.prototype.generatePreview = function(element){
 		this.addClearBackground(element);
 
 	    var canvas = document.createElement("canvas");
-	    canvas.width = element.offsetWidth;
-	    canvas.height = element.offsetHeight;
+		    canvas.width = element.offsetWidth;
+		    canvas.height = element.offsetHeight;
 	    var ctx = canvas.getContext("2d");
 	    var box = element.getBoundingClientRect();
 	    ctx.drawWindow(document.defaultView, parseInt(box.left)+
@@ -173,6 +182,16 @@ PageSelector.prototype.generatePreview = function(element){
 		console.log(err.message);
 		return;
 	}
+}
+PageSelector.prototype.addHighlightingOnHover = function(elem){
+
+	var me = this;
+	elem.addEventListener("mouseenter", function( event ) {   
+		me.addStyleClass(this, "andes-highlighted-on-hover");
+	}, false);
+	elem.addEventListener("mouseleave", function( event ) {   
+		me.removeStyleClass(this, "andes-highlighted-on-hover");
+	}, false);
 }
 PageSelector.prototype.addHighlightingClass = function(elem){
 

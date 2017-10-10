@@ -59,11 +59,20 @@
 
 
 
+  "results_title": {
+    "message": "Identificación de resultados"
+  },
+  "results_instructions": {
+    "message": "Señale y haga clic en el elemento de la página que identifica como «contenedor» de cada resultado devuelto por el motor de búsqueda. A continuación, etiquete el tipo de resultado e indique el número de instancias que identifica."
+  },
   "results_tag": {
-    "message": "¿Qué tipo de resultados devuelve este motor de búsqueda?"
+    "message": "Tipo de resultados que devuelve el motor de búsqueda"
   },
   "example_results_tag": {
     "message": "ej. Libros"
+  },
+  "results_occurrences": {
+    "message": "Cantidad de ocurrencias"
   },
 
 
