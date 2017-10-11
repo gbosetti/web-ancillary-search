@@ -87,7 +87,7 @@ SearchTool.prototype.fakeApiDefinitions = function(){
           }]
       }
     },
-    ebay_image: {
+      ebayImage: {
       name:'ebay-image',
       url:'http://www.ebay.com/sch/i.html?_odkw=xm&LH_PrefLoc=3&_sop=15&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR11.TRC2.A0.H0.Xxx.TRS1&_nkw=xx&_sacat=0',
       keywords:'',
@@ -100,8 +100,8 @@ SearchTool.prototype.fakeApiDefinitions = function(){
         xpath:'//div[@id="ResultSetItems"]/ul/li',
         properties:[
           {
-            name: 'Image',
-            xpath: '//div/div/a/img',
+            name:'Image',
+            xpath:'//div/div/a/img', 
             extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           }
         ]
@@ -113,6 +113,7 @@ SearchTool.prototype.fakeApiDefinitions = function(){
           }]
       }
     }
+   
   });
 }
 SearchTool.prototype.createApisMenu = function(){
