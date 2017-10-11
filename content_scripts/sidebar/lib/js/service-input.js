@@ -1,7 +1,10 @@
 function ServiceInputUI(){
 
 	UI.call(this);
+
+	this.fileDescription = " service-input.js";
 	this.inputSelectors;
+	var me = this;
 
 	this.loadSubformBehaviour = function() {
 		this.enableDomElementSelection("input", "onElementSelection");
@@ -19,7 +22,6 @@ function ServiceInputUI(){
 	}
 	this.loadPrevNavigationButton = function() {
 
-		var me = this;
 		document.querySelector(".prev > button").onclick = function(){   
 
     		/*me.saveDataForCurrentService({
@@ -36,15 +38,12 @@ function ServiceInputUI(){
 	};
 	this.loadNextNavigationButton = function() {
 
-		var me = this;
 		document.querySelector(".next > button").onclick = function(){   
 
-			console.log(me.inputSelectors);
 			if(me.inputSelectors){
-	    		/*me.saveDataForCurrentService({
-    				inputXpath: me.inputSelectors
-    			});*/
+				me.disableRuntimeListeners();
     			me.disableDomElementSelection("input");
+    			
 		    	me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-trigger.html",
 	        		filePaths: [
@@ -58,12 +57,12 @@ function ServiceInputUI(){
 };
 
 
-
-var serviceInput = new ServiceInputUI().initialize();
-browser.runtime.onMessage.addListener(function callServiceInputUIActions(request, sender, sendResponse) {
-
-	if(serviceInput[request.call]) {
-		console.log("calling " + request.call + " (.../service-input.js)");
-		serviceInput[request.call](request.args);
-	}
-});
+var serviceInput = new ServiceInputUI();
+	serviceInput.initialize({ //otherwise, if the browser is a collaborator, the class can not be clonned
+		"enableRuntimeListeners": function () {
+			 browser.runtime.onMessage.addListener(serviceInput.callServiceInputUIActions) 
+		},
+		"disableRuntimeListeners": function() {
+			browser.runtime.onMessage.removeListener(serviceInput.callServiceInputUIActions);
+		}
+	}); //It is necessary to be called from outside

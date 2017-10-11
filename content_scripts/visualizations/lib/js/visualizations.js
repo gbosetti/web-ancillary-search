@@ -8,7 +8,8 @@ function ResultsVisualizer(){
 ResultsVisualizer.prototype.showResults = function(data) {
 	this.panel = this.buildPanel(data);
 	this.results = data.results;
-	this.setVisualizer(new ViewImage(this)); //window[data.visualizer]());  //ver como definir un patron para que el usuario elija el tipo de visualización
+	//this.setVisualizer(new ViewImage(this)); //window[data.visualizer]());  //ver como definir un patron para que el usuario elija el tipo de visualización
+	this.setVisualizer(new Datatables(this));	
 	this.loadExtraDependencies();
 };
 
@@ -198,6 +199,14 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 	return resultsBody;
 }
 
+ResultsVisualizer.prototype.hideLoadingMessage = function(iframe){
+	iframe.contentWindow.document.getElementById("loading").remove();
+}
+
+
+ResultsVisualizer.prototype.showLoadingMessage = function(msg, iframe){
+	iframe.contentWindow.document.getElementById("loading-message").innerHTML = msg;
+}
 
 // STATE PATTERN!!!
 //TODO: implementar con estados, cada cual chequea lo que corresponde 
@@ -228,6 +237,7 @@ function WaitingForResults(){
 function Visualization(){}
 
 
+
 function Multimedia(visualizer){
 	
 	Visualization.call(this);
@@ -251,7 +261,6 @@ function ViewImage(visualizer){
 }
 
 ViewImage.prototype.presentData = function(concepts, iframe){
-	console.log("entroacaa");
 	var me = this;
 	var checkForIframe = setInterval(function(){ 
 		var divImage = iframe.contentWindow.document.querySelector("#images");
@@ -279,12 +288,16 @@ ViewImage.prototype.getDependencies = function(visualizer){
 ViewImage.prototype.initialize = function(doc, div, concepts){
 
 	concepts.forEach(function(image){
+<<<<<<< HEAD
 		console.log(image);
 		var img = doc.defaultView["$"](div).append("<div class='col-md-3'><a href='#' class='thumbnail'><img src="+image.Image+" alt='Image' style='max-width:100%;'></a></div>");
 		/*console.log("entro2"+ img);
 		img.setAttribute("src", image[i]);
 		div.appendChild(img);
 		console.log("entro4");*/
+=======
+		var img = doc.defaultView["$"](div).append($("img"));
+>>>>>>> 43dd40ad4908d7e7660a0f256fdd7fb527102a27
 	
 	});
 
@@ -293,8 +306,10 @@ ViewImage.prototype.initialize = function(doc, div, concepts){
 function Datatables(visualizer){
 
 	Visualization.call(this);
+	console.log(this);
 	this.visualizer = visualizer;
 }
+
 
 
 Datatables.prototype.getDependencies = function(visualizer) {
@@ -312,14 +327,19 @@ Datatables.prototype.getDependencies = function(visualizer) {
 Datatables.prototype.presentData = function(concepts, iframe) {
 
 	//TODO: APPLY STATE PATTERN
-	console.log("entro a PresentData del Datatable");
+
 	var me = this;
+	var v = this.visualizer;
 	var checkForIframe = setInterval(function(){ 
+
 		var table = iframe.contentWindow.document.querySelector("#results");
 		if(table){
 			clearInterval(checkForIframe);
 			//TODO: cambiar esto para que recupere resultados posta
+			me.visualizer.showLoadingMessage("Extracting Results...",iframe);
 			me.initializeDatatable(document, table, iframe, concepts);
+			me.visualizer.hideLoadingMessage(iframe);
+
 		}
 	}, 3000);
 };
@@ -341,6 +361,7 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
 	}
 
 	doc.defaultView["$"](doc).ready(function(){
+
 	var tableC =doc.defaultView["$"](table).DataTable({
         "data": concepts,
         "columns": [

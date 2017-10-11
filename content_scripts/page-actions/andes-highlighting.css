@@ -12,6 +12,13 @@
                 no-repeat;
 }
 
+.andes-highlighted-on-hover{
+    cursor: pointer;
+    background: orange !important;
+    border: 1px solid orange !important;
+    border-radius: 5px !important;
+    box-shadow: 0px 0px 2px 1px orange !important;
+}
 * > .andes-highlighted, 
 * > .andes-clear-background { 
     background: white !important; 
@@ -21,10 +28,10 @@
     cursor: pointer;
 }
 .andes-highlighted:hover{
-    background: orange !important;
+    /*background: orange !important;
     border: 1px solid orange !important;
     border-radius: 5px !important;
-    box-shadow: 0px 0px 2px 1px orange !important;
+    box-shadow: 0px 0px 2px 1px orange !important;*/
 }
 
 .andes-blurred{

@@ -39,11 +39,9 @@ function ClickBasedTrigger(client){
 	};
 	this.onTriggerSelection = function(data){
 
-		console.log("\n***********************");
 		client.showFormElement("#user-selected-trigger-element");
 		client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
 		this.triggerSelector = data.selectors;
-		console.log("triggerSelector", this.triggerSelector);
 		this.removeErrorMessage();
 	};
 }
@@ -66,6 +64,8 @@ function TypeAndWaitBasedTrigger(client){
 function ServiceInputUI(){
 
 	UI.call(this);
+
+	this.fileDescription = " service-trigger.js";
 	this.userDefInputXpath;
 	this.currentTriggerStrategy = new UnsetTrigger(this);
 
@@ -133,6 +133,9 @@ function ServiceInputUI(){
 	    		/*me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
     			});*/
+
+    			me.disableRuntimeListeners();
+    			me.disableDomElementSelection("input, button, a, img");
 	    	
 		    	me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-results.html",
@@ -146,14 +149,12 @@ function ServiceInputUI(){
 	};
 };
 
-
-
-var serviceInput = new ServiceInputUI().initialize();
-browser.runtime.onMessage.addListener(function callServiceInputUIActions(request, sender, sendResponse) {
-
-	console.log("calling " + request.call + " (.../service-input.js)");
-	if(serviceInput[request.call]) {
-		
-		serviceInput[request.call](request.args);
-	}
-});
+var serviceTrigger = new ServiceInputUI();
+	serviceTrigger.initialize({ //otherwise, if the browser is a collaborator, the class can not be clonned
+		"enableRuntimeListeners": function () {
+			browser.runtime.onMessage.addListener(serviceTrigger.callServiceInputUIActions);
+		},
+		"disableRuntimeListeners": function() {
+			browser.runtime.onMessage.removeListener(serviceTrigger.callServiceInputUIActions);
+		}
+	});
