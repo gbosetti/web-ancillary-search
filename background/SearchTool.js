@@ -63,17 +63,19 @@ SearchTool.prototype.fakeApiDefinitions = function(){
       trigger:'//form//table/tbody/tr/td[3]/input',
       results: {
         name: 'Generics',
-        xpath:'//div[@id="ResultSetItems"]/ul/li',
+       //div[@id="ResultSetItems"]/ul',
+      
+        xpath:'//div[@id="ResultSetItems"]/ul/li', //li[@class="sresult lvresult clearfix li shic"],//div[@id="ResultSetItems"]/ul/li',
         properties:[
           {
             name:'Name',
             xpath:'//h3/a', 
-            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           },
           {
             name: 'Price',
-            xpath: '//ul/li/span',
-            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+            xpath: '//ul/li[contains(@class, "prc")]/span',
+            //extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           }
         ]
       },
@@ -154,7 +156,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 	});
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
-
+  console.log(apiSpecs[info.menuItemId].results);
 	this.presentationParams = {
 		"resultsName": apiSpecs[info.menuItemId].results.name,
 		"selectedText": info.selectionText,
@@ -175,8 +177,7 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 
 }
 SearchTool.prototype.presentResults = function(results) {
-
-	//console.log(results);
+	console.log(results);
 	this.presentationParams.results = results;
 
 	browser.tabs.sendMessage(this.presentationParams.tabId, {

@@ -81,20 +81,17 @@ XPathInterpreter.prototype.getBetterPath = function(element) {
 XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
     var doc = node.ownerDocument;
     return  doc.evaluate( xpath, doc, null, 
-        9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE
+        9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE*/
 }
 XPathInterpreter.prototype.getElementsByXpath = function(xpath, node) {
-    
+    var nodes = [];
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
-
-    //TODO: ERROR ACÁ EN ALGUNOS SITIOS AL HACER  HARVESTING DE LAS PROPS, EJ: DBLP
-    //node.ownerDocument.defaultView.console.log(doc, xpath, node);
-    var results = doc.evaluate( xpath, doc, null, 4, null ); //4 = UNORDERED_NODE_ITERATOR_TYPE
-
-    var nodes = [], res = results.iterateNext(), i=0;
+    var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
+    var res = results.iterateNext(); 
+    console.log(results);
     while (res) {
-        nodes.push(res);
-        res = results.iterateNext();
+      nodes.push(res);
+      res = results.iterateNext();
     }
     return nodes;
 };

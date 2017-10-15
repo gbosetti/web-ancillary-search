@@ -46,7 +46,7 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 }
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
-	
+	console.log(data.resultSpec.xpath);
 	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
 	
 	browser.runtime.sendMessage({
@@ -58,22 +58,33 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 };
 
 ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
+	//TODO: Modularizar codigo
 	var concepts = [], me= this;
-
-	domElements.forEach(function(domElem){
-		var concept = {};
-		propSpecs.forEach(function(prop){
-
-			var propValue = me.getSingleElement(prop.xpath, domElem);
-			if(propValue && propValue.textContent){
-					concept[prop.name] = propValue.textContent;
-			}else{
-				concept[prop.name] = propValue.src;
+	propSpecs.forEach(function(prop){
+		var propValues = me.getMultipleElements(prop.xpath, domElements[0]);
+		var nameProp = prop.name;
+		for (i = 0; i < propValues.length; i++) { 
+			if (concepts[i]){
+				if(propValue && propValue.textContent){
+					concepts[i][nameProp] = propValues[i].textContent;
+				}else {
+					concepts[i][nameProp] = propValues[i].src;
+				}
 			}
-		});
-		concepts.push(concept);
+			else{
+				concept = {};
+				concepts[i] = concept;
+				if(propValue && propValue.textContent){
+					concepts[i][nameProp] = propValues[i].textContent;
+				}else {
+					concepts[i][nameProp] = propValues[i].src;
+				}
+			}
+			
+		}
 	});
 	return concepts;
+
 }
 
 ResultsVisualizer.prototype.getExternalContent = function(url, selector){
@@ -93,10 +104,14 @@ ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
 	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
     //return doc.querySelector(selector).textContent;
 };
+ResultsVisualizer.prototype.getMultipleElements = function(selector, node){
+	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
+	return (new XPathInterpreter()).getElementsByXpath(selector, node);
+}
 ResultsVisualizer.prototype.getSingleElement = function(selector, node){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-	return (new XPathInterpreter()).getElementByXPath(selector, node);
-    //return doc.querySelector(selector).textContent;
+	return (new XPathInterpreter()).getElementByXPath(selector, node); 
+
 };
 ResultsVisualizer.prototype.getDependencies = function(visualizer) {
 	return this.visualizer.getDependencies();
@@ -296,7 +311,6 @@ ViewImage.prototype.initialize = function(doc, div, concepts){
 function Datatables(visualizer){
 
 	Visualization.call(this);
-	console.log(this);
 	this.visualizer = visualizer;
 }
 
