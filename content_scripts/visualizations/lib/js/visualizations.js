@@ -65,7 +65,7 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 		var nameProp = prop.name;
 		for (i = 0; i < propValues.length; i++) { 
 			if (concepts[i]){
-				if(propValue && propValue.textContent){
+				if(propValues[i] && propValues[i].textContent){
 					concepts[i][nameProp] = propValues[i].textContent;
 				}else {
 					concepts[i][nameProp] = propValues[i].src;
@@ -74,7 +74,7 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 			else{
 				concept = {};
 				concepts[i] = concept;
-				if(propValue && propValue.textContent){
+				if(propValues[i] && propValues[i].textContent){
 					concepts[i][nameProp] = propValues[i].textContent;
 				}else {
 					concepts[i][nameProp] = propValues[i].src;
@@ -303,16 +303,14 @@ ViewImage.prototype.getDependencies = function(visualizer){
 ViewImage.prototype.initialize = function(doc, div, concepts){
 
 	concepts.forEach(function(image){
-<<<<<<< HEAD
+
 		console.log(image);
 		var img = doc.defaultView["$"](div).append("<div class='col-md-3'><a href='#' class='thumbnail'><img src="+image.Image+" alt='Image' style='max-width:100%;'></a></div>");
 		/*console.log("entro2"+ img);
 		img.setAttribute("src", image[i]);
 		div.appendChild(img);
 		console.log("entro4");*/
-=======
-		var img = doc.defaultView["$"](div).append($("img"));
->>>>>>> 43dd40ad4908d7e7660a0f256fdd7fb527102a27
+
 	
 	});
 
