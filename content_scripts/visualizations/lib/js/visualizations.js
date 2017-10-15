@@ -293,7 +293,8 @@ ViewImage.prototype.getDependencies = function(visualizer){
 	return {
 		
 		"js": [
-	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
+	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
+	  		"/content_scripts/visualizations/lib/js/functions.js"
 	  	]
 
 	};
@@ -302,7 +303,16 @@ ViewImage.prototype.getDependencies = function(visualizer){
 ViewImage.prototype.initialize = function(doc, div, concepts){
 
 	concepts.forEach(function(image){
+<<<<<<< HEAD
+		console.log(image);
+		var img = doc.defaultView["$"](div).append("<div class='col-md-3'><a href='#' class='thumbnail'><img src="+image.Image+" alt='Image' style='max-width:100%;'></a></div>");
+		/*console.log("entro2"+ img);
+		img.setAttribute("src", image[i]);
+		div.appendChild(img);
+		console.log("entro4");*/
+=======
 		var img = doc.defaultView["$"](div).append($("img"));
+>>>>>>> 43dd40ad4908d7e7660a0f256fdd7fb527102a27
 	
 	});
 
