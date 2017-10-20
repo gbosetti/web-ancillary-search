@@ -35,6 +35,25 @@ XPathInterpreter.prototype.removeEngines = function() {
     this.engines = new array();
 };
 
+
+XPathInterpreter.prototype.getMultipleXPathsWithOccurrences = function(element) {
+    var labeledXpaths = [], xpaths = this.getMultipleXPaths(element, element.ownerDocument);
+
+    for (var i = xpaths.length - 1; i >= 0; i--) {
+
+        var elemsBySelector = this.getElementsByXpath(xpaths[i], element.ownerDocument).length;
+        if(elemsBySelector > 0){
+            labeledXpaths.push({
+                expression: xpaths[i],
+                occurrences: elemsBySelector
+            });  
+        }
+    }
+
+    return labeledXpaths;
+};
+
+
 // obtener un array de xPaths correspondiente a los engines seteados
 XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeBase) {
     var xPathArray = [];
@@ -88,7 +107,7 @@ XPathInterpreter.prototype.getElementsByXpath = function(xpath, node) {
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
     var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
     var res = results.iterateNext(); 
-    console.log(results);
+
     while (res) {
       nodes.push(res);
       res = results.iterateNext();

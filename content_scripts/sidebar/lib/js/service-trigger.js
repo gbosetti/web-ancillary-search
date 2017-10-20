@@ -138,10 +138,11 @@ function ServiceInputUI(){
     			me.disableDomElementSelection("input, button, a, img");
 	    	
 		    	me.loadUrlAtSidebar({ 
-	        		url: "/content_scripts/sidebar/service-results.html",
+	        		url: "/content_scripts/sidebar/service-results-selection.html",
 	        		filePaths: [
 	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-						"/content_scripts/sidebar/lib/js/service-results.js"
+	        			"/content_scripts/XPathInterpreter.js",
+						"/content_scripts/sidebar/lib/js/service-results-selection.js"
 					] 
 	        	});
 		    }else me.showMissingRequirementMessage("triggering-error", "");

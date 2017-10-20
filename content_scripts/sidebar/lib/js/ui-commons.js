@@ -141,7 +141,7 @@ function UI(){
 	this.callServiceInputUIActions = function(request, sender, sendResponse) {
 
 		if(me[request.call]) {
-			console.log("calling " + request.call + this.fileDescription);
+			console.log("calling " + request.call + " " + this.fileDescription);
 			me[request.call](request.args);
 		}
 	};

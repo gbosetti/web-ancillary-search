@@ -62,8 +62,11 @@
   "results_title": {
     "message": "Identification of results"
   },
-  "results_instructions": {
-    "message": "Please, point and click on the element of the page you identify as «container» of each result returned by the search engine. Then label the result type and indicate the number of instances you identify."
+  "results_selection_instructions": {
+    "message": "Please, point and click on the element of the page you identify as «container» of each result returned by the search engine. Then, choose the number of occurrences you identify."
+  },
+  "results_tagging_instructions": {
+    "message": "Tag the result type you identify."
   },
   "results_tag": {
     "message": "Kind of results the engine retrieves"
@@ -73,6 +76,12 @@
   },
   "results_occurrences": {
     "message": "Number of occurrences"
+  },
+  "occurrences": {
+    "message": "occurrences"
+  },
+  "occurrence": {
+    "message": "occurrence"
   },
 
 

@@ -18,7 +18,7 @@ PageSelector.prototype.loadListeners = function(){
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": (new XPathInterpreter()).getMultipleXPaths(me.selectedElem), //evt.target),
+				"selectors": (new XPathInterpreter()).getMultipleXPathsWithOccurrences(me.selectedElem), //evt.target),
 				"previewSource": me.generatePreview(me.selectedElem) //evt.target)
 			}
 		});
