@@ -23,14 +23,20 @@ PageSelector.prototype.loadListeners = function(){
 			}
 		});
 	};
+	this.mouseEnterSelection = function(evt) {  
+		me.removeStyleClass(me.selectedElem, "andes-highlighted-on-hover");
+		me.selectedElem = this; 
+		me.addStyleClass(me.selectedElem, "andes-highlighted-on-hover");
+		evt.preventDefault(); evt.stopImmediatePropagation();
+	};
 	this.preventActionsListener = function(evt){
 		
 		evt.preventDefault();
 		me.executeAugmentedActions(evt);
 
-		if(me.hasAugmentedAction(evt.target)){
-			evt.stopImmediatePropagation();
-		}
+		//if(me.hasAugmentedAction(evt.target)){
+		evt.stopImmediatePropagation();
+		//}
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
@@ -71,10 +77,12 @@ PageSelector.prototype.restoreDomElementsBehaviour = function(){
 		me.undarkify(elem);
 		me.removeHighlightingClass(elem);
 		me.removeClearBackground(elem);
-		me.removeAugmentedActions(elem);
+		me.removeAugmentedActions(elem); 
+		me.removeStyleClass(elem, "andes-highlighted-on-hover");
+		me.removeHighlightingOnHover(elem);
 
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
-			elem.removeEventListener(eventToPrevent, me.preventActionsListener, false);
+			elem.removeEventListener(eventToPrevent, me.preventActionsListener);
 		});
 	});
 };
@@ -164,7 +172,7 @@ PageSelector.prototype.removeSelectionListener = function(selector, onEvent){
 
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
-		elem.removeEventListener(onEvent, me.selectionListener);	
+		me.removeAugmentedActions(elem);	
     });	
 }
 PageSelector.prototype.generatePreview = function(element){
@@ -193,17 +201,11 @@ PageSelector.prototype.generatePreview = function(element){
 }
 PageSelector.prototype.addHighlightingOnHover = function(elem){
 
-	var me = this;
-	elem.addEventListener("mouseenter", function( event ) {  
-		/*event.stopImmediatePropagation();
-		event.preventDefault(); */
-		me.removeStyleClass(me.selectedElem, "andes-highlighted-on-hover");
-		me.selectedElem = this; 
-		me.addStyleClass(me.selectedElem, "andes-highlighted-on-hover");
-	}, false);
-	/*elem.addEventListener("mouseleave", function( event ) {   
-		me.removeStyleClass(this, "andes-highlighted-on-hover");
-	}, false);*/
+	elem.addEventListener("mouseenter", this.mouseEnterSelection, false);
+}
+PageSelector.prototype.removeHighlightingOnHover = function(elem){
+
+	elem.removeEventListener("mouseenter", this.mouseEnterSelection, false);
 }
 PageSelector.prototype.addHighlightingClass = function(elem){
 
@@ -213,6 +215,7 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 
 	this.removeClassFromMatchingElements(this.obfuscatedClass);
 	this.removeClassFromMatchingElements(this.highlightingClass);
+	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 }
 PageSelector.prototype.removeEventBlockers = function(){
