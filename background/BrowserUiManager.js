@@ -16,6 +16,10 @@ BrowserUiManager.prototype.onTriggerSelection = function(data) {
 
   this.templatesCreator.onTriggerSelection(data.selectors, data.previewSource);
 };
+BrowserUiManager.prototype.onResultsContainerSelection = function(data) { 
+
+  this.templatesCreator.onResultsContainerSelection(data.selectors, data.previewSource);
+};
 BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
 
   var me = this;

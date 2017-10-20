@@ -7,6 +7,7 @@ function PageSelector(){
 	this.clearBackgroundClass = "andes-clear-background";
 	this.obfuscatedClass = "andes-blurred";
 	this.loadListeners();
+	this.selectedElem;
 };
 PageSelector.prototype.loadListeners = function(){
 	
@@ -17,16 +18,19 @@ PageSelector.prototype.loadListeners = function(){
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": (new XPathInterpreter()).getMultipleXPaths(evt.target),
-				"previewSource": me.generatePreview(evt.target)
+				"selectors": (new XPathInterpreter()).getMultipleXPaths(me.selectedElem), //evt.target),
+				"previewSource": me.generatePreview(me.selectedElem) //evt.target)
 			}
 		});
 	};
 	this.preventActionsListener = function(evt){
-
-		me.executeAndesActions(evt);
+		
 		evt.preventDefault();
-		evt.stopImmediatePropagation();
+		me.executeAugmentedActions(evt);
+
+		if(me.hasAugmentedAction(evt.target)){
+			evt.stopImmediatePropagation();
+		}
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
@@ -120,22 +124,26 @@ PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 		me.removeHighlightingClass(elem);
     });
 }
-PageSelector.prototype.executeAndesActions = function(evt){
+PageSelector.prototype.hasAugmentedAction = function(target){
 
-	var actions = this.getAndesActions(evt.target);
+	return (this.getAugmentedActions(target).length > 0);	
+}
+PageSelector.prototype.executeAugmentedActions = function(evt){
+
+	var actions = this.getAugmentedActions(evt.target);
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(evt.type.toUpperCase() == actions[i].event.toUpperCase())
 			this[actions[i].listener](evt);
 	}
 }
-PageSelector.prototype.getAndesActions = function(elem){
+PageSelector.prototype.getAugmentedActions = function(elem){
 
 	var actions = elem.getAttribute("andes-actions");
 	return (actions && actions.length)? actions=JSON.parse(actions): actions=[];
 }
-PageSelector.prototype.addAndesAction = function(elem, action){
+PageSelector.prototype.addAugmentedAction = function(elem, action){
 
-	var actions = this.getAndesActions(elem);
+	var actions = this.getAugmentedActions(elem);
 		actions.push(action);
 
 	elem.setAttribute("andes-actions", JSON.stringify(actions))
@@ -147,9 +155,9 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 		me.undarkify(elem);	
 		me.addHighlightingOnHover(elem);
 		me.addHighlightingClass(elem);
-		//this.addClearBackground(element);
 		me.onElementSelectionMessage = onElementSelection; //callback
-		me.addAndesAction(elem, {"listener": "selectionListener", "event": onEvent});
+		//console.log("ADDING LISTENER", selector, onElementSelection, onEvent);
+		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	
 }
 PageSelector.prototype.removeSelectionListener = function(selector, onEvent){
@@ -186,12 +194,16 @@ PageSelector.prototype.generatePreview = function(element){
 PageSelector.prototype.addHighlightingOnHover = function(elem){
 
 	var me = this;
-	elem.addEventListener("mouseenter", function( event ) {   
-		me.addStyleClass(this, "andes-highlighted-on-hover");
+	elem.addEventListener("mouseenter", function( event ) {  
+		/*event.stopImmediatePropagation();
+		event.preventDefault(); */
+		me.removeStyleClass(me.selectedElem, "andes-highlighted-on-hover");
+		me.selectedElem = this; 
+		me.addStyleClass(me.selectedElem, "andes-highlighted-on-hover");
 	}, false);
-	elem.addEventListener("mouseleave", function( event ) {   
+	/*elem.addEventListener("mouseleave", function( event ) {   
 		me.removeStyleClass(this, "andes-highlighted-on-hover");
-	}, false);
+	}, false);*/
 }
 PageSelector.prototype.addHighlightingClass = function(elem){
 
@@ -242,7 +254,7 @@ PageSelector.prototype.addStyleClass = function(elem, className){
 };
 PageSelector.prototype.removeStyleClass = function(elem, className){
 	
-	if(elem.classList && elem.classList.contains(className)){
+	if(elem && elem.classList && elem.classList.contains(className)){
 		elem.classList.remove(className);
 	}
 };

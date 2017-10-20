@@ -41,6 +41,10 @@ TemplatesCreator.prototype.onTriggerSelection = function(selectors, previewSourc
 
   this.sidebarManager.onTriggerSelection(selectors, previewSource);
 };
+TemplatesCreator.prototype.onResultsContainerSelection = function(selectors, previewSource) { 
+
+  this.sidebarManager.onResultsContainerSelection(selectors, previewSource);
+};
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 
   this.backPageSelector.enablePageRegularBehaviour(tab);
