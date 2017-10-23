@@ -129,7 +129,6 @@ function ServiceInputUI(){
 		document.querySelector(".next > button").onclick = function(){   
 
 	    	if(me.areTriggerRequirementsMet()){
-	    		console.log(this.triggerXpath);
 	    		/*me.saveDataForCurrentService({
     				inputXpath: me.userDefInputXpath
     			});*/

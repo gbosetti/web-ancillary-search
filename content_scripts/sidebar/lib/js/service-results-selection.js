@@ -26,7 +26,6 @@ function ServiceInputUI(){
 				opt.text = selectors[i].occurrences + " " + elemsBySelectorLabel;
 			selector.add(opt); 
 		}
-
 	};
 	this.sortSelectors = function(selectors){
 		return selectors.sort(function(a,b) {return (a.occurrences > b.occurrences) ? 1 : ((b.occurrences > a.occurrences) ? -1 : 0);} ); 

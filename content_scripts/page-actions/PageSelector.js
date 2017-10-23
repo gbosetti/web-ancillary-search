@@ -32,11 +32,15 @@ PageSelector.prototype.loadListeners = function(){
 	this.preventActionsListener = function(evt){
 		
 		evt.preventDefault();
-		me.executeAugmentedActions(evt);
 
-		//if(me.hasAugmentedAction(evt.target)){
-		evt.stopImmediatePropagation();
-		//}
+		var target = me.selectedElem; //evt.target;
+		console.log("preventing", target);
+		me.executeAugmentedActions({"target": target, "type": evt.type});
+
+		if(me.hasAugmentedAction(evt.target)){ //so it continues until a container with behaviour may be found
+			console.log("STOP"); //, evt.target);
+			evt.stopImmediatePropagation();
+		}
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
@@ -146,8 +150,12 @@ PageSelector.prototype.executeAugmentedActions = function(evt){
 }
 PageSelector.prototype.getAugmentedActions = function(elem){
 
-	var actions = elem.getAttribute("andes-actions");
-	return (actions && actions.length)? actions=JSON.parse(actions): actions=[];
+	if (elem){
+		var actions = elem.getAttribute("andes-actions");
+		if (actions && actions.length)
+			return actions=JSON.parse(actions);
+	}
+	return [];
 }
 PageSelector.prototype.addAugmentedAction = function(elem, action){
 
