@@ -20,6 +20,13 @@ BrowserUiManager.prototype.onResultsContainerSelection = function(data) {
 
   this.templatesCreator.onResultsContainerSelection(data.selectors, data.previewSource);
 };
+BrowserUiManager.prototype.selectMatchingElements = function(data) { 
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.selectMatchingElements(tab, data);
+  });
+};
 BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
 
   var me = this;

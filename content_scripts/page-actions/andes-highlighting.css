@@ -14,12 +14,11 @@
 
 .andes-highlighted-on-hover{
     cursor: pointer;
-    background: orange !important;
     border: 1px solid orange !important;
     border-radius: 5px !important;
     box-shadow: 0px 0px 2px 1px orange !important;
 }
-* > .andes-highlighted, 
+* > .andes-selectable, 
 * > .andes-clear-background { 
     background: white !important; 
     border-radius: 5px !important;
@@ -33,3 +32,17 @@
 .andes-blurred img{
     filter: grayscale(100%) !important;
 }
+
+
+.andes-selected {
+    background: #66afe9 !important;
+    border: 1px solid #66afe9 !important;
+    border-radius: 5px !important;
+    box-shadow: 0px 0px 2px 1px #66afe9 !important;
+    /*animation-name: fadeinout;
+    animation-duration: 3s;*/
+}
+/*@keyframes fadeinout {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}*/

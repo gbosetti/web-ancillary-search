@@ -65,6 +65,10 @@ TemplatesCreator.prototype.highlightMatchingElements = function(tab, data) {
 
   browser.tabs.sendMessage(tab.id, {call: "highlightMatchingElements", args: data});
 }
+TemplatesCreator.prototype.selectMatchingElements = function(tab, data) { 
+
+  browser.tabs.sendMessage(tab.id, {"call": "selectMatchingElements", "args": data });
+};
 TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
   this.disableDomSelection(tab);

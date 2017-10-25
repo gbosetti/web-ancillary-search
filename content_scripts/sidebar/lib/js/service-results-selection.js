@@ -4,7 +4,7 @@ function ServiceInputUI(){
 	this.userDefInputXpath;
 
 	this.loadSubformBehaviour = function() {
-		this.enableDomElementSelection("div", "onResultsContainerSelection");
+		this.enableDomElementSelection("div:not(#andes-sidebar)", "onResultsContainerSelection");
 	};
 	this.onResultsContainerSelection = function(data){
 
@@ -17,7 +17,6 @@ function ServiceInputUI(){
 			selector.innerHTML = "";
 
 		selectors = this.sortSelectors(selectors);
-
 		for (var i = selectors.length - 1; i >= 0; i--) {
 
 			var elemsBySelectorLabel = selectors[i].occurrences > 1? browser.i18n.getMessage("occurrences") : browser.i18n.getMessage("occurrence");
@@ -26,9 +25,21 @@ function ServiceInputUI(){
 				opt.text = selectors[i].occurrences + " " + elemsBySelectorLabel;
 			selector.add(opt); 
 		}
+
+		selector.onchange = function(){
+
+			console.log(this.value);
+			browser.runtime.sendMessage({ 
+	    		"call": "selectMatchingElements",
+	    		"args": {
+	    			"selector": this.value
+	    		}
+	    	});
+	    	//browser.tabs is undefined here
+		}
 	};
 	this.sortSelectors = function(selectors){
-		return selectors.sort(function(a,b) {return (a.occurrences > b.occurrences) ? 1 : ((b.occurrences > a.occurrences) ? -1 : 0);} ); 
+		return selectors.sort(function(a,b) {return (a.occurrences < b.occurrences) ? 1 : ((b.occurrences < a.occurrences) ? -1 : 0);} ); 
 	};
 	this.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";

@@ -21,3 +21,17 @@ form{
 	background: white;
 	border-bottom: 2px solid #e95420 !important;
 }
+.image-preview-container{
+    background-color: #EEE;
+    padding: 5px;
+    border-radius: 5px;
+}
+.image-preview{
+    max-height: 200px;
+    width: auto !important;
+    max-width: 100%;
+    display: block;
+    margin: auto;
+    border-radius: 5px;
+	border: 1px solid #e3e3e3;
+}

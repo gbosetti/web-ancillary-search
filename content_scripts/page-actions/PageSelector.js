@@ -3,7 +3,8 @@ console.log("\n\n\n********* LOADING THE 'PAGE SELECTOR' FILE *********\n\n\n");
 
 function PageSelector(){
 	//this.createEventListeners();
-	this.highlightingClass = "andes-highlighted";
+	this.selectableElemClass = "andes-selectable";
+	this.selectionClass = "andes-selected";
 	this.clearBackgroundClass = "andes-clear-background";
 	this.obfuscatedClass = "andes-blurred";
 	this.loadListeners();
@@ -34,11 +35,9 @@ PageSelector.prototype.loadListeners = function(){
 		evt.preventDefault();
 
 		var target = me.selectedElem; //evt.target;
-		console.log("preventing", target);
 		me.executeAugmentedActions({"target": target, "type": evt.type});
 
 		if(me.hasAugmentedAction(evt.target)){ //so it continues until a container with behaviour may be found
-			console.log("STOP"); //, evt.target);
 			evt.stopImmediatePropagation();
 		}
 	};
@@ -52,6 +51,23 @@ PageSelector.prototype.getAllVisibleDomElementsButBody = function(){
 PageSelector.prototype.getCurrentSidebarElements = function(){
 	
 	return document.querySelector("#andes-sidebar").querySelectorAll("*");
+};
+PageSelector.prototype.highlightMatchingElements = function(data){
+
+	/*var elems = (new XPathInterpreter()).getElementsByXpath(data.xpath, document);
+	for (var i = elems.length - 1; i >= 0; i--) {
+		this.addSelectionClass(elems[i]);
+	}*/
+};
+PageSelector.prototype.selectMatchingElements = function(data){
+
+	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, document);
+	for (var i = elems.length - 1; i >= 0; i--) {
+		this.addSelectionClass(elems[i]);
+		
+	}
+	var me= this;
+	setTimeout(function(){ me.removeFullSelectionStyle(this.selectionClass); }, 2000);
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
@@ -79,7 +95,7 @@ PageSelector.prototype.restoreDomElementsBehaviour = function(){
 	elements.forEach(function(elem){
 		
 		me.undarkify(elem);
-		me.removeHighlightingClass(elem);
+		me.removeSelectableElemStyle(elem);
 		me.removeClearBackground(elem);
 		me.removeAugmentedActions(elem); 
 		me.removeStyleClass(elem, "andes-highlighted-on-hover");
@@ -133,7 +149,7 @@ PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 
 	var me = this, elems = document.querySelectorAll(selector); 
 	elems.forEach(function(elem) { 
-		me.removeHighlightingClass(elem);
+		me.removeSelectableElemStyle(elem);
     });
 }
 PageSelector.prototype.hasAugmentedAction = function(target){
@@ -170,7 +186,7 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingOnHover(elem);
-		me.addHighlightingClass(elem);
+		me.addSelectableElemStyle(elem);
 		me.onElementSelectionMessage = onElementSelection; //callback
 		//console.log("ADDING LISTENER", selector, onElementSelection, onEvent);
 		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
@@ -186,7 +202,7 @@ PageSelector.prototype.removeSelectionListener = function(selector, onEvent){
 PageSelector.prototype.generatePreview = function(element){
 
 	try{
-		this.removeHighlightingClass(element);
+		this.removeSelectableElemStyle(element);
 		this.addClearBackground(element);
 
 	    var canvas = document.createElement("canvas");
@@ -199,7 +215,7 @@ PageSelector.prototype.generatePreview = function(element){
 	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
 
 	    this.removeClearBackground(element);
-	    this.addHighlightingClass(element);
+	    this.addSelectableElemStyle(element);
 
 	    return canvas.toDataURL();
 	}catch(err){
@@ -215,16 +231,25 @@ PageSelector.prototype.removeHighlightingOnHover = function(elem){
 
 	elem.removeEventListener("mouseenter", this.mouseEnterSelection, false);
 }
-PageSelector.prototype.addHighlightingClass = function(elem){
+PageSelector.prototype.addSelectableElemStyle = function(elem){
 
-	this.addStyleClass(elem, this.highlightingClass);  
+	this.addStyleClass(elem, this.selectableElemClass);  
+}
+PageSelector.prototype.addSelectionClass = function(elem){
+
+	this.addStyleClass(elem, this.selectionClass);  
+}
+PageSelector.prototype.removeSelectionClass = function(elem){
+
+	this.removeStyleClass(elem, this.selectionClass);  
 }
 PageSelector.prototype.removeFullSelectionStyle = function(){
 
 	this.removeClassFromMatchingElements(this.obfuscatedClass);
-	this.removeClassFromMatchingElements(this.highlightingClass);
+	this.removeClassFromMatchingElements(this.selectableElemClass);
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
+	this.removeClassFromMatchingElements(this.selectionClass);
 }
 PageSelector.prototype.removeEventBlockers = function(){
 
@@ -273,9 +298,9 @@ PageSelector.prototype.undarkify = function(elem){
 	
 	this.removeStyleClass(elem, this.obfuscatedClass);
 };
-PageSelector.prototype.removeHighlightingClass = function(elem){
+PageSelector.prototype.removeSelectableElemStyle = function(elem){
 	
-	this.removeStyleClass(elem, this.highlightingClass);	
+	this.removeStyleClass(elem, this.selectableElemClass);	
 };
 PageSelector.prototype.removeClearBackground = function(elem){
 	
