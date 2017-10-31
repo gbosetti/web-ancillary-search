@@ -10,16 +10,49 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
+PageSelector.prototype.getSetOfXPathsByOccurrences = function(element){
+
+	var xpi = new XPathInterpreter(),
+		labeledXpaths = {}, 
+		xpaths = xpi.getMultipleXPaths(element, element.ownerDocument);
+
+    for (var i = xpaths.length - 1; i >= 0; i--) {
+
+        var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
+        if(elemsBySelector > 0){
+
+            if(labeledXpaths[elemsBySelector])
+            	this.addToExistingLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths)
+            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths); 
+        }
+    }
+
+    return labeledXpaths;
+}
+PageSelector.prototype.addToExistingLabeledXpath = function(ocurrences, xpath, labeledXpaths){
+
+	var xpaths = labeledXpaths[ocurrences]; 
+	//console.log("existing", xpaths, " with ", xpath);
+		xpaths.push(xpath);
+
+	labeledXpaths[ocurrences] = xpaths; 
+}
+PageSelector.prototype.createNewLabeledXpath = function(ocurrences, xpath, labeledXpaths){
+
+	labeledXpaths[ocurrences] = [xpath]; 
+}
 PageSelector.prototype.loadListeners = function(){
 	
 	var me = this;
 	this.onElementSelectionMessage; 
 	this.selectionListener = function(evt){
 
+		me.removeFullSelectionStyle();
+		
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": (new XPathInterpreter()).getMultipleXPathsWithOccurrences(me.selectedElem), //evt.target),
+				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem), 
 				"previewSource": me.generatePreview(me.selectedElem) //evt.target)
 			}
 		});

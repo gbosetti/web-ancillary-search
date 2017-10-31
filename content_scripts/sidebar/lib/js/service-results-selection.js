@@ -13,34 +13,33 @@ function ServiceInputUI(){
 		this.fillOccurrencesSelector(data.selectors);
 	};
 	this.fillOccurrencesSelector = function(selectors){
+
 		var selector = document.querySelector("#result-selector");
 			selector.innerHTML = "";
 
-		selectors = this.sortSelectors(selectors);
-		for (var i = selectors.length - 1; i >= 0; i--) {
+		Object.keys(selectors).forEach(function(key) {
 
-			var elemsBySelectorLabel = selectors[i].occurrences > 1? browser.i18n.getMessage("occurrences") : browser.i18n.getMessage("occurrence");
+			var elemsBySelectorLabel = key > 1? browser.i18n.getMessage("occurrences") : browser.i18n.getMessage("occurrence");
 			var opt = document.createElement("option");
-				opt.value = selectors[i].expression;
-				opt.text = selectors[i].occurrences + " " + elemsBySelectorLabel;
+				opt.value = selectors[key][0];
+				opt.text = key + " " + elemsBySelectorLabel;
 			selector.add(opt); 
-		}
+		});
 
 		selector.onchange = function(){
-
 			console.log(this.value);
 			browser.runtime.sendMessage({ 
 	    		"call": "selectMatchingElements",
-	    		"args": {
-	    			"selector": this.value
-	    		}
+	    		"args": { "selector": this.value }
 	    	});
-	    	//browser.tabs is undefined here
 		}
 	};
-	this.sortSelectors = function(selectors){
-		return selectors.sort(function(a,b) {return (a.occurrences < b.occurrences) ? 1 : ((b.occurrences < a.occurrences) ? -1 : 0);} ); 
-	};
+	/*this.sortSelectors = function(selectors){
+
+		//console.log("\n\n\nSELECTORS!!!!!!", selectors);
+		return JSON.stringify(selectors, Object.keys(selectors).sort());
+		//return selectors.sort(function(a,b) {return (a.occurrences < b.occurrences) ? 1 : ((b.occurrences < a.occurrences) ? -1 : 0);} ); 
+	};*/
 	this.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";
 	};
