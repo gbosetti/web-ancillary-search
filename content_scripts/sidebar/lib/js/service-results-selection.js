@@ -8,8 +8,10 @@ function ServiceInputUI(){
 	};
 	this.onResultsContainerSelection = function(data){
 
+		this.showFormElement("#preview_group");
+		this.showFormElement("#selector_group");
+		
 		this.loadPreview("#result-preview-image", data.previewSource);
-		//this.showFormElement("#result-preview-image");
 		this.fillOccurrencesSelector(data.selectors);
 	};
 	this.fillOccurrencesSelector = function(selectors){
