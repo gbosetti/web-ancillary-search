@@ -70,7 +70,7 @@ PageSelector.prototype.loadListeners = function(){
 		var target = me.selectedElem; //evt.target;
 		me.executeAugmentedActions({"target": target, "type": evt.type});
 
-		if(me.hasAugmentedAction(evt.target)){ //so it continues until a container with behaviour may be found
+		if(me.hasAugmentedAction(target)){ //so it continues until a container with behaviour may be found
 			evt.stopImmediatePropagation();
 		}
 	};
@@ -97,10 +97,9 @@ PageSelector.prototype.selectMatchingElements = function(data){
 	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, document);
 	for (var i = elems.length - 1; i >= 0; i--) {
 		this.addSelectionClass(elems[i]);
-		
 	}
-	var me= this;
-	setTimeout(function(){ me.removeFullSelectionStyle(this.selectionClass); }, 2000);
+	//var me= this;
+	//setTimeout(function(){ me.removeFullSelectionStyle(this.selectionClass); }, 2000);
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 

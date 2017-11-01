@@ -35,14 +35,17 @@
 
 
 .andes-selected {
-    background: #66afe9 !important;
-    border: 1px solid #66afe9 !important;
+    background: orange !important;
+    border: 1px solid orange !important;
     border-radius: 5px !important;
-    box-shadow: 0px 0px 2px 1px #66afe9 !important;
+    box-shadow: 0px 0px 2px 1px orange !important;
     /*animation-name: fadeinout;
     animation-duration: 3s;*/
 }
-/*@keyframes fadeinout {
+/*
+#66afe9
+
+@keyframes fadeinout {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }*/

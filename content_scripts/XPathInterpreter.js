@@ -7,7 +7,7 @@ function XPathInterpreter() {
     arguments.callee.instance = this;
     this.currentElement;
     this.xPaths;
-    this.engine = [new BasicIdEngine(), new IdTreeXPathEngine(), 
+    this.engine = [new BasicIdEngine(), new IdTreeXPathEngine(), new ControlTypeBasedEngine(), 
     new FullXPathEngine(), new ClassXPathEngine() ];
     //, new CssPathEngine()
 
@@ -36,24 +36,6 @@ XPathInterpreter.prototype.removeEngines = function() {
 };
 
 
-XPathInterpreter.prototype.getMultipleXPathsWithOccurrences = function(element) {
-    var labeledXpaths = [], xpaths = this.getMultipleXPaths(element, element.ownerDocument);
-
-    for (var i = xpaths.length - 1; i >= 0; i--) {
-
-        var elemsBySelector = this.getElementsByXpath(xpaths[i], element.ownerDocument).length;
-        if(elemsBySelector > 0){
-            labeledXpaths.push({
-                expression: xpaths[i],
-                occurrences: elemsBySelector
-            });  
-        }
-    }
-
-    return labeledXpaths;
-};
-
-
 // obtener un array de xPaths correspondiente a los engines seteados
 XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeBase) {
     var xPathArray = [];
@@ -70,12 +52,12 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
 
                 for (var j = 0; j < path.length; j++) {
                     
-                    if(removeBase && path[j] != null && path[j].indexOf('.//')>-1)
-                        path[j] = path[j].slice(3,path[j].length);
+                    /*if(removeBase && path[j] != null && path[j].indexOf('.//')>-1)
+                        path[j] = path[j].slice(3,path[j].length);*/
 
                     xPathArray.push(path[j]);
-                    if(!removeBase)
-                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
+                    /*if(!removeBase)
+                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));*/
                 } 
             }
         }catch(err){ 
@@ -237,6 +219,36 @@ IdTreeXPathEngine.prototype.getElementIdXPath = function(element){
 };
 
 
+
+function ControlTypeBasedEngine() {
+    if ( arguments.callee.instance )    //Singleton pattern
+        return arguments.callee.instance;
+    arguments.callee.instance = this;
+}
+ControlTypeBasedEngine.prototype = new XPathSelectorEngine();
+ControlTypeBasedEngine.prototype.constructor = ControlTypeBasedEngine;
+ControlTypeBasedEngine.prototype.getPath = function(element, parent){
+
+    if (!element) return;
+    
+    var xpaths = [];
+    var tagName = element.nodeName.toLowerCase();
+    var traversingElem = element;
+
+    for (var i = 0; i < 3; i++) {
+
+        traversingElem = traversingElem.parentNode;
+        var elemPath = ".//"+ traversingElem.parentNode.nodeName.toLowerCase() + "//" + tagName;
+
+        //console.log("1-"+i, traversingElem, elemPath);
+        xpaths.push(elemPath);
+    }
+    console.log("\n\n\n", xpaths, "\n\n\n");
+    //xpaths.push(".//"+tagName);
+
+    return (xpaths.length && xpaths.length > 0)? xpaths:undefined;
+}
+
 /* 
  * Función que obtiene un Xpath en relación a todos los elementos con la misma clase.
  */
@@ -250,14 +262,17 @@ ClassXPathEngine.prototype = new XPathSelectorEngine();
 ClassXPathEngine.prototype.constructor = ClassXPathEngine;
 
 ClassXPathEngine.prototype.getPath = function(element, parent){
+
+    //console.log("1", element);
     if (!element) return;
     var elemClass = element.className;
+    //console.log("2", elemClass);
     if (!elemClass) return;
     var tagName = element.nodeName.toLowerCase();
     
     // ESTO ES LO QUE DETERMINA COMO SERA EL XPATH -> VER VARIANTES
     //var elemPath = "//"+tagName+"[@class='"+elemClass+"']";
-    var xpaths = [], elemClasses = elemClass.split(/[ ]+/);
+    var xpaths = [], elemClasses = elemClass.split("/[ ]+/");
 
     for (var i = 0; i < elemClasses.length; i++) {
 

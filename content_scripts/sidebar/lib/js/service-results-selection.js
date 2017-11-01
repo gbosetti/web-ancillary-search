@@ -4,7 +4,7 @@ function ServiceInputUI(){
 	this.userDefInputXpath;
 
 	this.loadSubformBehaviour = function() {
-		this.enableDomElementSelection("div:not(#andes-sidebar)", "onResultsContainerSelection");
+		this.enableDomElementSelection("tr, div:not(#andes-sidebar)", "onResultsContainerSelection");
 	};
 	this.onResultsContainerSelection = function(data){
 
@@ -21,6 +21,7 @@ function ServiceInputUI(){
 
 		Object.keys(selectors).forEach(function(key) {
 
+			console.log(selectors[key]);
 			var elemsBySelectorLabel = key > 1? browser.i18n.getMessage("occurrences") : browser.i18n.getMessage("occurrence");
 			var opt = document.createElement("option");
 				opt.value = selectors[key][0];
