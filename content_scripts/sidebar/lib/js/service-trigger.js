@@ -24,7 +24,7 @@ function ClickBasedTrigger(client){
 	this.triggerSelector;
 
 	this.loadParamsConfigControls = function(){
-		client.enableDomElementSelection("input, button, a, img", "onTriggerSelection");
+		client.enableDomElementSelection("input, button, a, img:not(#andes-close-button)", "onTriggerSelection");
 		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
 		client.addParamsConfigurationControls(preview);
 	};
@@ -129,21 +129,7 @@ function ServiceInputUI(){
 		document.querySelector(".next > button").onclick = function(){   
 
 	    	if(me.areTriggerRequirementsMet()){
-	    		/*me.saveDataForCurrentService({
-    				inputXpath: me.userDefInputXpath
-    			});*/
-
-    			me.disableRuntimeListeners();
-    			me.disableDomElementSelection("input, button, a, img");
-	    	
-		    	me.loadUrlAtSidebar({ 
-	        		url: "/content_scripts/sidebar/service-results-selection.html",
-	        		filePaths: [
-	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-	        			"/content_scripts/XPathInterpreter.js",
-						"/content_scripts/sidebar/lib/js/service-results-selection.js"
-					] 
-	        	});
+    			me.loadResultsSelectionForm();
 		    }else me.showMissingRequirementMessage("triggering-error", "");
 		};
 	};

@@ -19,21 +19,17 @@ function ServiceInputUI(){
 	this.isElementSelected = function(elemType) {
 		return (this.userDefInputXpath)? true : false;
 	};
+	this.areFormRequirementsMet = function(){
+		return true;
+	};
 	this.loadPrevNavigationButton = function() {
 
 		var me = this;
 		document.querySelector(".prev > button").onclick = function(){   
 
-	    	me.disableRuntimeListeners();
-    		me.disableDomElementSelection("input");
-
-	    	me.loadUrlAtSidebar({ 
-        		url: "/content_scripts/sidebar/service-trigger.html",
-        		filePaths: [
-        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-					"/content_scripts/sidebar/lib/js/service-trigger.js"
-				] 
-        	});
+	    	if(me.areFormRequirementsMet()){
+	    		me.loadResultsSelectionForm();
+		    }else me.showMissingRequirementMessage("triggering-error", "");
 		};
 	};
 	this.areRequirementsMet = function(){
