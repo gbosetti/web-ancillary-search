@@ -200,7 +200,7 @@ IdTreeXPathEngine.prototype.getPath = function(element, parent){
             if (oldElem2 && oldElem2.length && oldElem2.length > 0 && result == oldElem2[0]){
                 return null;
             }
-            else return [result];
+            else return [result, result.substring(0, result.length-3)];
         }        
     }
     var result =  paths.length ? ".//" + paths.join("/") : null;
@@ -233,18 +233,29 @@ ControlTypeBasedEngine.prototype.getPath = function(element, parent){
     
     var xpaths = [];
     var tagName = element.nodeName.toLowerCase();
+    var accumPathEnding = tagName;
     var traversingElem = element;
 
-    for (var i = 0; i < 3; i++) {
+    //    .//*[contains(@class, 'briefCitRow')]/table/tbody/tr
 
-        traversingElem = traversingElem.parentNode;
-        var elemPath = ".//"+ traversingElem.parentNode.nodeName.toLowerCase() + "//" + tagName;
+    /*for (var i = 0; i < 4; i++) {
 
-        //console.log("1-"+i, traversingElem, elemPath);
-        xpaths.push(elemPath);
+        traversingElem = traversingElem.parentElement;
+        accumPathEnding = traversingElem.parentElement.nodeName.toLowerCase() + "/" + accumPathEnding;
+        xpaths.push(".//"+ accumPathEnding);
+    }*/
+
+    while (traversingElem = traversingElem.parentElement){
+        if(traversingElem.className){
+            accumPathEnding = "*[contains(@class, 'briefCitRow')]/" + accumPathEnding;
+            break;
+        }
+        else{
+            accumPathEnding = traversingElem.nodeName.toLowerCase() + "/" + accumPathEnding;
+        }
     }
-    console.log("\n\n\n", xpaths, "\n\n\n");
-    //xpaths.push(".//"+tagName);
+
+    xpaths.push(".//" + accumPathEnding);
 
     return (xpaths.length && xpaths.length > 0)? xpaths:undefined;
 }

@@ -16,9 +16,15 @@ PageSelector.prototype.getSetOfXPathsByOccurrences = function(element){
 		labeledXpaths = {}, 
 		xpaths = xpi.getMultipleXPaths(element, element.ownerDocument);
 
+	console.log("to evaluate:", xpaths, "\n\n");
+
     for (var i = xpaths.length - 1; i >= 0; i--) {
 
         var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
+
+        console.log("\nxpath:", xpaths[i]);
+        console.log("occurrences:", elemsBySelector);
+
         if(elemsBySelector > 0){
 
             if(labeledXpaths[elemsBySelector])
@@ -93,6 +99,8 @@ PageSelector.prototype.highlightMatchingElements = function(data){
 	}*/
 };
 PageSelector.prototype.selectMatchingElements = function(data){
+
+	this.removeFullSelectionStyle(this.selectionClass);
 
 	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, document);
 	for (var i = elems.length - 1; i >= 0; i--) {

@@ -30,7 +30,7 @@ function ServiceInputUI(){
 		});
 
 		selector.onchange = function(){
-			console.log(this.value);
+			//console.log(this.value);
 			browser.runtime.sendMessage({ 
 	    		"call": "selectMatchingElements",
 	    		"args": { "selector": this.value }
