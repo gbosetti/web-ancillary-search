@@ -1,18 +1,18 @@
 function Sidebar(){
 	this.widget;
 	this.createUI();
-	this.status = new ClosedSidebar(this);
+	this.displayStatus = new ClosedSidebar(this);
 	this.positioningStatus = new LeftSidedBar(this);
 	//this.open();
 }
 Sidebar.prototype.toggle = function() { 
-	this.status.toggle();
+	this.displayStatus.toggle();
 };
 Sidebar.prototype.open = function() {
-	this.status.open();
+	this.displayStatus.open();
 };
 Sidebar.prototype.close = function() {
-	this.status.close();
+	this.displayStatus.close();
 };
 Sidebar.prototype.toggleSide = function() {
 	this.positioningStatus.toggleSide();
@@ -203,7 +203,7 @@ function OpenSidebar(context){
 	SidebarStatus.call(this, context);
 	this.close = function() {
 		context.widget.style.display = "none";
-		context.status = new ClosedSidebar(context);
+		context.displayStatus = new ClosedSidebar(context);
 		browser.runtime.sendMessage({ call: "onSidebarClosed" });
 	};
 	this.toggle = function() {
@@ -215,7 +215,7 @@ function ClosedSidebar(context){
 	SidebarStatus.call(this, context);
 	this.open = function() {
 		this.sidebar.widget.style.display = "";
-		context.status = new OpenSidebar(context);
+		context.displayStatus = new OpenSidebar(context);
 		browser.runtime.sendMessage({ call: "onFrameReadyForLoadingUrl" });
 	};
 	this.toggle = function() {

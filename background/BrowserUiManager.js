@@ -34,6 +34,13 @@ BrowserUiManager.prototype.loadVisalizerDependencies = function(data) {
     me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
   });
 }
+BrowserUiManager.prototype.removeFullSelectionStyle = function() { 
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.removeFullSelectionStyle(tab);
+  });
+}
 BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.templatesCreator.onFrameReadyForLoadingUrl();

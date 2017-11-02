@@ -16,14 +16,9 @@ PageSelector.prototype.getSetOfXPathsByOccurrences = function(element){
 		labeledXpaths = {}, 
 		xpaths = xpi.getMultipleXPaths(element, element.ownerDocument);
 
-	console.log("to evaluate:", xpaths, "\n\n");
-
     for (var i = xpaths.length - 1; i >= 0; i--) {
 
         var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
-
-        console.log("\nxpath:", xpaths[i]);
-        console.log("occurrences:", elemsBySelector);
 
         if(elemsBySelector > 0){
 
@@ -74,11 +69,16 @@ PageSelector.prototype.loadListeners = function(){
 		evt.preventDefault();
 
 		var target = me.selectedElem; //evt.target;
-		me.executeAugmentedActions({"target": target, "type": evt.type});
+		if(target) {
+			me.executeAugmentedActions({"target": target, "type": evt.type});
 
-		if(me.hasAugmentedAction(target)){ //so it continues until a container with behaviour may be found
-			evt.stopImmediatePropagation();
-		}
+			if(me.hasAugmentedAction(target)){ //so it continues until a container with behaviour may be found
+				evt.stopImmediatePropagation();
+			}
+		} 
+		else {evt.stopImmediatePropagation();}
+
+		return false; //This is for preventing anchors
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
@@ -111,8 +111,11 @@ PageSelector.prototype.selectMatchingElements = function(data){
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
-	var me=this, elements = this.getAllVisibleDomElementsButBody(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
-	elements.forEach(function(elem){
+	console.log("\n\n\nPRENEVTING\n\n\n");
+
+	var me=this;
+
+	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 		
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 			elem.addEventListener(eventToPrevent, me.preventActionsListener, false);
@@ -123,13 +126,14 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 	document.querySelectorAll("form").forEach(function(form){ 
 		if(form.addEventListener){
 			form.onsubmit = function(evt){ 
-				console.log("preventing from ANDES");
         		return false;
     		}; 
     	};
     });
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
+
+	console.log("\n\n\nRESTORING THE PRENEVT LISTENER\n\n\n");
 
 	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
@@ -169,7 +173,9 @@ PageSelector.prototype.disableElementSelection = function(data){
 
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
-    this.removeSelectionListener(data.selector, "click");
+	this.removeHighlightingOnHoverFrom(data.selector);
+
+    this.removeAugmentedActionsFrom(data.selector, "click"); //TODO: do not just remove. add a default action (prevent)
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -232,9 +238,10 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	
 }
-PageSelector.prototype.removeSelectionListener = function(selector, onEvent){
+PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 
 	var me = this;
+	console.log("removing from: ", selector);
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.removeAugmentedActions(elem);	
     });	
@@ -290,6 +297,15 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 	this.removeClassFromMatchingElements(this.selectionClass);
+}
+PageSelector.prototype.removeHighlightingOnHoverFrom = function(selector){
+	
+	this.selectedElem = undefined;
+
+	var me = this;
+	document.querySelectorAll(selector).forEach(function(elem){
+		me.removeHighlightingOnHover(elem);
+	});
 }
 PageSelector.prototype.removeEventBlockers = function(){
 

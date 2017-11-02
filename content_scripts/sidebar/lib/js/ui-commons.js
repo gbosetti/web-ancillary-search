@@ -159,5 +159,24 @@ function UI(){
 				"/content_scripts/sidebar/lib/js/service-results-selection.js"
 			] 
     	});
+    };
+    this.loadResultsNamingForm = function(){
+    	me.loadUrlAtSidebar({ 
+    		url: "/content_scripts/sidebar/service-results-naming.html",
+    		filePaths: [
+    			"/content_scripts/sidebar/lib/js/ui-commons.js",
+				"/content_scripts/sidebar/lib/js/service-results-naming.js"
+			] 
+    	});
+    };
+    this.loadServiceNavigationForm = function(){
+    	me.loadUrlAtSidebar({ 
+    		url: "/content_scripts/sidebar/service-navigation.html",
+    		filePaths: [
+    			"/content_scripts/sidebar/lib/js/ui-commons.js",
+    			"/content_scripts/XPathInterpreter.js",
+				"/content_scripts/sidebar/lib/js/service-navigation.js"
+			] 
+    	});
     }
 };

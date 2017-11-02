@@ -23,6 +23,10 @@ BackgroundPageSelector.prototype.enableElementSelection = function(tab, targetEl
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	this.getStatusByTab(tab).disableElementSelection(tab, selector);
 };
+BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab) {
+
+	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" });
+}
 BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callback) {
 
 	BackgroundResourcesLoader.syncLoadStyles([

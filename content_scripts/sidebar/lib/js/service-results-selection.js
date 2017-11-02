@@ -13,6 +13,7 @@ function ServiceInputUI(){
 		
 		this.loadPreview("#result-preview-image", data.previewSource);
 		this.fillOccurrencesSelector(data.selectors);
+		document.querySelector("#result-selector").onchange();
 	};
 	this.fillOccurrencesSelector = function(selectors){
 
@@ -21,7 +22,6 @@ function ServiceInputUI(){
 
 		Object.keys(selectors).forEach(function(key) {
 
-			console.log(selectors[key]);
 			var elemsBySelectorLabel = key > 1? browser.i18n.getMessage("occurrences") : browser.i18n.getMessage("occurrence");
 			var opt = document.createElement("option");
 				opt.value = selectors[key][0];
@@ -52,6 +52,9 @@ function ServiceInputUI(){
 	this.isElementSelected = function(elemType) {
 		return (this.userDefInputXpath)? true : false;
 	};
+	this.removeFullSelectionStyle = function(){
+		browser.runtime.sendMessage({ "call": "removeFullSelectionStyle" });
+	};
 	this.loadPrevNavigationButton = function() {
 
 		var me = this;
@@ -78,14 +81,12 @@ function ServiceInputUI(){
 		document.querySelector(".next > button").onclick = function(){   
 
 	    	if(me.areRequirementsMet()){
-	    	
-		    	me.loadUrlAtSidebar({ 
-	        		url: "/content_scripts/sidebar/service-results-naming.html",
-	        		filePaths: [
-	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-						"/content_scripts/sidebar/lib/js/service-results-naming.js"
-					] 
-	        	});
+	    		me.removeFullSelectionStyle();
+	    		me.disableRuntimeListeners();
+
+				me.disableDomElementSelection("tr, div:not(#andes-sidebar)"); // calls disableElementSelection
+
+		    	me.loadResultsNamingForm();
 		    }//else me.showMissingRequirementMessage("triggering-error", "");
 		};
 	};

@@ -20,8 +20,11 @@ TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) 
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
-	var me = this;
 	this.sidebarManager.toggleSidebar();
+}
+TemplatesCreator.prototype.removeFullSelectionStyle = function(tab) {
+
+  this.backPageSelector.removeFullSelectionStyle(tab);
 }
 TemplatesCreator.prototype.listenForTabChanges = function() { 
 
