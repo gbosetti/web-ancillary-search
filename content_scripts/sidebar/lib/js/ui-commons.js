@@ -2,6 +2,8 @@ function UI(){
 
 	var me = this; //we need this
 	this.fileDescription = "default file, please override in subclass";
+	this.triggablesSelector = "input, button, a, img:not(#andes-close-button):not(#andes-reposition-button)";
+
 	this.initialize = function(data) { //Do not call this methid from the constructor --> Loading error.
 
 		this.loadValidationBehaviour();

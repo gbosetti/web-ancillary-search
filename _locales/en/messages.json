@@ -63,7 +63,7 @@
     "message": "Identification of results"
   },
   "results_selection_instructions": {
-    "message": "Please, point and click on the element of the page you identify as «container» of each result returned by the search engine. Then, choose the number of occurrences you identify."
+    "message": "Please, click on the element of the page you identify as «container» of each result returned by the search engine. Then, choose the number of occurrences you identify."
   },
   "results_tagging_instructions": {
     "message": "Tag the result type you identify."
@@ -82,6 +82,15 @@
   },
   "occurrence": {
     "message": "occurrence"
+  },
+  "retrieving_more_results_mechanism": {
+    "message": "Retrieval of more results"
+  },
+  "more_results_mechanism_instructions": {
+    "message": "Please, choose one of the available strategies for retrieving more results. <br><br>E.g. one of such strategies involves clicking on a button/anchor to navigate to other page with more results."
+  },
+  "more_results_mechanism": {
+    "message": "Mechanism used in the page:"
   },
 
 

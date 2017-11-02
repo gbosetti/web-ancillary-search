@@ -2,35 +2,39 @@ function ServiceNameUI(){
 	UI.call(this);
 	
 	this.loadSubformBehaviour = function() {
-		this.callPlaceholderNameAdaptation();
-		this.focusElement("#search_service_name");
+
 	};
-	this.callPlaceholderNameAdaptation = function() {
-		//The only way I ound to communicate the iframe content to the outside
-		browser.runtime.sendMessage({
-			call: "adaptPlaceholder"
-		});
+	this.areFormRequirementsMet = function(){
+		return true;
 	};
-	this.getValidationRules = function() {
-		return {
-	        "search_service_name": {
-	            "minlength": 2,
-	            "required": true
-	        }
-	    };
+	this.loadPrevNavigationButton = function() {
+
+		var me = this;
+		document.querySelector(".prev > button").onclick = function(){   
+
+	    	if(me.areFormRequirementsMet()){
+
+	    		me.removeFullSelectionStyle();
+	    		me.disableRuntimeListeners();
+
+				me.disableDomElementSelection(me.triggablesSelector); // calls disableElementSelection
+		    	me.loadResultsNamingForm();
+		    }
+		    else me.showMissingRequirementMessage("triggering-error", "");
+		};
 	};
 	this.loadNextNavigationButton = function() {
 		var me = this;
 		document.querySelector(".next > button").onclick = function(){   
 		    if($("form").valid()){
-		    	me.createNewServiceFromData(document.querySelector("#search_service_name").value);
+		    	/*me.createNewServiceFromData(document.querySelector("#search_service_name").value);
 		        me.loadUrlAtSidebar({ 
 	        		url: "/content_scripts/sidebar/service-input.html",
 	        		filePaths: [
 	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
 						"/content_scripts/sidebar/lib/js/service-input.js"
 					] 
-			    });
+			    });*/
 		    }
 		}
 	};

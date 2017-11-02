@@ -24,12 +24,12 @@ function ClickBasedTrigger(client){
 	this.triggerSelector;
 
 	this.loadParamsConfigControls = function(){
-		client.enableDomElementSelection("input, button, a, img:not(#andes-close-button)", "onTriggerSelection");
+		client.enableDomElementSelection(client.triggablesSelector, "onTriggerSelection");
 		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
 		client.addParamsConfigurationControls(preview);
 	};
 	this.undoActionsOnDom = function(){
-		client.disableDomElementSelection("input, button, a, img", "onTriggerSelection");
+		client.disableDomElementSelection(client.triggablesSelector, "onTriggerSelection");
 	};
 	this.getMissingRequirementLocalizedId = function(){
 		return "click_on_trigger_error"

@@ -83,6 +83,15 @@
   "occurrence": {
     "message": "ocurrencia"
   },
+  "retrieving_more_results_mechanism": {
+    "message": "Obtención de más resultados"
+  },
+  "more_results_mechanism_instructions": {
+    "message": "Elegí una de las estrategias disponibles para recuperar más resultados. <br><br>Ej. Una de las estrategias implica hacer click en un botón/ancla para navegar a otra página con más resultados."
+  },
+  "more_results_mechanism": {
+    "message": "Mechanism used in the page:"
+  },
 
 
 
