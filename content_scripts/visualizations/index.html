@@ -3,19 +3,32 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title></title>
-     <link rel="stylesheet" type="text/css" href="../vendor/datatables/media/css/jquery.dataTables.min.css"/>
+	<script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="../vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../vendor/datatables/media/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" type="text/css" href="../vendor/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="lib/css/visualization.css"/>
-
-
+    <link rel="stylesheet" type="text/css" href="lib/css/details.css"/>
 <body>
 	<div id="loading" class="loading">
 		<span id="loading-message"></span>
 	</div>
 	<div class="list-group sidebar-menu"> 
-		<a href="#" class="list-group-item sidebar-visualizations">
+ <div class="dropdown">
+		<a href="#" id="visualizations" class="list-group-item sidebar-visualizations" data-toggle="dropdown">
 		    <img class="sidebar-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAATCAYAAAB2pebxAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QECEhgXmM/pPAAAAGVJREFUOMvtk0sOgCAMRPsa73/kjhtEiB8IuDDR2bbz2iEUSbJJuT2gH/IByPxfe5EYvp3CtowYZWaUmxz79hFArkeESAB3r3ycmVuTsznBvCczrYe9i3DJj5ClNoBqkx5AGWPTCuNEKRs6C8vEAAAAAElFTkSuQmCC"/> 
 		</a>
+        <ul id="menu" class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu1">
+
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Visualize as:</a> 
+            
+                <ul id="change-visualization" class="dropdown-menu">
+                  <li><a tabindex="-1" href="#">Image</a></li>
+                </ul>
+            </li> 
+        </ul>
+        </div>
 		<a href="#" class="list-group-item sidebar-cog">
 		    <img class="sidebar-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAATCAYAAAB2pebxAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH4QECEio3TtGdhQAAAeFJREFUOMu1lD9oU1EYxX/vNTQpEqukREsXLTgJ6mI3S1HHuji6uQjioghuLoJOEVcXQRFBIiJ0KxTUQRQdzKAFN5da6p8ktTxMiH0/B2/KJTTYxQ8e73uPc7973jnnPvjfpV5Vf2q+qCY7WVBUp9Sx8DyiLqi52lIPATQajVTdp5YHB4yq59S36jX1iHpF/RKGdNR76nH1jLqk3lIn4iGT6hv/Vlf95vbVUtuhX1fnAFIAoQU8BrrAKDAREf0F9EK/BxgP/TP1E0ABIE2SjroErAPVAPoIPARWgTFgPlwAm8DzNE1Xt7bK87ygXopof1BPNJvNUTXp9Xoj6nSuTyLMfc0rfT0uq4tBRNVeeFfYxsFZdS3gNtRX6h3UzwPiranzQ2JwIDLA4FyeAu+BLIgKsAvYOyROZaAS6ZIBy/2MHFbvRjssqAcHWIyrNyLMC/WkujsGHVN/RKCn6mn1aAjZTTWLPuNCf20BoF6vp+pUkiTx+TgLnALaITuTMTGg2u12S8VisdNnUQ0O9WvT4ZWH+4o6s5XYkMp3wAbwADgPPArCCfwGXgMXgevASjDk+6B9FXVO3Q+QZVlFfRlYtdXZgCupM+p0rVbb0e/hdqC+rJaG4ZJ/DCmHzHSSJPk6DPcH9qU3G0I3SXsAAAAASUVORK5CYII="/>
 		</a>
@@ -25,39 +38,22 @@
 	</div>	
 
 	<table id="results" class="display" width="100%" cellspacing="0"></table>
-
-	<div class="container">
-    	<div class="row">
-		<div class="col-md-12">
 	
-		<div id="Carousel" class="carousel slide">
-		
-			<ol class="carousel-indicators">
-                    <li data-target="#Carousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#Carousel" data-slide-to="1"></li>
-                    <li data-target="#Carousel" data-slide-to="2"></li>
-        	</ol>
-                 
-              
-        	<div class="carousel-inner">
+	<div id="my_carousel" class="carousel slide">
+		  <ol id="indicators" class="carousel-indicators">
+		  </ol>
 
-           		
-        		<div class="item active">
-                	<div class="row">
-           				<div id="images" class="item active"></div>
-           			</div>
-           		</div>
+		  <div id="inner" class="carousel-inner i">
+		  </div>
 
-    
-    		</div>
+		  <a class="carousel-control left" href="#my_carousel" data-slide = "prev">
+		    <span class="icon-prev left"></span>
+		  </a>
 
-   		</div>
-   		<a data-slide="prev" href="#Carousel" class="left carousel-control">‹</a>
-        <a data-slide="next" href="#Carousel" class="right carousel-control">›</a>
-
-   	</div>
-   	</div>
-   	</div>
+		  <a class="carousel-control right" href="#my_carousel" data-slide = "next">
+		    <span class="icon-next right"></span>
+		  </a>
+	</div>
 
 </body>
 

@@ -55,14 +55,14 @@ SearchTool.prototype.fakeApiDefinitions = function(){
   browser.storage.local.set({
     ebay: {
       name:'ebay',
-      url:'http://www.ebay.com/sch/i.html?_odkw=xm&LH_PrefLoc=3&_sop=15&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR11.TRC2.A0.H0.Xxx.TRS1&_nkw=xx&_sacat=0',
+      url:'https://www.ebay.com/sch/i.html?_odkw=ibei+compras&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR0.TRC0.H0.Xlas+venas+abiertas+de+america+latina.TRS0&_nkw=las+venas+abiertas+de+america+latina&_sacat=0',
       keywords:'',
       loadingResStrategy: "WriteAndClickToReload", 
       contentScriptWhen: "ready",
       entry:'//form//table//input',
       trigger:'//form//table/tbody/tr/td[3]/input',
       results: {
-        name: 'Generics',
+        name: 'Productos',
        //div[@id="ResultSetItems"]/ul',
       
         xpath:'//div[@id="ResultSetItems"]/ul/li', //li[@class="sresult lvresult clearfix li shic"],//div[@id="ResultSetItems"]/ul/li',
@@ -76,6 +76,11 @@ SearchTool.prototype.fakeApiDefinitions = function(){
             name: 'Price',
             xpath: '//ul/li[contains(@class, "prc")]/span',
             //extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Image',
+            xpath:'//div/div/a/img', 
+            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           }
         ]
       },
@@ -86,33 +91,60 @@ SearchTool.prototype.fakeApiDefinitions = function(){
           },{
             title: "Price",
             responsivePriority: 1
+          },{
+            title: "Image",
+            responsivePriority: 1
           }]
       }
     },
-      ebayImage: {
-      name:'ebay-image',
-      url:'http://www.ebay.com/sch/i.html?_odkw=xm&LH_PrefLoc=3&_sop=15&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR11.TRC2.A0.H0.Xxx.TRS1&_nkw=xx&_sacat=0',
+    bibliotecaUNLP: {
+      name:'bibliotecaUNLP',
+      url:'http://www.biblio.unlp.edu.ar/catalogo/opac/cgi-bin/pgopac.cgi?a=ISRCH&Profile=Default&cArea1=MATSTOCK%3A%3ACodBiblioteca&cTermino1=&cTodas1=N&cOperacion2=AND&cArea2=En+todas&cOperacion2=FIN&cTermino2=eduardo+galeano&bBuscar=Comenzar&cTodas2=S',
       keywords:'',
       loadingResStrategy: "WriteAndClickToReload", 
       contentScriptWhen: "ready",
-      entry:'//form//table//input',
-      trigger:'//form//table/tbody/tr/td[3]/input',
+      entry:'//table[@id="tb-resultados"]/tbody/tr',
+      trigger:'',
       results: {
-        name: 'Generics',
-        xpath:'//div[@id="ResultSetItems"]/ul/li',
+        name: 'Libros',
+       //div[@id="ResultSetItems"]/ul',
+      
+        xpath:'//table[@id="tb-resultados"]/tbody/tr',//tr/td[3]', //li[@class="sresult lvresult clearfix li shic"],//div[@id="ResultSetItems"]/ul/li',
         properties:[
           {
-            name:'Image',
-            xpath:'//div/div/a/img', 
-            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+            name:'Name',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[3]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Year',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[6]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Editorial',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[5]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
           }
+
         ]
       },
       visualization:{
         colsDef: [{
-            title: "Image",
+            title: "Name",
             responsivePriority: 1
-          }]
+          },
+          {
+            title: "Year",
+            responsivePriority: 1
+          },
+          {
+            title: "Editorial",
+            responsivePriority: 1
+          }
+
+
+        ]
       }
     }
    
@@ -128,7 +160,6 @@ SearchTool.prototype.createApisMenu = function(){
   });
 }
 SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
-  
 	var me = this, getApiSpecifications = browser.storage.local.get(null); //TODO: use the class: filereader
 	getApiSpecifications.then((apiSpecs) => {
 
@@ -157,7 +188,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 	});
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
-  console.log(apiSpecs[info.menuItemId].results);
+
 	this.presentationParams = {
 		"resultsName": apiSpecs[info.menuItemId].results.name,
 		"selectedText": info.selectionText,

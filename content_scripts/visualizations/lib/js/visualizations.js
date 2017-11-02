@@ -8,8 +8,14 @@ function ResultsVisualizer(){
 ResultsVisualizer.prototype.showResults = function(data) {
 	this.panel = this.buildPanel(data);
 	this.results = data.results;
-	//this.setVisualizer(new ViewImage(this)); //window[data.visualizer]());  //ver como definir un patron para que el usuario elija el tipo de visualización
-	this.setVisualizer(new Datatables(this));	
+	//window[data.visualizer]());  
+	//TODO: Definir un patron para que el usuario elija el tipo de visualización
+	if (data.seearchEngineName.includes("Image")){
+		this.setVisualizer(new ViewImage(this)); 
+	} else {
+		this.setVisualizer(new Datatables(this)); 
+	}
+	
 	this.loadExtraDependencies();
 };
 
@@ -46,7 +52,7 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 }
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
-	console.log(data.resultSpec.xpath);
+	console.log(data.resultSpec.properties[0].xpath.includes('img'));
 	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
 	
 	browser.runtime.sendMessage({
@@ -59,6 +65,7 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 
 ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
+		console.log(domElements);
 	var concepts = [], me= this;
 	propSpecs.forEach(function(prop){
 		var propValues = me.getMultipleElements(prop.xpath, domElements[0]);
@@ -83,6 +90,7 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 			
 		}
 	});
+	console.log(concepts);
 	return concepts;
 
 }
@@ -223,6 +231,7 @@ ResultsVisualizer.prototype.showLoadingMessage = function(msg, iframe){
 	iframe.contentWindow.document.getElementById("loading-message").innerHTML = msg;
 }
 
+
 // STATE PATTERN!!!
 //TODO: implementar con estados, cada cual chequea lo que corresponde 
 function PresentationStatus(context){
@@ -260,29 +269,31 @@ function Multimedia(visualizer){
 
 }
 
-/*Multimedia.prototype.getDependencies = function(visualizer){
-	return {
-		"js": [
-	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
-	  	]
-	};
-};*/
-
 function ViewImage(visualizer){
-
 	Multimedia.call(this);
 	this.visualizer = visualizer
-	console.log("instanciaViewImage");
 }
 
 ViewImage.prototype.presentData = function(concepts, iframe){
+
+	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
+
 	var me = this;
+	var v = this.visualizer;
 	var checkForIframe = setInterval(function(){ 
-		var divImage = iframe.contentWindow.document.querySelector("#images");
+		var divImage = iframe.contentWindow.document.querySelector("#my_carousel");		
 		if(divImage){
 			clearInterval(checkForIframe);
 			//TODO: cambiar esto para que recupere resultados posta
-			me.initialize(document, divImage, concepts);
+			me.initialize(document, divImage, concepts, iframe);
+			me.visualizer.hideLoadingMessage(iframe);
+			var link = iframe.contentWindow.document.querySelector("#change-visualization");
+			link.onclick = function(){
+				divImage.remove();
+				v.setVisualizer(new Datatables(v));
+				v.loadExtraDependencies();
+			};
+
 		}
 	}, 3000);
 
@@ -291,29 +302,32 @@ ViewImage.prototype.presentData = function(concepts, iframe){
 ViewImage.prototype.getDependencies = function(visualizer){
 
 	return {
-		
 		"js": [
-	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js",
-	  		"/content_scripts/visualizations/lib/js/functions.js"
+			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
 	  	]
 
 	};
 }
 
-ViewImage.prototype.initialize = function(doc, div, concepts){
-
+//TODO: Cambiar codigo despues de la expo
+ViewImage.prototype.initialize = function(doc, div, concepts,iframe){
+	var inner = iframe.contentWindow.document.querySelector("#inner");
+	var indicators = iframe.contentWindow.document.querySelector("#indicators");
+	// Generate first image
+	doc.defaultView["$"](inner).append("<div class='item active'><img src="+concepts[0].Image+" alt='Image' class='img-responsive' style='height:330px;'> </div>");
+	doc.defaultView["$"](indicators).append("<li data-target = '#my_carousel' data-slide-to = "+0+" class='active'></li>");
+	var i = 1;
 	concepts.forEach(function(image){
+		doc.defaultView["$"](inner).append("<div class='item'><img src="+image.Image+" alt='Image' class='img-responsive' style='height:330px;'> </div>");
+		doc.defaultView["$"](indicators).append("<li data-target = '#my_carousel' data-slide-to = "+i+"></li>");
+		i = i+1;
 
-		console.log(image);
-		var img = doc.defaultView["$"](div).append("<div class='col-md-3'><a href='#' class='thumbnail'><img src="+image.Image+" alt='Image' style='max-width:100%;'></a></div>");
-		/*console.log("entro2"+ img);
-		img.setAttribute("src", image[i]);
-		div.appendChild(img);
-		console.log("entro4");*/
-
-	
 	});
-
+ 	doc.defaultView["$"](div).ready(function(){
+    	div.carousel({
+    		interval: 2000
+    	}  )
+  	});    
 }
 
 function Datatables(visualizer){
@@ -338,12 +352,11 @@ Datatables.prototype.getDependencies = function(visualizer) {
 };
 Datatables.prototype.presentData = function(concepts, iframe) {
 
-	//TODO: APPLY STATE PATTERN
+	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
 
 	var me = this;
 	var v = this.visualizer;
 	var checkForIframe = setInterval(function(){ 
-
 		var table = iframe.contentWindow.document.querySelector("#results");
 		if(table){
 			clearInterval(checkForIframe);
@@ -351,30 +364,47 @@ Datatables.prototype.presentData = function(concepts, iframe) {
 			me.visualizer.showLoadingMessage("Extracting Results...",iframe);
 			me.initializeDatatable(document, table, iframe, concepts);
 			me.visualizer.hideLoadingMessage(iframe);
-
+		/*Add event onclick too link visualizations */
+			var link = iframe.contentWindow.document.querySelector("#change-visualization");
+			link.onclick = function(){
+				table.remove();
+				v.setVisualizer(new ViewImage(v));
+				v.loadExtraDependencies();
+			};
 		}
 	}, 3000);
 };
 
 Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts) {
-	
 	function format (d) {
     // `d` is the original data object for the row
+    	if (d.Image){
+			return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+		        '<tr>'+
+		            "<td> <img src="+d.Image+" alt='Image'</td>"+
+		        '</tr>'+
+		 '</table>';
+    	} else {
     	return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	        '<tr>'+
-	            '<td>Name:</td>'+
-	            '<td>'+d.Name+'</td>'+
+	            '<td>Stock:</td>'+
+	            '<td> Disponible </td>'+
 	        '</tr>'+
 	        '<tr>'+
-	            '<td>Price:</td>'+
-	            '<td>'+d.Price+'</td>'+
+	      	   '<td>Editorial:</td>'+
+         	   '<td>'+d.Editorial+'</td>'+
 	        '</tr>'+
-	    '</table>';
+	    '</table>'}
 	}
+	var properties = Object.keys(concepts[0]);
+	console.log(properties[1]);
 
 	doc.defaultView["$"](doc).ready(function(){
-
 	var tableC =doc.defaultView["$"](table).DataTable({
+        "paging": false,
+        "bFilter": false,
+        "ordering": true,
+        "searching": false,
         "data": concepts,
         "columns": [
             {
@@ -385,11 +415,13 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
             },
 
             //Add this from concept
-            { "title":"Name", "data": "Name"},
-            { "title":"Price","data": "Price" }
+            { "title":properties[0], "data": properties[0]},
+            { "title":properties[1], "data": properties[1],  "defaultContent": "<i>Not set</i>"}
         ],
         "order": [[1, 'asc']]
 	});
+
+
 
 	var tbody = iframe.contentWindow.document.querySelector("#results > tbody");
 	doc.defaultView["$"](tbody).on('click', 'td.details-control', function () {
