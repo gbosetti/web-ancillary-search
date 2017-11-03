@@ -173,11 +173,11 @@ function UI(){
     };
     this.loadServiceNavigationForm = function(){
     	me.loadUrlAtSidebar({ 
-    		url: "/content_scripts/sidebar/service-navigation.html",
+    		url: "/content_scripts/sidebar/service-more-results-strategies.html",
     		filePaths: [
     			"/content_scripts/sidebar/lib/js/ui-commons.js",
     			"/content_scripts/XPathInterpreter.js",
-				"/content_scripts/sidebar/lib/js/service-navigation.js"
+				"/content_scripts/sidebar/lib/js/service-more-results-strategies.js"
 			] 
     	});
     }

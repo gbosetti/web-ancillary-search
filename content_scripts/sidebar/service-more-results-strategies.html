@@ -19,20 +19,32 @@
 
 	<div class="container">    
 		<form class="sidebar-form">     
-			<div class="well">
+			<!--<div class="well">
 				<button type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</button>
 				<span i18n-data="more_results_mechanism_instructions"></span>
-			</div>
+			</div>-->
 			<!-- :::::::::: SELECT :::::::::: -->
 		    <div class="form-group">
 		        <label for="more_results_mechanism" i18n-data="more_results_mechanism">Search trigger mechanism</label>
-		        <select id="more_results_mechanism" class="form-control">
-		        	<option i18n-data="click_on_control_to_trigger" value="ClickBasedTrigger"></option>
-		        	<option i18n-data="press_enter_to_trigger" value="EnterBasedTrigger"></option>
-		        	<option i18n-data="type_and_wait_to_trigger" value="TypeAndWaitBasedTrigger"></option>
-		        </select>
+				<div class="list-group">
+					<a href="#" class="list-group-item">
+						<h4 class="list-group-item-heading">
+							<input type="radio" id="click_for_more_res" name="more_res_mechanism" value="ClickBasedRetrieval">
+    						<label for="click_for_more_res" i18n-data="click_for_more_results"></label>
+						</h4>
+						<p class="list-group-item-text" i18n-data="click_for_more_results_info"></p>
+					</a>
+					<a href="#" class="list-group-item">
+						<h4 class="list-group-item-heading">
+							<input type="radio" id="click_for_more_res" name="more_res_mechanism" value="ScrollDownBasedRetrieval">
+    						<label for="click_for_more_res" i18n-data="scroll_down_for_more_results"></label>
+						</h4>
+						<p class="list-group-item-text" i18n-data="scroll_down_for_more_results_info"></p>
+					</a>
+				</div>
+
 		    </div>
 		    <div id="trigger_mechanism_params_area">
 		    	

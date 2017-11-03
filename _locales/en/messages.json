@@ -87,12 +87,23 @@
     "message": "Retrieval of more results"
   },
   "more_results_mechanism_instructions": {
-    "message": "Please, choose one of the available strategies for retrieving more results. <br><br>E.g. one of such strategies involves clicking on a button/anchor to navigate to other page with more results."
+    "message": "Please, choose one of the available strategies for retrieving more results."
   },
   "more_results_mechanism": {
     "message": "Mechanism used in the page:"
   },
-
+  "click_for_more_results": {
+    "message": "Click on element"
+  },
+  "click_for_more_results_info": {
+    "message": "In this page, you have to click on an element like a button or an anchor for retrieving more results. E.g. a «Next page» button."
+  },
+  "scroll_down_for_more_results": {
+    "message": "Scroll down"
+  },
+  "scroll_down_for_more_results_info": {
+    "message": "In this page, you have to scroll down in the page and it automatically loads more results (usually displaying a «loading» message while retrieving the results)."
+  },
 
 
   "next":{

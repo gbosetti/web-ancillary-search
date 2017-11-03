@@ -87,11 +87,24 @@
     "message": "Récupération de plus de résultats"
   },
   "more_results_mechanism_instructions": {
-    "message": "Veuillez choisir l'une des stratégies disponibles pour récupérer plus de résultats. <br><br>Ex. une des stratégies consiste à cliquer sur un bouton/ancrage pour naviguer vers une autre page avec plus de résultats."
+    "message": "Veuillez choisir l'une des stratégies disponibles pour récupérer plus de résultats."
   },
   "more_results_mechanism": {
-    "message": "Mechanism used in the page:"
+    "message": "Mécanisme utilisé dans la page:"
   },
+  "click_on_next_for_more_results": {
+    "message": "Cliquer sur un élément"
+  },
+  "click_for_more_results_info": {
+    "message": "Sur cette page il faut cliquer sur un élément comme un bouton ou une ancre pour récupérer plus de résultats. Ex. un bouton «Page suivante»."
+  },
+  "scroll_down_for_more_results": {
+    "message": "Défiler vers le bas"
+  },
+  "scroll_down_for_more_results_info": {
+    "message": "Sur cette page il faut faire défiler vers le bas pour obtenir automatiquement plus de résultats (il est habituel de visualizer un «message de chargement» pendant que les résultats sont récupérés)."
+  },
+
 
 
 
