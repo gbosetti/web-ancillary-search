@@ -17,8 +17,8 @@ BackgroundPageSelector.prototype.preventDomElementsBehaviour = function(tab) {
 BackgroundPageSelector.prototype.restoreDomElementsBehaviour = function(tab) {
 	this.getStatusByTab(tab).restoreDomElementsBehaviour(tab);
 };
-BackgroundPageSelector.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
-	this.getStatusByTab(tab).enableElementSelection(tab, targetElementSelector, onElementSelection);
+BackgroundPageSelector.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection, scoped) {
+	this.getStatusByTab(tab).enableElementSelection(tab, targetElementSelector, onElementSelection, scoped);
 };
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	this.getStatusByTab(tab).disableElementSelection(tab, selector);
@@ -62,12 +62,13 @@ BackgroundPageSelector.prototype.sendDisableSelectionMessage = function(tab, sel
     	}
     });
 };
-BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection){
+BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, targetElementSelector, onElementSelection, scoped){
 	browser.tabs.sendMessage(tab.id, {
     	"call": "enableElementSelection",
     	"args":{
     		"targetElementSelector": targetElementSelector,
-    		"onElementSelection": onElementSelection
+    		"onElementSelection": onElementSelection,
+    		"scoped": scoped
     	}
     });
 };
@@ -93,11 +94,11 @@ function UnloadedPageSelector(context){
 			context.sendRestoreDomElementsBehaviour(tab);
 		});
 	};
-	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
+	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection, scoped){
 
 		context.status[tab.id] = new LoadedPageSelector(context);
 		context.loadDomHighlightingExtras(tab, function(){
-			context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
+			context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection, scoped);
 		});
 	};
 	this.disableElementSelection = function(tab, selector){
@@ -116,8 +117,8 @@ function LoadedPageSelector(context){
 	this.restoreDomElementsBehaviour = function(tab){
 		context.sendRestoreDomElementsBehaviour(tab);
 	};
-	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection){
-		context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection);
+	this.enableElementSelection = function(tab, targetElementSelector, onElementSelection, scoped){
+		context.sendEnableSelectionMessage(tab, targetElementSelector, onElementSelection, scoped);
 	};
 	this.disableElementSelection = function(tab, selector){
 		context.sendDisableSelectionMessage(tab, selector);

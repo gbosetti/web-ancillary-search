@@ -11,4 +11,28 @@ function AbstractController ($scope, $state) {
     $scope.focusElement = function(selector) {
         document.querySelector(selector).focus();
     };
+    $scope.loadValidationRules = function() {};
+    $scope.loadSubformBehaviour = function() {};
+    $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
+
+      $scope.loadValidationRules();
+      $scope.loadSubformBehaviour();
+      $scope.localize();
+    };
+    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped) {
+      browser.runtime.sendMessage({ 
+        "call": "enableElementSelection",
+        "args": {
+          targetElementSelector: controlsSelector,
+          onElementSelection: callbackMessage,
+          scoped: scoped
+        }
+      });
+    };
+    $scope.disableDomElementSelection = function(selector) {
+      browser.runtime.sendMessage({ 
+        "call": "disableElementSelection",
+        "args": { "selector": selector }
+      });
+    };
 }

@@ -1,89 +1,31 @@
 serviceCreator.controller('ServiceInputController', function($scope, $state) {
 
-    AbstractController.call(this, $scope, $state);
-    $scope.loadValidationRules = function() {
-      $('form').validate({  "rules": {
-          "search_service_name": {
-              "minlength": 2,
-              "required": true
-          }
-      }});
-    }
-    $scope.loadNextNavigationButton = function() {
+	$scope.inputSelectors;
+	$scope.fileDescription = " service-input.js";
 
-      if($("form").valid($state)){
-        $state.go('ServiceInput')
+    AbstractController.call(this, $scope, $state);
+
+    $scope.loadPrevStep = function() {
+    	$scope.disableDomElementSelection("input");
+        $state.go('ServiceName')
+    };
+    $scope.loadNextStep = function() {
+      if($scope.inputSelectors){
+        $state.go('ServiceTrigger')
       }
     };
-    //$scope.callPlaceholderNameAdaptation();
-    //$scope.loadValidationRules();
-    $scope.localize();
-});
-
-
-/*function ServiceInputUI(){
-
-	UI.call(this);
-
-	this.fileDescription = " service-input.js";
-	this.inputSelectors;
-	var me = this;
-
-	this.loadSubformBehaviour = function() {
-		this.enableDomElementSelection("input", "onElementSelection");
-	};
-	this.onElementSelection = function(data){
-
-		this.showPreview();
-		this.loadPreview("#property-preview-image", data.previewSource);
+    $scope.loadSubformBehaviour = function() { 
+      $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
+    };
+    $scope.onElementSelection = function(data){
+		this.showPreview(data.previewSource);
 		this.inputSelectors = data.selectors;
 	}
-	this.showPreview = function(data){
+	$scope.showPreview = function(previewSource){
 		document.querySelectorAll(".hidden").forEach(function(elem){
 			elem.classList.remove("hidden");
 		});
+		document.querySelector("#property-preview-image").src = previewSource;
 	}
-	this.loadPrevNavigationButton = function() {
-
-		document.querySelector(".prev > button").onclick = function(){   
-
-    		
-	    	me.loadUrlAtSidebar({ 
-        		url: "/content_scripts/sidebar/service-name.html",
-        		filePaths: [
-        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-					"/content_scripts/sidebar/lib/js/service-name.js"
-				] 
-        	});
-		};
-	};
-	this.loadNextNavigationButton = function() {
-
-		document.querySelector(".next > button").onclick = function(){   
-
-			if(me.inputSelectors){
-				me.disableRuntimeListeners();
-    			me.disableDomElementSelection("input");
-    			
-		    	me.loadUrlAtSidebar({ 
-	        		url: "/content_scripts/sidebar/service-trigger.html",
-	        		filePaths: [
-	        			"/content_scripts/sidebar/lib/js/ui-commons.js",
-						"/content_scripts/sidebar/lib/js/service-trigger.js"
-					] 
-	        	});
-		    } 
-		};
-	};
-};
-
-
-var serviceInput = new ServiceInputUI();
-	serviceInput.initialize({ //otherwise, if the browser is a collaborator, the class can not be clonned
-		"enableRuntimeListeners": function () {
-			 browser.runtime.onMessage.addListener(serviceInput.callServiceInputUIActions) 
-		},
-		"disableRuntimeListeners": function() {
-			browser.runtime.onMessage.removeListener(serviceInput.callServiceInputUIActions);
-		}
-	}); //It is necessary to be called from outside*/
+    $scope.initialize();
+});

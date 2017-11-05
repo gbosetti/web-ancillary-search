@@ -10,7 +10,7 @@ BrowserUiManager.prototype.initialize = function() {
 };
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
-  this.templatesCreator.onElementSelection(data.selectors, data.previewSource);
+  this.templatesCreator.onElementSelection(data);
 };
 BrowserUiManager.prototype.onTriggerSelection = function(data) { 
 
@@ -106,7 +106,7 @@ BrowserUiManager.prototype.enableElementSelection = function(data) {
   
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enableElementSelection(tab, data.targetElementSelector, data.onElementSelection);
+    me.templatesCreator.enableElementSelection(tab, data.targetElementSelector, data.onElementSelection, data.scoped);
   });
 };
 BrowserUiManager.prototype.disableElementSelection = function(data) {

@@ -9,11 +9,15 @@ serviceCreator.controller('ServiceNameController', function($scope, $state) {
           }
       }});
     }
-    $scope.loadNextNavigationButton = function() {
+    $scope.loadNextStep = function() {
 
       if($("form").valid($state)){
         $state.go('ServiceInput')
       }
+    };
+    $scope.loadSubformBehaviour = function() { 
+
+      $scope.callPlaceholderNameAdaptation();
     };
     $scope.callPlaceholderNameAdaptation = function() {
       //The only way I ound to communicate the iframe content to the outside
@@ -29,7 +33,5 @@ serviceCreator.controller('ServiceNameController', function($scope, $state) {
       );
       $scope.focusElement("#search_service_name");
     };
-    $scope.callPlaceholderNameAdaptation();
-    $scope.loadValidationRules();
-    $scope.localize();
+    $scope.initialize();
 });

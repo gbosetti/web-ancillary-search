@@ -4,38 +4,8 @@ function UI(){
 	this.fileDescription = "default file, please override in subclass";
 	this.triggablesSelector = "input, button, a, img:not(#andes-close-button):not(#andes-reposition-button)";
 
-	this.initialize = function(data) { //Do not call this methid from the constructor --> Loading error.
-
-		this.loadValidationBehaviour();
-		this.loadNavigationTriggers();
-		this.loadSubformBehaviour();
-
-		if(data) {
-			this.enableRuntimeListeners = data.enableRuntimeListeners;
-			this.disableRuntimeListeners = data.disableRuntimeListeners;
-		}
-		this.enableRuntimeListeners();
-
-		return this;
-	};
-	this.enableDomElementSelection = function(controlsSelector, callbackMessage) {
-
-		//console.log("processing selection", controlsSelector, callbackMessage);
-		browser.runtime.sendMessage({ 
-    		"call": "enableElementSelection",
-    		"args": {
-    			targetElementSelector: controlsSelector,
-    			onElementSelection: callbackMessage
-    		}
-    	});
-	};
-	this.disableDomElementSelection = function(selector) {
-
-		browser.runtime.sendMessage({ 
-    		"call": "disableElementSelection",
-    		"args": { "selector": selector }
-    	});
-	};
+	
+	
 	this.isElementSelected = function(elem) {
 		return (elem)? true : false;
 	};
@@ -89,9 +59,6 @@ function UI(){
 		var rules = this.getValidationRules();
 		if(rules) $('form').validate({  "rules": rules });
 	};
-	this.focusElement = function(selector) {
-		document.querySelector(selector).focus();
-	};
 	this.showFormElement = function(selector){
 		var elem = document.querySelector(selector);
 		elem.display = "";
@@ -104,41 +71,6 @@ function UI(){
 
 	   if(document.querySelector(selector)) 
 	   	document.querySelector(selector).remove();
-	};
-	this.getValidationRules = function() {};
-	this.loadNavigationTriggers = function() {
-		this.loadPrevNavigationButton(); 
-		this.loadNextNavigationButton();
-	};
-	this.loadPrevNavigationButton = function() {};
-	this.loadNextNavigationButton = function() {};
-	this.loadSubformBehaviour = function() {};
-	this.enableRuntimeListeners = function() {};
-	this.disableRuntimeListeners = function() {};
-	this.createNewServiceFromData = function(serviceName){
-    	browser.runtime.sendMessage({ 
-    		"call": "createNewServiceFromData",
-    		"args": {
-    			"service": {
-    				"name": serviceName
-    			}
-    		}
-    	});
-    };
-	this.saveDataForCurrentService = function(serviceData){
-		browser.runtime.sendMessage({ 
-    		"call": "saveDataForCurrentService",
-    		"args": {
-    			"service": serviceData
-    		}
-    	});
-	};
-	this.loadUrlAtSidebar = function(loadingData){
-
-        browser.runtime.sendMessage({ 
-        	"call": "loadUrlAtSidebar",
-        	"args": loadingData
-        });
 	};
 	this.callServiceInputUIActions = function(request, sender, sendResponse) {
 

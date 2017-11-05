@@ -46,15 +46,20 @@ PageSelector.prototype.loadListeners = function(){
 	
 	var me = this;
 	this.onElementSelectionMessage; 
+	this.scoped;
+
 	this.selectionListener = function(evt){
 
 		me.removeFullSelectionStyle();
+
+		console.log("sending scoped from ", me.onElementSelectionMessage, " ... ", me.scoped);
 		
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
 				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem), 
-				"previewSource": me.generatePreview(me.selectedElem) //evt.target)
+				"previewSource": me.generatePreview(me.selectedElem),
+				"scoped": me.scoped
 			}
 		});
 	};
@@ -165,7 +170,7 @@ PageSelector.prototype.getTargetElements = function(selector){
 PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
-    this.addSelectionListener(data.targetElementSelector, data.onElementSelection, "click");
+    this.addSelectionListener(data.targetElementSelector, data.onElementSelection, "click", data.scoped);
     this.undarkifySidebarElements();
     this.darkify(document.body); 
 };
@@ -226,14 +231,16 @@ PageSelector.prototype.addAugmentedAction = function(elem, action){
 
 	elem.setAttribute("andes-actions", JSON.stringify(actions))
 }
-PageSelector.prototype.addSelectionListener = function(selector, onElementSelection, onEvent){
+PageSelector.prototype.addSelectionListener = function(selector, onElementSelection, onEvent, scoped){
 
+	console.log("adding scoped:", scoped);
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingOnHover(elem);
 		me.addSelectableElemStyle(elem);
 		me.onElementSelectionMessage = onElementSelection; //callback
+		me.scoped = scoped;
 		//console.log("ADDING LISTENER", selector, onElementSelection, onEvent);
 		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	

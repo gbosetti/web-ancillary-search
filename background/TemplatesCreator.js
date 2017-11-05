@@ -39,9 +39,9 @@ TemplatesCreator.prototype.listenForTabChanges = function() {
     } 
   });
 }
-TemplatesCreator.prototype.onElementSelection = function(selectors, previewSource) { 
+TemplatesCreator.prototype.onElementSelection = function(data) { 
 
-  this.sidebarManager.onElementSelection(selectors, previewSource);
+  this.sidebarManager.onElementSelection(data);
 }
 TemplatesCreator.prototype.onTriggerSelection = function(selectors, previewSource) { 
 
@@ -100,9 +100,9 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
   browser.tabs.sendMessage(tab.id, {call: "disableContextElementSelection"});
 }
-TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection) {
+TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection, scoped) {
 
-	this.backPageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection);
+	this.backPageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection, scoped);
 }
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
 
