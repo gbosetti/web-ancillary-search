@@ -95,13 +95,13 @@ SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 		me.getStatusForTab(tab).toggleSidebar(tab, callback);
 	});
 };
-SidebarManager.prototype.adaptPlaceholder = function() {
+SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 
-	this.getCurrentTab(function(tab){
-		browser.tabs.sendMessage(tab.id, {
-			call: "adaptPlaceholderExample", 
-			args: {domainName: tab.url.split(".")[1] }
-		});
+	data.domainName = tab.url.split(".")[1];
+
+	browser.tabs.sendMessage(tab.id, {
+		call: data.callback, 
+		args: data
 	});
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {

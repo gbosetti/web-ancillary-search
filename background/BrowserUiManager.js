@@ -67,7 +67,10 @@ BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 };
 BrowserUiManager.prototype.adaptPlaceholder = function(data) {
 
-  this.templatesCreator.adaptPlaceholder(data);
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.adaptPlaceholder(tab, data);
+  });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;

@@ -23,6 +23,8 @@
     "bootstrap-toggle": "2.2.2",
     "css-toggle-switch": "4.0.2",
     "jquery-validation": "1.17.0",
-    "popper": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    "popper": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js",
+    "angular": "http://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js",
+    "angular-ui-router": "http://angular-ui.github.io/ui-router/release/angular-ui-router.js"
   }
 }

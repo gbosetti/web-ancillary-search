@@ -1,10 +1,13 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
   this.sidebarManager = new SidebarManager(
-    "/content_scripts/sidebar/service-name.html", 
+    "/content_scripts/sidebar/index.html", 
     [
-      "/content_scripts/sidebar/lib/js/ui-commons.js",
-      "/content_scripts/sidebar/lib/js/service-name.js"
+      /*,
+      "/content_scripts/vendor/jquery/dist/jquery.min.js",
+      "/content_scripts/vendor/angular/index.js",
+      "/content_scripts/vendor/angular-route/index.js",
+      "/content_scripts/sidebar/script.js"*/
     ],
     [this]
   ); 
@@ -76,9 +79,9 @@ TemplatesCreator.prototype.disableHarvesting = function(tab) {
 
   this.disableDomSelection(tab);
 }
-TemplatesCreator.prototype.adaptPlaceholder = function() {
+TemplatesCreator.prototype.adaptPlaceholder = function(tab, data) {
 
-  this.sidebarManager.adaptPlaceholder();
+  this.sidebarManager.adaptPlaceholder(tab, data);
 };
 TemplatesCreator.prototype.saveService = function(data) {
 

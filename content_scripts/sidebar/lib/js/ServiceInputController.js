@@ -1,4 +1,27 @@
-function ServiceInputUI(){
+serviceCreator.controller('ServiceInputController', function($scope, $state) {
+
+    AbstractController.call(this, $scope, $state);
+    $scope.loadValidationRules = function() {
+      $('form').validate({  "rules": {
+          "search_service_name": {
+              "minlength": 2,
+              "required": true
+          }
+      }});
+    }
+    $scope.loadNextNavigationButton = function() {
+
+      if($("form").valid($state)){
+        $state.go('ServiceInput')
+      }
+    };
+    //$scope.callPlaceholderNameAdaptation();
+    //$scope.loadValidationRules();
+    $scope.localize();
+});
+
+
+/*function ServiceInputUI(){
 
 	UI.call(this);
 
@@ -24,9 +47,7 @@ function ServiceInputUI(){
 
 		document.querySelector(".prev > button").onclick = function(){   
 
-    		/*me.saveDataForCurrentService({
-				inputXpath: me.inputSelectors
-			});*/
+    		
 	    	me.loadUrlAtSidebar({ 
         		url: "/content_scripts/sidebar/service-name.html",
         		filePaths: [
@@ -65,4 +86,4 @@ var serviceInput = new ServiceInputUI();
 		"disableRuntimeListeners": function() {
 			browser.runtime.onMessage.removeListener(serviceInput.callServiceInputUIActions);
 		}
-	}); //It is necessary to be called from outside
+	}); //It is necessary to be called from outside*/

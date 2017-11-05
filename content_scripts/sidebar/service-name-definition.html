@@ -1,0 +1,34 @@
+<div ng-controller="ServiceNameController">
+	<div class="panel-heading">
+	   <div class="panel-title text-center">
+	   		<h2 class="title" i18n-data="new_service">New service</h2>
+	   	</div>
+	</div> 
+
+	<div class="container" >    
+	    <form class="sidebar-form">    			
+			<div class="well">
+				<button type="button" class="close" data-dismiss="alert">
+					<span class="glyphicon glyphicon-info-sign"></span>
+				</button>
+				<span i18n-data="name_the_service"></span>
+			</div>
+	        <!-- :::::::::: INPUT :::::::::: -->
+		    <div class="form-group">
+		        <label for="search_service_name" i18n-data="service_name">Service name</label>
+		        <input id="search_service_name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true"></input>
+		    </div>
+		    <nav> 
+		        <ul class="pager">
+		        	<!-- ng-click="loadNextNavigationButton()"         ui-sref=".Page3">       -->
+		            <li class="next active pull-right">
+		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextNavigationButton()">
+		                    <span i18n-data="next">Next</span>
+		                    <span class="glyphicon glyphicon-triangle-right"></span>
+		                </button>
+		            </li>
+		        </ul>
+		    </nav> 
+	    </form>
+	</div>
+</div>

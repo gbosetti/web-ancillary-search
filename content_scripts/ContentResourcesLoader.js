@@ -11,9 +11,11 @@ function ContentResourcesLoader(){
 
 			var script = doc.createElement('script');
 			script.onload = function() {
+
 			  me.syncLoadScripts(filePaths, doc, callback);
 			};
 			doc.getElementsByTagName('head')[0].appendChild(script);
+			console.log("loading ", path);
 			script.src = browser.extension.getURL(path);
 
 		}else{
