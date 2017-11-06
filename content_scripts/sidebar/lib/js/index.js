@@ -19,7 +19,19 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider) {
         .state("ServiceResultsSelection", {
             url: "/ServiceResultsSelection",
             templateUrl: "service-results-selection.html"
-        }); 
+        })
+        .state("ServiceResultsNaming", {
+            url: "/ServiceResultsNaming",
+            templateUrl: "service-results-naming.html"
+        })
+        .state("ServiceMoreResultsController", {
+            url: "/ServiceMoreResultsController",
+            templateUrl: "service-more-results-strategies.html"
+        })
+        .state("ServiceMoreResultsSelection", {
+            url: "/ServiceMoreResultsSelection",
+            templateUrl: "service-more-results-selection.html"
+        })
 });
 
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
@@ -32,4 +44,3 @@ browser.runtime.onMessage.addListener(function callServiceNameActions(request, s
     }
   }
 });
-

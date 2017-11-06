@@ -12,6 +12,8 @@ function AbstractController ($scope, $state) {
           elem[targetAttr] = browser.i18n.getMessage(label);
       });
     };
+    $scope.loadDataModel = function() {};
+    $scope.saveDataModel = function() {};
     $scope.areRequirementsMet = function(){
       return true;
     };
@@ -20,12 +22,6 @@ function AbstractController ($scope, $state) {
     };
     $scope.loadValidationRules = function() {};
     $scope.loadSubformBehaviour = function() {};
-    $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
-
-      $scope.loadValidationRules();
-      $scope.loadSubformBehaviour();
-      $scope.localize();
-    };
     $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped) {
       browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
@@ -75,5 +71,22 @@ function AbstractController ($scope, $state) {
     };
     $scope.removeFullSelectionStyle = function(){
       browser.runtime.sendMessage({ "call": "removeFullSelectionStyle" });
+    };
+    $scope.loadPrevStep = function(aState) {
+      $state.go(aState)
+    };
+    $scope.loadNextStep = function(nextState) {
+
+      if($scope.areRequirementsMet()){
+        $scope.saveDataModel();
+        $state.go(nextState);
+      }
+    };
+    $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
+
+      $scope.loadValidationRules();
+      $scope.loadSubformBehaviour();
+      $scope.localize();
+      $scope.loadDataModel();
     };
 }

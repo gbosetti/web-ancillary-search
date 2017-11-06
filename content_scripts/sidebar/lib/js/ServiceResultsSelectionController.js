@@ -10,10 +10,10 @@ serviceCreator.controller('ServiceResultsSelectionController', function($scope, 
     };
     $scope.loadNextStep = function() {
 
-		if(me.areRequirementsMet()){
+		if($scope.areRequirementsMet()){
 
-			me.removeFullSelectionStyle();
-			me.disableDomElementSelection("tr, div:not(#andes-sidebar)"); // calls disableElementSelection
+			$scope.removeFullSelectionStyle();
+			$scope.disableDomElementSelection("tr, div:not(#andes-sidebar)"); // calls disableElementSelection
 
 			$state.go('ServiceResultsNaming');
     	}

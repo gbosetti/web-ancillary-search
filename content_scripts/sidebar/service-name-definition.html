@@ -16,12 +16,13 @@
 	        <!-- :::::::::: INPUT :::::::::: -->
 		    <div class="form-group">
 		        <label for="search_service_name" i18n-data="service_name">Service name</label>
-		        <input id="search_service_name" name="edit-result-name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true"></input>
+		        <input id="search_service_name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true" ng-model="service.name"></input>
 		    </div>
+
 		    <nav> 
 		        <ul class="pager">
 		            <li class="next active pull-right">
-		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep()">
+		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceInput')">
 		                    <span i18n-data="next">Next</span>
 		                    <span class="glyphicon glyphicon-triangle-right"></span>
 		                </button>

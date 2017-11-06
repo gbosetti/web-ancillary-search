@@ -122,10 +122,6 @@ BrowserUiManager.prototype.enableBrowserAction = function(tab) {
       64: "icons/logo-disabled-64.png"
     },
     tab.id, "✓", "#60DA11");
-
-  browser.sidebarAction.setPanel({ 
-    panel: browser.extension.getURL("/sidebar/manage-services.html")   
-  }); 
 };
 BrowserUiManager.prototype.openSidebar = function() {
 

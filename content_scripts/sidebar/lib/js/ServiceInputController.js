@@ -1,31 +1,45 @@
-serviceCreator.controller('ServiceInputController', function($scope, $state) {
-
-	$scope.inputSelectors;
-	$scope.fileDescription = " service-input.js";
+serviceCreator.controller('ServiceInputController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
-
-    $scope.loadPrevStep = function() {
-    	$scope.disableDomElementSelection("input");
-        $state.go('ServiceName')
-    };
-    $scope.loadNextStep = function() {
-      if($scope.inputSelectors){
-        $state.go('ServiceTrigger')
+    $scope.service = { 
+      input: {
+        selector:"",
+        preview: ""
       }
+    };
+
+    $scope.loadDataModel = function() {
+      ServiceService.getService().then(function(service) {
+        $scope.service.input.selector = service.input.selector;
+      }); 
+    };
+    $scope.saveDataModel = function() {
+      ServiceService.setInput({
+        selector: $scope.service.input.selector,
+        preview: $scope.service.input.preview
+      });
+    };
+
+    $scope.loadPrevStep = function(aState) {
+      $scope.disableDomElementSelection("input");
+      $state.go(aState)
     };
     $scope.loadSubformBehaviour = function() { 
       $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
     };
     $scope.onElementSelection = function(data){
-		this.showPreview(data.previewSource);
-		this.inputSelectors = data.selectors;
-	}
-	$scope.showPreview = function(previewSource){
-		document.querySelectorAll(".hidden").forEach(function(elem){
-			elem.classList.remove("hidden");
-		});
-		document.querySelector("#property-preview-image").src = previewSource;
-	}
+  		this.showPreview(data.previewSource);
+      $scope.service.input.preview = previewSource;
+  		$scope.service.input.selector = data.selectors;
+  	}
+  	$scope.showPreview = function(previewSource){
+  		document.querySelectorAll(".hidden").forEach(function(elem){
+  			elem.classList.remove("hidden");
+  		});
+  		document.querySelector("#property-preview-image").src = previewSource;
+  	}
+    $scope.areRequirementsMet = function(){
+      return ($scope.service.input.selector)? true: false;
+    };
     $scope.initialize();
 });

@@ -1,6 +1,18 @@
-serviceCreator.controller('ServiceNameController', function($scope, $state) {
+serviceCreator.controller('ServiceNameController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
+
+    $scope.service = { name: "" };
+
+    $scope.loadDataModel = function() {
+      ServiceService.getService().then(function(service) {
+        $scope.service.name = service.name;
+      }); 
+    };
+    $scope.saveDataModel = function() {
+      ServiceService.setName($scope.service.name);
+    };
+    
     $scope.loadValidationRules = function() {
       $('form').validate({  "rules": {
           "search_service_name": {
@@ -9,12 +21,6 @@ serviceCreator.controller('ServiceNameController', function($scope, $state) {
           }
       }});
     }
-    $scope.loadNextStep = function() {
-
-      if($("form").valid($state)){
-        $state.go('ServiceInput')
-      }
-    };
     $scope.loadSubformBehaviour = function() { 
 
       $scope.callPlaceholderNameAdaptation();
@@ -32,6 +38,9 @@ serviceCreator.controller('ServiceNameController', function($scope, $state) {
         browser.i18n.getMessage("example_acronym") + " " + data.domainName
       );
       $scope.focusElement("#search_service_name");
+    };
+    $scope.areRequirementsMet = function(){
+      return $("form").valid($state);
     };
     $scope.initialize();
 });

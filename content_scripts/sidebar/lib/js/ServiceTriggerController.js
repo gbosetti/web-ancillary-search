@@ -1,7 +1,7 @@
 function TriggerMechanism(client){
 	this.loadParamsConfigControls = function(){}
 	this.undoActionsOnDom = function(){};
-	this.areTriggerRequirementsMet = function(){ return false };
+	this.areRequirementsMet = function(){ return false };
 	this.showMissingRequirementMessage = function(){
 		if(!client.hasErrorMessage("strategy-error")) //Avoiding extras
 			client.showErrorMessage("strategy-error", 
@@ -34,7 +34,7 @@ function ClickBasedTrigger(client){
 	this.getMissingRequirementLocalizedId = function(){
 		return "click_on_trigger_error"
 	};
-	this.areTriggerRequirementsMet = function(){
+	this.areRequirementsMet = function(){
 		return (this.triggerSelector)? true : false;
 	};
 	this.onTriggerSelection = function(data){
@@ -78,7 +78,9 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state) {
     	$state.go('ServiceInput')
     };
     $scope.loadNextStep = function() {
-      if($scope.areTriggerRequirementsMet()){
+      if($scope.areRequirementsMet()){
+
+		$scope.currentTriggerStrategy.undoActionsOnDom();
         $state.go('ServiceResultsSelection')
       }
     };
@@ -93,9 +95,9 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state) {
 	$scope.showMissingRequirementMessage = function(){
 		$scope.currentTriggerStrategy.showMissingRequirementMessage();
 	};
-	$scope.areTriggerRequirementsMet = function(){
+	$scope.areRequirementsMet = function(){
 
-		return $scope.currentTriggerStrategy.areTriggerRequirementsMet();
+		return $scope.currentTriggerStrategy.areRequirementsMet();
 	};
 	$scope.associateTriggeringStrategiesBehaviour = function(){
 
@@ -108,6 +110,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state) {
 			$scope.currentTriggerStrategy.loadParamsConfigControls();
 		};
 		document.querySelector('#trigger_mechanism').onchange();
+		console.log($scope.currentTriggerStrategy);
 	};
 	$scope.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";
