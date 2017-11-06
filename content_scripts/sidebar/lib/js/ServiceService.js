@@ -1,19 +1,33 @@
 serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeout) {
+
+  var buildingService, $service=this;
   
-  var service = {
-    name: "demo name",
-    input: {
-      selector:"",
-      preview: ""
-    }
+  this.initialize = function(action){
+    browser.storage.local.get("buildingService").then((storage) => {
+        if(storage.buildingService){
+          buildingService = storage.buildingService;
+        }
+        else {
+          buildingService = $service.getBlankService();
+        }
+    });
   };
-  
+  this.getBlankService = function(){
+    return {
+      name: "demo",
+      input: {
+        selector:"",
+        preview: ""
+      }
+    };
+  };
   this.asDeferred = function(action){
     var deferred = $q.defer();
     $timeout(function() {
 
-      if(action) action(service);
-      deferred.resolve(service);
+      if(action) action(buildingService);
+      deferred.resolve(buildingService);
+      browser.storage.local.set({"buildingService": buildingService});
 
     }, 500);
     return deferred.promise;
@@ -25,13 +39,15 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.setName = function(name) {
 
     return this.asDeferred(function(){
-      service.name = name;  
+      buildingService.name = name;  
     });
   };
   this.setInput = function(input) {
 
     return this.asDeferred(function(){
-      service.input = input;  
+      buildingService.input = input;  
     });
   };
+
+  this.initialize();
 }]);
