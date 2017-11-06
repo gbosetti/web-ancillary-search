@@ -12,6 +12,9 @@ function AbstractController ($scope, $state) {
           elem[targetAttr] = browser.i18n.getMessage(label);
       });
     };
+    $scope.areRequirementsMet = function(){
+      return true;
+    };
     $scope.focusElement = function(selector) {
         document.querySelector(selector).focus();
     };
@@ -69,5 +72,8 @@ function AbstractController ($scope, $state) {
     };
     $scope.loadPreview = function(selector, src){
       document.querySelector(selector).src = src;
+    };
+    $scope.removeFullSelectionStyle = function(){
+      browser.runtime.sendMessage({ "call": "removeFullSelectionStyle" });
     };
 }

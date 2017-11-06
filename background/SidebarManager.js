@@ -69,15 +69,12 @@ SidebarManager.prototype.onTriggerSelection = function(data) {
 		});
 	});
 };
-SidebarManager.prototype.onResultsContainerSelection = function(selectors, previewSource) { 
+SidebarManager.prototype.onResultsContainerSelection = function(data) { 
 
   	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "onResultsContainerSelection", 
-			args: {
-				"selectors": selectors,
-				"previewSource": previewSource
-			}
+			args: data
 		});
 	});
 };

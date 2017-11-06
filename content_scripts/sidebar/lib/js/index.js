@@ -6,8 +6,7 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state("ServiceName", {
             url: "/ServiceName",
-            templateUrl: "service-name-definition.html",
-            controller: 'ServiceNameController'
+            templateUrl: "service-name-definition.html"
         })
         .state("ServiceInput", {
             url: "/ServiceInput",

@@ -47,9 +47,9 @@ TemplatesCreator.prototype.onTriggerSelection = function(data) {
 
   this.sidebarManager.onTriggerSelection(data);
 };
-TemplatesCreator.prototype.onResultsContainerSelection = function(selectors, previewSource) { 
+TemplatesCreator.prototype.onResultsContainerSelection = function(data) { 
 
-  this.sidebarManager.onResultsContainerSelection(selectors, previewSource);
+  this.sidebarManager.onResultsContainerSelection(data);
 };
 TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
 

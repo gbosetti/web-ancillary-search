@@ -18,7 +18,7 @@ BrowserUiManager.prototype.onTriggerSelection = function(data) {
 };
 BrowserUiManager.prototype.onResultsContainerSelection = function(data) { 
 
-  this.templatesCreator.onResultsContainerSelection(data.selectors, data.previewSource);
+  this.templatesCreator.onResultsContainerSelection(data);
 };
 BrowserUiManager.prototype.selectMatchingElements = function(data) { 
 

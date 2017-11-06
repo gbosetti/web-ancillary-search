@@ -51,8 +51,9 @@ PageSelector.prototype.loadListeners = function(){
 	this.selectionListener = function(evt){
 
 		me.removeClassFromMatchingElements("andes-highlighted-on-hover");
+		me.removeClassFromMatchingElements(this.selectableElemClass);
 		me.removeClassFromMatchingElements(this.selectionClass);
-		//me.removeFullSelectionStyle();
+
 		//console.log("sending scoped from ", me.onElementSelectionMessage, " ... ", me.scoped);
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,

@@ -8,9 +8,7 @@ function UI(){
 	this.isElementSelected = function(elem) {
 		return (elem)? true : false;
 	};
-	this.loadPreview = function(selector, src){
-		document.querySelector(selector).src = src;
-	};
+	
 	this.hasErrorMessage = function(id){
 		return (document.querySelector("#" + id))? true: false;
 	};
