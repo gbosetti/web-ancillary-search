@@ -29,7 +29,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
     };
     $scope.onElementSelection = function(data){
   		this.showPreview(data.previewSource);
-      $scope.service.input.preview = previewSource;
+      $scope.service.input.preview = data.previewSource;
   		$scope.service.input.selector = data.selectors;
   	}
   	$scope.showPreview = function(previewSource){
@@ -39,6 +39,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
   		document.querySelector("#property-preview-image").src = previewSource;
   	}
     $scope.areRequirementsMet = function(){
+      console.log($scope.service.input.selector);
       return ($scope.service.input.selector)? true: false;
     };
     $scope.initialize();

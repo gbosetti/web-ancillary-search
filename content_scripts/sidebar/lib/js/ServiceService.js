@@ -1,6 +1,12 @@
 serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeout) {
   
-  var service = {name: "demo name"};
+  var service = {
+    name: "demo name",
+    input: {
+      selector:"",
+      preview: ""
+    }
+  };
   
   this.asDeferred = function(action){
     var deferred = $q.defer();
