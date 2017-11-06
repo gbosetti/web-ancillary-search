@@ -1,8 +1,7 @@
 function UI(){
 
 	var me = this; //we need this
-	this.fileDescription = "default file, please override in subclass";
-	this.triggablesSelector = "input, button, a, img:not(#andes-close-button):not(#andes-reposition-button)";
+	
 
 	
 	
@@ -34,39 +33,13 @@ function UI(){
 
 	    this.removeFormElement("#" + id);
 	};
-	this.createPreviewControl = function(previewElemId, localizedDescriptionId){
-
-		var formGroup = document.createElement("div");
-			formGroup.setAttribute("id", previewElemId);
-			formGroup.setAttribute("class", "form-group hidden");
-
-		var label = document.createElement("label");
-			label.innerHTML = browser.i18n.getMessage(localizedDescriptionId);
-			formGroup.appendChild(label);
-
-		var imgContainer = document.createElement("div");
-		var previewImage = document.createElement("img");
-			previewImage.setAttribute("id", previewElemId + "-img");
-			previewImage.setAttribute("class", "image-preview");
-			previewImage.setAttribute("src", "lib/img/no-preview.png");
-		imgContainer.appendChild(previewImage);
-		formGroup.appendChild(imgContainer);
-		
-		return formGroup;
-	};
+	
 	this.loadValidationBehaviour = function() {
 
 		var rules = this.getValidationRules();
 		if(rules) $('form').validate({  "rules": rules });
 	};
-	this.showFormElement = function(selector){
-		var elem = document.querySelector(selector);
-		elem.display = "";
-		if(elem.classList.contains("hidden")) elem.classList.remove("hidden");
-	};
-	this.hideFormElement = function(selector){
-		document.querySelector(selector).display = "none";
-	};
+	
 	this.removeFormElement = function(selector) {
 
 	   if(document.querySelector(selector)) 

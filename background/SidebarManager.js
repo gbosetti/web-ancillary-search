@@ -60,15 +60,12 @@ SidebarManager.prototype.onElementSelection = function(data) {
 		});
 	});
 }
-SidebarManager.prototype.onTriggerSelection = function(selectors, previewSource) { 
+SidebarManager.prototype.onTriggerSelection = function(data) { 
 
   	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "onTriggerSelection", 
-			args: {
-				"selectors": selectors,
-				"previewSource": previewSource
-			}
+			args: data
 		});
 	});
 };

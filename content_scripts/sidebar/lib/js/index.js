@@ -16,6 +16,10 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider) {
         .state("ServiceTrigger", {
             url: "/ServiceTrigger",
             templateUrl: "service-trigger.html"
+        })
+        .state("ServiceResultsSelection", {
+            url: "/ServiceResultsSelection",
+            templateUrl: "service-results-selection.html"
         }); 
 });
 

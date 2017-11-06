@@ -43,9 +43,9 @@ TemplatesCreator.prototype.onElementSelection = function(data) {
 
   this.sidebarManager.onElementSelection(data);
 }
-TemplatesCreator.prototype.onTriggerSelection = function(selectors, previewSource) { 
+TemplatesCreator.prototype.onTriggerSelection = function(data) { 
 
-  this.sidebarManager.onTriggerSelection(selectors, previewSource);
+  this.sidebarManager.onTriggerSelection(data);
 };
 TemplatesCreator.prototype.onResultsContainerSelection = function(selectors, previewSource) { 
 

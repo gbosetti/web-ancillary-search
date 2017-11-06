@@ -1,4 +1,8 @@
 function AbstractController ($scope, $state) {
+
+    $scope.fileDescription = "default file, please override in subclass";
+    $scope.triggablesSelector = "input, button, a, img:not(#andes-close-button):not(#andes-reposition-button)";
+
     $scope.localize = function() {
       var elemsToTranslate = document.querySelectorAll("[i18n-data]");
       if(elemsToTranslate.length > 0)
@@ -34,5 +38,36 @@ function AbstractController ($scope, $state) {
         "call": "disableElementSelection",
         "args": { "selector": selector }
       });
+    };
+    $scope.createPreviewControl = function(previewElemId, localizedDescriptionId){
+
+      var formGroup = document.createElement("div");
+        formGroup.setAttribute("id", previewElemId);
+        formGroup.setAttribute("class", "form-group hidden");
+
+      var label = document.createElement("label");
+        label.innerHTML = browser.i18n.getMessage(localizedDescriptionId);
+        formGroup.appendChild(label);
+
+      var imgContainer = document.createElement("div");
+      var previewImage = document.createElement("img");
+        previewImage.setAttribute("id", previewElemId + "-img");
+        previewImage.setAttribute("class", "image-preview");
+        previewImage.setAttribute("src", "lib/img/no-preview.png");
+      imgContainer.appendChild(previewImage);
+      formGroup.appendChild(imgContainer);
+      
+      return formGroup;
+    };
+    $scope.showFormElement = function(selector){
+      var elem = document.querySelector(selector);
+      elem.display = "";
+      if(elem.classList.contains("hidden")) elem.classList.remove("hidden");
+    };
+    $scope.hideFormElement = function(selector){
+      document.querySelector(selector).display = "none";
+    };
+    $scope.loadPreview = function(selector, src){
+      document.querySelector(selector).src = src;
     };
 }

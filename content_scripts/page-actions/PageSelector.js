@@ -50,10 +50,10 @@ PageSelector.prototype.loadListeners = function(){
 
 	this.selectionListener = function(evt){
 
-		me.removeFullSelectionStyle();
-
-		console.log("sending scoped from ", me.onElementSelectionMessage, " ... ", me.scoped);
-		
+		me.removeClassFromMatchingElements("andes-highlighted-on-hover");
+		me.removeClassFromMatchingElements(this.selectionClass);
+		//me.removeFullSelectionStyle();
+		//console.log("sending scoped from ", me.onElementSelectionMessage, " ... ", me.scoped);
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -105,7 +105,7 @@ PageSelector.prototype.highlightMatchingElements = function(data){
 };
 PageSelector.prototype.selectMatchingElements = function(data){
 
-	this.removeFullSelectionStyle(this.selectionClass);
+	this.removeFullSelectionStyle();
 
 	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, document);
 	for (var i = elems.length - 1; i >= 0; i--) {
@@ -241,7 +241,6 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 		me.addSelectableElemStyle(elem);
 		me.onElementSelectionMessage = onElementSelection; //callback
 		me.scoped = scoped;
-		//console.log("ADDING LISTENER", selector, onElementSelection, onEvent);
 		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	
 }
