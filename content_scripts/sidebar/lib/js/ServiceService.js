@@ -23,6 +23,10 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
           strategy: {
             className: 'ClickBasedTrigger'
           }      
+      },
+      results: {
+        selector:undefined,
+        preview: undefined
       }
     };
   };
@@ -63,8 +67,19 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.setTrigger = function(trigger) {
 
     return this.asDeferred(function(){
-      console.log("saving trigger:", trigger);
       buildingService.trigger = trigger; 
+    });
+  };
+  this.setResultsSelector = function(selector) {
+
+    return this.asDeferred(function(){
+      buildingService.results.selector = selector;  
+    });
+  };
+  this.setResultsPreview = function(preview) {
+
+    return this.asDeferred(function(){
+      buildingService.results.preview = preview;  
     });
   };
 

@@ -109,7 +109,6 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
 	        strategy: new UnsetTrigger($scope)  
 	    }
     };
-    ServiceService.logService();
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
