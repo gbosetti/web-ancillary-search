@@ -30,7 +30,9 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     var deferred = $q.defer();
     $timeout(function() {
 
-      if(action) action(buildingService);
+      if(action) 
+        action(buildingService);
+      
       deferred.resolve(buildingService);
       browser.storage.local.set({"buildingService": buildingService});
 
@@ -61,6 +63,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.setTrigger = function(trigger) {
 
     return this.asDeferred(function(){
+      console.log("saving trigger:", trigger);
       buildingService.trigger = trigger; 
     });
   };

@@ -22,17 +22,7 @@
 		        	<option i18n-data="type_and_wait_to_trigger" value="TypeAndWaitBasedTrigger"></option>
 		        </select>
 		    </div>
-		    <div id="trigger_mechanism_params_area">
-		    	
-		    	<!-- :::::::::: SPECIAL AREA FOR THE SPECIALIZED STRATEGY CONTROLS (BETTER IF DYNAMIC) :::::::::: -->
-				<div class="form-group hidden">
-				  	<label for="" i18n-data="selected_input_control">Service name</label>
-				  	<div id="preview-of-property">
-			            <img id="trigger-preview-image" class="image-preview" src="lib/img/no-preview.png"/> 
-			        </div>
-				</div>
-
-		    </div>
+		    <div id="trigger_mechanism_params_area" class="hidden"></div>
 			<nav > 
 			  <ul class="pager">
 			    	<li class="prev active pull-left">
@@ -41,7 +31,7 @@
 						  	<span i18n-data="back">Back</span>
 						</button>
 					</li>
-			      	<li class="next active pull-right">
+			      	<li class="next active pull-right hidden">
 			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceResultsSelection')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>

@@ -13,7 +13,7 @@
 				<span i18n-data="select_the_input_control"></span>
 			</div>
 			<!-- :::::::::: PREVIEW :::::::::: -->
-			<div class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
+			<div id="preview-area" class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
 			  	<label for="" i18n-data="selected_input_control">Service name</label>
 			  	<div id="preview-of-property">
 		            <img id="property-preview-image" class="image-preview" ng-src="{{service.input.preview}}"/> 

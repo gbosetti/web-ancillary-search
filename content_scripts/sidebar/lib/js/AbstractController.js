@@ -38,7 +38,7 @@ function AbstractController ($scope, $state) {
         "args": { "selector": selector }
       });
     };
-    $scope.createPreviewControl = function(previewElemId, localizedDescriptionId){
+    $scope.createPreviewControl = function(previewElemId, localizedDescriptionId, source){
 
       var formGroup = document.createElement("div");
         formGroup.setAttribute("id", previewElemId);
@@ -52,7 +52,7 @@ function AbstractController ($scope, $state) {
       var previewImage = document.createElement("img");
         previewImage.setAttribute("id", previewElemId + "-img");
         previewImage.setAttribute("class", "image-preview");
-        previewImage.setAttribute("src", "lib/img/no-preview.png");
+        previewImage.setAttribute("src", source || "lib/img/no-preview.png");
       imgContainer.appendChild(previewImage);
       formGroup.appendChild(imgContainer);
       
@@ -60,11 +60,17 @@ function AbstractController ($scope, $state) {
     };
     $scope.showFormElement = function(selector){
       var elem = document.querySelector(selector);
-      elem.display = "";
+      elem.style.display = "";
       if(elem.classList.contains("hidden")) elem.classList.remove("hidden");
     };
+    $scope.showAllHiddenElements = function(){
+      document.querySelectorAll(".hidden").forEach(function(elem){
+        elem.classList.remove("hidden");
+        elem.style.display = '';
+      });
+    };
     $scope.hideFormElement = function(selector){
-      document.querySelector(selector).display = "none";
+      document.querySelector(selector).style.display = "none";
     };
     $scope.loadPreview = function(selector, src){
       document.querySelector(selector).src = src;
@@ -88,9 +94,9 @@ function AbstractController ($scope, $state) {
     };
     $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
 
+      $scope.loadDataModel();
       $scope.loadValidationRules();
       $scope.loadSubformBehaviour();
       $scope.localize();
-      $scope.loadDataModel();
     };
 }

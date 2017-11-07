@@ -1,13 +1,16 @@
-function TriggerMechanism(client, data){
+function TriggerMechanism(client, props){
 
 	this.loadProperties = function(data){
 
-		if(data)
+		if(data){
+			var me = this;
 			Object.keys(data).forEach(function(key) {
-			    this[key] = data[key];
+			    me[key] = data[key];
 			});
+		}
 	}
-	this.loadParamsConfigControls = function(){}
+	this.loadParamsConfigControls = function(){};
+	this.loadSubformBehaviour = function(){};
 	this.getProperties = function(){ return {} };
 	this.undoActionsOnDom = function(){};
 	this.areRequirementsMet = function(){ return false };
@@ -24,26 +27,40 @@ function TriggerMechanism(client, data){
 	};
 	this.onTriggerSelection = function(data){ console.log("default onTriggerSelection"); };
 
-	this.loadProperties(data);
+	this.loadProperties(props);
 }
-function UnsetTrigger(client, data){
-	TriggerMechanism.call(this, client, data);
+function UnsetTrigger(client, props){
+	TriggerMechanism.call(this, client, props);
 }
-function ClickBasedTrigger(client, data){
-	TriggerMechanism.call(this, client, data);
+function ClickBasedTrigger(client, props){
 
-	this.selector = '';
+	this.selector = undefined;
+	this.preview = undefined;
+
+	TriggerMechanism.call(this, client, props);
 
 	this.getProperties = function(){
+
 		return {
 			"className": this.constructor.name,
-			"selector": this.selector
+			"selector": this.selector,
+			"preview": this.preview 
 		};
 	};
 	this.loadParamsConfigControls = function(){
-		client.enableDomElementSelection(client.triggablesSelector, "onTriggerSelection", "#trigger_mechanism");
-		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
+		client.enableDomElementSelection(client.triggablesSelector, "onTriggerSelection", ".container");
+		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control", this.preview);
 		client.addParamsConfigurationControls(preview);
+	};
+	this.loadSubformBehaviour = function(){
+
+		if(this.preview){
+			client.showAllHiddenElements();
+		}
+		else {
+			client.hideFormElement("#trigger_mechanism_params_area");
+			client.hideFormElement(".next");
+		}
 	};
 	this.undoActionsOnDom = function(){
 		client.disableDomElementSelection(client.triggablesSelector);
@@ -52,13 +69,14 @@ function ClickBasedTrigger(client, data){
 		return "click_on_trigger_error"
 	};
 	this.areRequirementsMet = function(){
-		return (this.triggerSelector)? true : false;
+		return (this.selector)? true : false;
 	};
 	this.onTriggerSelection = function(data){
-
-		client.showFormElement("#user-selected-trigger-element");
+		
+  		client.showAllHiddenElements();
 		client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
-		this.triggerSelector = data.selectors;
+		this.selector = data.selectors["1"][0];
+		this.preview = data.previewSource;
 		this.removeErrorMessage();
 	};
 }
@@ -88,21 +106,20 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
 
     $scope.service = { 
       	trigger: {
-	        strategy: new UnsetTrigger($scope)      
+	        strategy: new UnsetTrigger($scope)  
 	    }
     };
     ServiceService.logService();
 
     $scope.loadDataModel = function() {
-    	$scope.loadDataModel = function() {
-	      ServiceService.getService().then(function(service) {
-	      	$scope.service.trigger.strategy = new window[service.trigger.strategy.className]($scope, service.trigger.strategy);
-	      }); 
-	    };
+      ServiceService.getService().then(function(service) {
+      	
+      	$scope.associateTriggeringStrategiesBehaviour(service.trigger.strategy);
+      }); 
     };
     $scope.saveDataModel = function() {
     	ServiceService.setTrigger({
-    		"strategy": $scope.trigger.strategy.getProperties()
+    		"strategy": $scope.service.trigger.strategy.getProperties()
 		});	
     };
     $scope.loadValidationRules = function() { }
@@ -110,10 +127,11 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     	$scope.service.trigger.strategy.undoActionsOnDom();
     };
     $scope.loadSubformBehaviour = function() { 
-      $scope.associateTriggeringStrategiesBehaviour();
+      //mowing this to loadDataModel because some of the UI depend on the strategy
     };
 
     $scope.onTriggerSelection = function(data){
+    	//console.log("*****************", $scope.service.trigger.strategy, data);
 		$scope.service.trigger.strategy.onTriggerSelection(data);
 	}
 	$scope.showMissingRequirementMessage = function(){
@@ -122,13 +140,17 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
 	$scope.areRequirementsMet = function(){
 		return $scope.service.trigger.strategy.areRequirementsMet();
 	};
-	$scope.associateTriggeringStrategiesBehaviour = function(){
+	$scope.associateTriggeringStrategiesBehaviour = function(strategy){
+
+		document.querySelector('#trigger_mechanism').value = strategy.className;
+
 		document.querySelector('#trigger_mechanism').onchange = function(){
 
 			$scope.clearTriggeringStrategyParamsArea();
-			$scope.service.trigger.strategy.undoActionsOnDom();
-			$scope.service.trigger.strategy = new window[this.value]($scope, {});
+			$scope.service.trigger.strategy.undoActionsOnDom();			
+			$scope.service.trigger.strategy = new window[this.value]($scope, strategy || {});
 			$scope.service.trigger.strategy.loadParamsConfigControls();
+			$scope.service.trigger.strategy.loadSubformBehaviour();
 		};
 		document.querySelector('#trigger_mechanism').onchange();
 	};

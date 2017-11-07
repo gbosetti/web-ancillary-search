@@ -23,14 +23,15 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
       $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
     };
     $scope.onElementSelection = function(data){
+
   		this.showPreview(data.previewSource);
+      $scope.showAllHiddenElements();
+
       $scope.service.input.preview = data.previewSource;
   		$scope.service.input.selector = data.selectors["1"][0];
   	}
   	$scope.showPreview = function(previewSource){
-  		document.querySelectorAll(".hidden").forEach(function(elem){
-  			elem.classList.remove("hidden");
-  		});
+      $scope.showFormElement("#property-preview-image");
   		document.querySelector("#property-preview-image").src = previewSource;
   	}
     $scope.areRequirementsMet = function(){
