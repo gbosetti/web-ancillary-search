@@ -1,6 +1,6 @@
 var serviceCreator = angular.module("ServiceCreator", ['ui.router']);
 
-serviceCreator.config(function ($stateProvider, $urlRouterProvider) {
+serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
     $urlRouterProvider.when("", "/ServiceName");
 
     $stateProvider
@@ -31,13 +31,21 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider) {
         .state("ServiceMoreResultsSelection", {
             url: "/ServiceMoreResultsSelection",
             templateUrl: "service-more-results-selection.html"
-        })
+        });
+
+
+        $compileProvider.imgSrcSanitizationWhitelist(
+            /^\s*(https?|ftp|file|chrome-extension|moz-extension):|data:image\//
+        );
+        $compileProvider.aHrefSanitizationWhitelist(
+            /^\s*(https?|ftp|mailto|file|chrome-extension|moz-extension):/
+        );
 });
 
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
   if(request.args){
-    console.log(request);
+    //console.log(request);
     var controller = angular.element(document.querySelector(request.args.scoped)).scope();
     if(controller[request.call]){
       controller[request.call](request.args);

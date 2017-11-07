@@ -72,13 +72,17 @@ function AbstractController ($scope, $state) {
     $scope.removeFullSelectionStyle = function(){
       browser.runtime.sendMessage({ "call": "removeFullSelectionStyle" });
     };
+    $scope.undoActionsOnDom = function(aState) {};
     $scope.loadPrevStep = function(aState) {
+      //$scope.saveDataModel();
+      $scope.undoActionsOnDom();
       $state.go(aState)
     };
     $scope.loadNextStep = function(nextState) {
 
       if($scope.areRequirementsMet()){
         $scope.saveDataModel();
+        $scope.undoActionsOnDom();
         $state.go(nextState);
       }
     };

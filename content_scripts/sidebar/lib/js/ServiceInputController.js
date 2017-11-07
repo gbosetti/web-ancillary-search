@@ -3,26 +3,21 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
     AbstractController.call(this, $scope, $state);
     $scope.service = { 
       input: {
-        selector:"",
-        preview: ""
+        selector:undefined,
+        preview: 'lib/img/no-preview.png'
       }
     };
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        $scope.service.input.selector = service.input.selector;
+        $scope.service.input = service.input;
       }); 
     };
     $scope.saveDataModel = function() {
-      ServiceService.setInput({
-        selector: $scope.service.input.selector,
-        preview: $scope.service.input.preview
-      });
+      ServiceService.setInput($scope.service.input);
     };
-
-    $scope.loadPrevStep = function(aState) {
+    $scope.undoActionsOnDom = function(aState) {
       $scope.disableDomElementSelection("input");
-      $state.go(aState)
     };
     $scope.loadSubformBehaviour = function() { 
       $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
@@ -30,7 +25,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
     $scope.onElementSelection = function(data){
   		this.showPreview(data.previewSource);
       $scope.service.input.preview = data.previewSource;
-  		$scope.service.input.selector = data.selectors;
+  		$scope.service.input.selector = data.selectors["1"][0];
   	}
   	$scope.showPreview = function(previewSource){
   		document.querySelectorAll(".hidden").forEach(function(elem){
@@ -39,7 +34,6 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
   		document.querySelector("#property-preview-image").src = previewSource;
   	}
     $scope.areRequirementsMet = function(){
-      console.log($scope.service.input.selector);
       return ($scope.service.input.selector)? true: false;
     };
     $scope.initialize();

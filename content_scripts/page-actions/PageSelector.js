@@ -117,10 +117,7 @@ PageSelector.prototype.selectMatchingElements = function(data){
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
-	console.log("\n\n\nPRENEVTING\n\n\n");
-
 	var me=this;
-
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 		
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
@@ -138,8 +135,6 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
     });
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
-
-	console.log("\n\n\nRESTORING THE PRENEVT LISTENER\n\n\n");
 
 	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	elements.forEach(function(elem){
@@ -234,7 +229,6 @@ PageSelector.prototype.addAugmentedAction = function(elem, action){
 }
 PageSelector.prototype.addSelectionListener = function(selector, onElementSelection, onEvent, scoped){
 
-	console.log("adding scoped:", scoped);
 	var me = this;
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.undarkify(elem);	
@@ -248,7 +242,6 @@ PageSelector.prototype.addSelectionListener = function(selector, onElementSelect
 PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 
 	var me = this;
-	console.log("removing from: ", selector);
 	this.getTargetElements(selector).forEach(function(elem) { 
 		me.removeAugmentedActions(elem);	
     });	
@@ -374,7 +367,7 @@ var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
 	if(pageManager[request.call]){
-		console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
 		//Se lo llama con: browser.tabs.sendMessage
 		pageManager[request.call](request.args);
 	}

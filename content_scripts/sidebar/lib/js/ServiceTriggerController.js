@@ -1,5 +1,14 @@
-function TriggerMechanism(client){
+function TriggerMechanism(client, data){
+
+	this.loadProperties = function(data){
+
+		if(data)
+			Object.keys(data).forEach(function(key) {
+			    this[key] = data[key];
+			});
+	}
 	this.loadParamsConfigControls = function(){}
+	this.getProperties = function(){ return {} };
 	this.undoActionsOnDom = function(){};
 	this.areRequirementsMet = function(){ return false };
 	this.showMissingRequirementMessage = function(){
@@ -13,16 +22,24 @@ function TriggerMechanism(client){
 		if(client.hasErrorMessage("strategy-error"))
 			client.removeErrorMessage("strategy-error");
 	};
-	this.onTriggerSelection = function(data){ console.log("lalala "); };
-}
-function UnsetTrigger(client){
-	TriggerMechanism.call(this, client);
-}
-function ClickBasedTrigger(client){
-	TriggerMechanism.call(this, client);
+	this.onTriggerSelection = function(data){ console.log("default onTriggerSelection"); };
 
-	this.triggerSelector;
+	this.loadProperties(data);
+}
+function UnsetTrigger(client, data){
+	TriggerMechanism.call(this, client, data);
+}
+function ClickBasedTrigger(client, data){
+	TriggerMechanism.call(this, client, data);
 
+	this.selector = '';
+
+	this.getProperties = function(){
+		return {
+			"className": this.constructor.name,
+			"selector": this.selector
+		};
+	};
 	this.loadParamsConfigControls = function(){
 		client.enableDomElementSelection(client.triggablesSelector, "onTriggerSelection", "#trigger_mechanism");
 		var preview = client.createPreviewControl("user-selected-trigger-element", "selected_trigger_control");
@@ -45,15 +62,15 @@ function ClickBasedTrigger(client){
 		this.removeErrorMessage();
 	};
 }
-function EnterBasedTrigger(client){
-	TriggerMechanism.call(this, client);
+function EnterBasedTrigger(client, data){
+	TriggerMechanism.call(this, client, data);
 
 	this.loadParamsConfigControls = function(){
 		client.addParamsConfigurationControls(document.createTextNode("EnterBasedTrigger"));
 	}
 }
-function TypeAndWaitBasedTrigger(client){
-	TriggerMechanism.call(this, client);
+function TypeAndWaitBasedTrigger(client, data){
+	TriggerMechanism.call(this, client, data);
 
 	this.loadParamsConfigControls = function(){
 		client.addParamsConfigurationControls(document.createTextNode("TypeAndWaitBasedTrigger"));
@@ -65,52 +82,55 @@ function TypeAndWaitBasedTrigger(client){
 
 
 
-serviceCreator.controller('ServiceTriggerController', function($scope, $state) {
+serviceCreator.controller('ServiceTriggerController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
 
-    $scope.fileDescription = " service-trigger.js";
-	$scope.userDefInputXpath;
-	$scope.currentTriggerStrategy = new UnsetTrigger($scope);
-
-    $scope.loadValidationRules = function() { }
-    $scope.loadPrevStep = function() {
-    	$state.go('ServiceInput')
+    $scope.service = { 
+      	trigger: {
+	        strategy: new UnsetTrigger($scope)      
+	    }
     };
-    $scope.loadNextStep = function() {
-      if($scope.areRequirementsMet()){
+    ServiceService.logService();
 
-		$scope.currentTriggerStrategy.undoActionsOnDom();
-        $state.go('ServiceResultsSelection')
-      }
+    $scope.loadDataModel = function() {
+    	$scope.loadDataModel = function() {
+	      ServiceService.getService().then(function(service) {
+	      	$scope.service.trigger.strategy = new window[service.trigger.strategy.className]($scope, service.trigger.strategy);
+	      }); 
+	    };
+    };
+    $scope.saveDataModel = function() {
+    	ServiceService.setTrigger({
+    		"strategy": $scope.trigger.strategy.getProperties()
+		});	
+    };
+    $scope.loadValidationRules = function() { }
+    $scope.undoActionsOnDom = function() {
+    	$scope.service.trigger.strategy.undoActionsOnDom();
     };
     $scope.loadSubformBehaviour = function() { 
-
       $scope.associateTriggeringStrategiesBehaviour();
     };
 
     $scope.onTriggerSelection = function(data){
-		$scope.currentTriggerStrategy.onTriggerSelection(data);
+		$scope.service.trigger.strategy.onTriggerSelection(data);
 	}
 	$scope.showMissingRequirementMessage = function(){
-		$scope.currentTriggerStrategy.showMissingRequirementMessage();
+		$scope.service.trigger.strategy.showMissingRequirementMessage();
 	};
 	$scope.areRequirementsMet = function(){
-
-		return $scope.currentTriggerStrategy.areRequirementsMet();
+		return $scope.service.trigger.strategy.areRequirementsMet();
 	};
 	$scope.associateTriggeringStrategiesBehaviour = function(){
-
 		document.querySelector('#trigger_mechanism').onchange = function(){
 
 			$scope.clearTriggeringStrategyParamsArea();
-			$scope.currentTriggerStrategy.undoActionsOnDom();
-
-			$scope.currentTriggerStrategy = new window[this.value]($scope);
-			$scope.currentTriggerStrategy.loadParamsConfigControls();
+			$scope.service.trigger.strategy.undoActionsOnDom();
+			$scope.service.trigger.strategy = new window[this.value]($scope, {});
+			$scope.service.trigger.strategy.loadParamsConfigControls();
 		};
 		document.querySelector('#trigger_mechanism').onchange();
-		console.log($scope.currentTriggerStrategy);
 	};
 	$scope.clearTriggeringStrategyParamsArea = function(){
 		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";
@@ -119,7 +139,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state) {
 		document.querySelector("#trigger_mechanism_params_area").appendChild(controls);
 	};
 	$scope.isElementSelected = function(elemType) {
-		return ($scope.userDefInputXpath)? true : false;
+		return ($scope.service.userDefInputXpath)? true : false;
 	};
     $scope.initialize();
 });

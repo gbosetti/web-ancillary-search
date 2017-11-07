@@ -2,7 +2,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
   var buildingService, $service=this;
   
-  this.initialize = function(action){
+  this.initialize = function(){
     browser.storage.local.get("buildingService").then((storage) => {
         if(storage.buildingService){
           buildingService = storage.buildingService;
@@ -16,8 +16,13 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     return {
       name: "demo",
       input: {
-        selector:"",
-        preview: ""
+        selector:undefined,
+        preview: undefined
+      },
+      trigger: {
+          strategy: {
+            className: 'ClickBasedTrigger'
+          }      
       }
     };
   };
@@ -31,6 +36,11 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     }, 500);
     return deferred.promise;
+  };
+  this.logService = function() {
+    this.asDeferred(function(){
+      console.log(buildingService);  
+    });
   };
   this.getService = function() {
 
@@ -46,6 +56,12 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       buildingService.input = input;  
+    });
+  };
+  this.setTrigger = function(trigger) {
+
+    return this.asDeferred(function(){
+      buildingService.trigger = trigger; 
     });
   };
 

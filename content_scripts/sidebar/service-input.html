@@ -13,10 +13,10 @@
 				<span i18n-data="select_the_input_control"></span>
 			</div>
 			<!-- :::::::::: PREVIEW :::::::::: -->
-			<div class="form-group hidden">
+			<div class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
 			  	<label for="" i18n-data="selected_input_control">Service name</label>
 			  	<div id="preview-of-property">
-		            <img id="property-preview-image" class="image-preview" src="lib/img/no-preview.png"/> 
+		            <img id="property-preview-image" class="image-preview" ng-src="{{service.input.preview}}"/> 
 		        </div>
 			</div>
 
@@ -28,7 +28,7 @@
 						  	<span i18n-data="back">Back</span>
 						</button>
 					</li>
-			      	<li class="next active pull-right">
+			      	<li class="next active pull-right" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
 			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceTrigger')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>

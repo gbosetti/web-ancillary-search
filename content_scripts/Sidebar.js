@@ -228,7 +228,7 @@ var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
 	if(sidebar[request.call]) {
-		console.log("calling " + request.call + " (.../sidebar.js)");
+		//console.log("calling " + request.call + " (.../sidebar.js)");
 		sidebar[request.call](request.args);
 	}
 });
