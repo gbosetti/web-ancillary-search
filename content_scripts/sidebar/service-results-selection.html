@@ -14,16 +14,16 @@
 				<span i18n-data="results_selection_instructions"></span>
 			</div>
             <!-- :::::::::: XPATH :::::::::: --> 
-            <div id="selector_group" class="form-group hidden">
+            <div id="selector_group" class="form-group" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
                 <label for="result-selector" i18n-data="results_occurrences"></label>
                 <select id="result-selector" class="form-control">
                 </select>
             </div>
             <!-- :::::::::: PREVIEW :::::::::: --> 
-            <div id="preview_group" class="form-group hidden">
+            <div id="preview_group" class="form-group" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
                 <label for="preview-of-result" data-l10n-id="materializable_preview"></label>
                 <div id="preview-of-result" class="image-preview-container">
-                    <img id="result-preview-image" class="image-preview" /> 
+                    <img id="result-preview-image" class="image-preview" ng-src="{{service.results.preview}}"/> 
                 </div>
             </div>
 			<nav > 
