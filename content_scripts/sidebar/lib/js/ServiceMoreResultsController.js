@@ -23,52 +23,47 @@ function MoreElementsConfig(){
 	};
 };
 
-serviceCreator.controller('ServiceMoreResultsController', function($scope, $state) {
+serviceCreator.controller('ServiceMoreResultsController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
 
-    $scope.loadValidationRules = function() { }
-    $scope.loadPrevStep = function() {
-    	
+    $scope.moreResults = {
+    	strategy: {
+    		className: undefined,
+    	}
+    };
+
+    $scope.loadDataModel = function() {
+      ServiceService.getService().then(function(service) {
+        $scope.service.moreResults.strategy = service.moreResults.strategy;
+      }); 
+    };
+    $scope.saveDataModel = function() {
+      ServiceService.setInput($scope.service.moreResults.strategy);
+    };
+    $scope.undoActionsOnDom = function() {
 		$scope.disableDomElementSelection(me.triggablesSelector); 
-    	$state.go('ServiceResultsNaming')
     };
     $scope.loadNextStep = function() {
       if($scope.areRequirementsMet()){
 
-      	var nextFormState = new window[me.retrievalStrategy]().getConfigurationFormState();
+      	var nextFormState = new window[me.moreResults.strategy]().getConfigurationFormState();
 	    if(nextFormState == undefined) nextFormState = "ServiceFilters";
 	    console.log(nextFormState);
       }
     };
     $scope.loadSubformBehaviour = function() { 
 
-      $scope.loadStrategySelectionBehaviour();
     };
     $scope.onTriggerSelection = function(data){
-		$scope.currentTriggerStrategy.onTriggerSelection(data);
+		$scope.moreResults.strategy.onTriggerSelection(data);
 	}
 	$scope.showMissingRequirementMessage = function(){
-		$scope.currentTriggerStrategy.showMissingRequirementMessage();
+		$scope.moreResults.strategy.showMissingRequirementMessage();
 	};
 	$scope.areRequirementsMet = function(){
 
-		return $scope.currentTriggerStrategy.areRequirementsMet();
-	};
-	$scope.associateTriggeringStrategiesBehaviour = function(){
-
-		document.querySelector('#trigger_mechanism').onchange = function(){
-
-			$scope.clearTriggeringStrategyParamsArea();
-			$scope.currentTriggerStrategy.undoActionsOnDom();
-
-			$scope.currentTriggerStrategy = new window[this.value]($scope);
-			$scope.currentTriggerStrategy.loadParamsConfigControls();
-		};
-		document.querySelector('#trigger_mechanism').onchange();
-	};
-	$scope.clearTriggeringStrategyParamsArea = function(){
-		document.querySelector("#trigger_mechanism_params_area").innerHTML = "";
+		return $scope.moreResults.strategy.areRequirementsMet();
 	};
 	$scope.addParamsConfigurationControls = function(controls){
 		document.querySelector("#trigger_mechanism_params_area").appendChild(controls);
@@ -76,20 +71,20 @@ serviceCreator.controller('ServiceMoreResultsController', function($scope, $stat
 	$scope.isElementSelected = function(elemType) {
 		return ($scope.userDefInputXpath)? true : false;
 	};
-	$scope.loadStrategySelectionBehaviour = function() {
+	$scope.loadStrategyConfig = function(option){
+		console.log("HOLA");
+		console.log(option);
+		if(!option.classList.contains("active")){
 
-		var me = this;
-		document.querySelectorAll(".list-group-item").forEach(function(option){
-			option.addEventListener("click", function(){
-				if(!this.classList.contains("active")){
-
-					me.unselectAllRadios();
-					this.classList.add("active");
-					this.querySelector("input[type=radio]").click();
-					me.retrievalStrategy = this.querySelector("input[type=radio]").getAttribute("value");
-				}
-			});
-		});
+			console.log(1);
+			$scope.unselectAllRadios();
+			console.log(2);
+			option.classList.add("active");
+			console.log(3);
+			option.querySelector("input[type=radio]").click();
+			console.log(4);
+			$scope.moreResults.strategy = option.querySelector("input[type=radio]").getAttribute("value");
+		}
 	};
 	$scope.unselectAllRadios = function() {
 		document.querySelectorAll(".list-group-item").forEach(function(option){

@@ -6,7 +6,7 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
     $stateProvider
         .state("ServiceName", {
             url: "/ServiceName",
-            templateUrl: "service-name-definition.html"
+            templateUrl: "service-name.html"
         })
         .state("ServiceInput", {
             url: "/ServiceInput",
@@ -24,8 +24,8 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
             url: "/ServiceResultsNaming",
             templateUrl: "service-results-naming.html"
         })
-        .state("ServiceMoreResultsController", {
-            url: "/ServiceMoreResultsController",
+        .state("ServiceMoreResults", {
+            url: "/ServiceMoreResults",
             templateUrl: "service-more-results-strategies.html"
         })
         .state("ServiceMoreResultsSelection", {

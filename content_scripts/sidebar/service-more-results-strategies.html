@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head> 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="lib/css/service-trigger.css">
-    <link rel="stylesheet" type="text/css" href="lib/css/forms-commons.css">
-    <link rel="stylesheet" type="text/css" href="../vendor/bootswatch/united/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="lib/css/validate.css"/>
-
-    <script type="text/javascript" src="../vendor/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="../vendor/jquery-validation/dist/jquery.validate.min.js"></script>
-  </head>
-  <body class="dotted">
+<div ng-controller="ServiceResultsNamingController">
     <div class="panel-heading">
 		<div class="panel-title text-center">
 		  <h2 class="title" i18n-data="retrieving_more_results_mechanism"></h2>
@@ -19,30 +7,30 @@
 
 	<div class="container">    
 		<form class="sidebar-form">     
-			<!--<div class="well">
+			<div class="well">
 				<button type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</button>
 				<span i18n-data="more_results_mechanism_instructions"></span>
-			</div>-->
+			</div>
 			<!-- :::::::::: SELECT :::::::::: -->
 		    <div class="form-group">
-		        <label for="more_results_mechanism" i18n-data="more_results_mechanism">Search trigger mechanism</label>
+		        <label for="more_results_mechanism" i18n-data="more_results_mechanism"></label>
 				<div class="list-group">
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">
-							<input type="radio" id="click_for_more_res" name="more_res_mechanism" value="ClickBasedRetrieval">
-    						<label for="click_for_more_res" i18n-data="click_for_more_results"></label>
-						</h4>
-						<p class="list-group-item-text" i18n-data="click_for_more_results_info"></p>
-					</a>
-					<a href="#" class="list-group-item">
-						<h4 class="list-group-item-heading">
-							<input type="radio" id="click_for_more_res" name="more_res_mechanism" value="ScrollDownBasedRetrieval">
-    						<label for="click_for_more_res" i18n-data="scroll_down_for_more_results"></label>
-						</h4>
-						<p class="list-group-item-text" i18n-data="scroll_down_for_more_results_info"></p>
-					</a>
+					<div class="list-group-item" ng-click="loadStrategyConfig('this')">
+						<div class="list-group-item-heading">
+							<input type="radio" id="ClickBasedRetrieval" name="more_res_mechanism" value="ClickBasedRetrieval"></input>
+    						<label for="ClickBasedRetrieval" i18n-data="click_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="click_for_more_results_info"></p>
+					</div>
+					<div class="list-group-item" ng-click="loadStrategyConfig('this')">
+						<div class="list-group-item-heading">
+							<input type="radio" id="ScrollDownBasedRetrieval" name="more_res_mechanism" value="ScrollDownBasedRetrieval"></input>
+    						<label for="ScrollDownBasedRetrieval" i18n-data="scroll_down_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="scroll_down_for_more_results_info"></p>
+					</div>
 				</div>
 
 		    </div>
@@ -60,7 +48,7 @@
 			<nav > 
 			  <ul class="pager">
 			    	<li class="prev active pull-left">
-						<button type="button" class="btn btn-primary">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceResultsNaming')">
 							<span class="glyphicon glyphicon-triangle-left"></span>
 						  	<span i18n-data="back">Back</span>
 						</button>
@@ -75,5 +63,4 @@
 			</nav> 
         </form>
     </div>
-  </body>
-</html>
+</div>

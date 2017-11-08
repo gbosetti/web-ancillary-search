@@ -87,7 +87,7 @@
     "message": "Récupération de plus de résultats"
   },
   "more_results_mechanism_instructions": {
-    "message": "Veuillez choisir l'une des stratégies disponibles pour récupérer plus de résultats."
+    "message": "Indiquez comment les résultats sont récupérés sur cette page."
   },
   "more_results_mechanism": {
     "message": "Mécanisme utilisé dans la page:"
