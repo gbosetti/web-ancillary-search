@@ -18,19 +18,19 @@
                 <label for="results_tag" i18n-data="results_tag"></label>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
-                    <input id="results_tag" type="text" class="form-control" i18n-data="example_results_tag" i18n-target-attr="placeholder" required="true"></input>
+                    <input id="results_tag" type="text" class="form-control" i18n-data="example_results_tag" i18n-target-attr="placeholder" required="true" ng-model="service.results.name"></input>
                 </div>
             </div>
 			<nav > 
 			  <ul class="pager">
 			    	<li class="prev active pull-left">
-						<button type="button" class="btn btn-primary" ng-click="loadPrevStep()">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceResultsSelection')">
 							<span class="glyphicon glyphicon-triangle-left"></span>
 						  	<span i18n-data="back">Back</span>
 						</button>
 					</li>
 			      	<li class="next active pull-right">
-			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep()">
+			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceMoreResultsController')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>
 			          	</button>

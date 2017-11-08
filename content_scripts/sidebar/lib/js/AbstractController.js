@@ -80,7 +80,7 @@ function AbstractController ($scope, $state) {
     };
     $scope.undoActionsOnDom = function(aState) {};
     $scope.loadPrevStep = function(aState) {
-      //$scope.saveDataModel();
+      $scope.saveDataModel();
       $scope.undoActionsOnDom();
       $state.go(aState)
     };

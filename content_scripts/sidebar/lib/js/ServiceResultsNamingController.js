@@ -1,7 +1,20 @@
-serviceCreator.controller('ServiceResultsNamingController', function($scope, $state) {
+serviceCreator.controller('ServiceResultsNamingController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
+    $scope.service = { 
+      results: { name: undefined }
+    };
 
+    $scope.loadDataModel = function() {
+      ServiceService.getService().then(function(service) {
+        console.log("loading", service.results);
+        $scope.service.results.name = service.results.name;
+      }); 
+    };
+    $scope.saveDataModel = function() {
+      console.log("saving", $scope.service.results);
+      ServiceService.setResultsName($scope.service.results.name);
+    };
     $scope.loadValidationRules = function() {
       $('form').validate({  "rules": {
           "results_tag": {
@@ -9,14 +22,6 @@ serviceCreator.controller('ServiceResultsNamingController', function($scope, $st
               "required": true
           }
       }});
-    }
-    $scope.loadPrevStep = function() {
-        $state.go('ServiceResultsSelection')
-    };
-    $scope.loadNextStep = function() {
-      if($scope.areRequirementsMet()){
-        $state.go('ServiceMoreResultsRetrieval')
-      }
     };
     $scope.areRequirementsMet = function(){
     	return ($scope.results && $scope.results.name)? true:false;

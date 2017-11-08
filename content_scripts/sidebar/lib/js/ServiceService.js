@@ -25,6 +25,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
           }      
       },
       results: {
+        name: undefined,
         selector:undefined,
         preview: undefined
       }
@@ -68,6 +69,12 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       buildingService.trigger = trigger; 
+    });
+  };
+  this.setResultsName = function(name) {
+
+    return this.asDeferred(function(){
+      buildingService.results.name = name;  
     });
   };
   this.setResultsSelector = function(selector) {
