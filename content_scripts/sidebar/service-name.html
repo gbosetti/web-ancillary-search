@@ -16,7 +16,7 @@
 	        <!-- :::::::::: INPUT :::::::::: -->
 		    <div class="form-group">
 		        <label for="search_service_name" i18n-data="service_name">Service name</label>
-		        <input id="search_service_name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true" ng-model="service.name"></input>
+		        <input id="search_service_name" name="search_service_name" type="text" class="form-control" i18n-data="example_acronym" i18n-target-attr="placeholder" required="true" ng-model="service.name" ng-change="removeErrorMessages()"></input>
 		    </div>
 
 		    <nav> 

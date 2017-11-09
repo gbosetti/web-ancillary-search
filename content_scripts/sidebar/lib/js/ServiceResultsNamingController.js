@@ -15,12 +15,10 @@ serviceCreator.controller('ServiceResultsNamingController', function($scope, $st
     };
     $scope.getValidationRules = function() {
       return {  
-        "rules": {
           "results_tag": {
             "minlength": 2,
             "required": true
           }
-        }
       };
     }
     $scope.loadSubformBehaviour = function() { };

@@ -1,6 +1,8 @@
 serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeout) {
 
-  var buildingService, $service=this;
+  var services=[{ name:"google" }],
+      buildingService, 
+      $service=this;
   
   this.initialize = function(){
     browser.storage.local.get("buildingService").then((storage) => {
@@ -55,6 +57,22 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.getService = function() {
 
     return this.asDeferred();
+  };
+  this.uniqueNameService = function(name) {
+
+    var deferred = $q.defer();
+
+      var serviceExists = false; 
+      for (var i = services.length - 1; i >= 0; i--) {
+        if(services[i].name == name){
+          serviceExists = true;
+          break;
+        }
+      };
+
+      deferred.resolve(serviceExists);
+
+    return deferred.promise;
   };
   this.setName = function(name) {
 

@@ -11,6 +11,9 @@
   "name_the_service":{
     "message": "Veuillez sélectionner un nom correspondant au <a href='#' data-toggle='tooltip' title='Un site Web qui vous permet de rechercher des informations sur le World Wide Web (par exemple Google, Amazon, etc.)'>moteur de recherche</a> que vous allez envelopper"
   },
+  "service_name_already_exists":{
+    "message": "Ce nom est déjà pris par un autre service"
+  },
 
 
   
