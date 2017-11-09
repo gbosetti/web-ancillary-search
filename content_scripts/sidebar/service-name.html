@@ -21,6 +21,12 @@
 
 		    <nav> 
 		        <ul class="pager">
+		        	<li class="prev active pull-left">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ExistingServiceCheck')">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						  	<span i18n-data="back">Back</span>
+						</button>
+					</li>
 		            <li class="next active pull-right">
 		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceInput')"> <!-- ServiceInput -->
 		                    <span i18n-data="next">Next</span>

@@ -2,17 +2,29 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
 
     AbstractController.call(this, $scope, $state);
 
-    $scope.service = { name: "" };
+    $scope.service = { name: "", url: undefined};
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        $scope.service.name = service.name;
+        if(service){
+          $scope.service.name = service.name;
+          $scope.service.url = service.url;
+        }
       }); 
     };
     $scope.saveDataModel = function() {
+      ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name);
+      ServiceService.setUrl($scope.service.url);
+
+      /*browser.runtime.sendMessage({
+        call: "getCurrentUrl",
+        args: { scoped: ".next", callback: 'saveUrl' }
+      });*/      
     };
-    
+    $scope.saveUrl = function() {
+      ServiceService.setUrl($scope.service.url);
+    };
     $scope.getValidationRules = function() {
       return {  
         "search_service_name": {

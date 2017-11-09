@@ -19,7 +19,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.getUrlDomain = function(url){
 
     if(url){
-      var a = document.createElement('a').
+      var a = document.createElement('a');
         a.setAttribute('href', url);
       return a.hostname;
     }
@@ -30,20 +30,21 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     var me=this, deferred = $q.defer();
     $timeout(function() {
 
-      var matchingServices = {};
-      for (var i = services.length - 1; i >= 0; i--) {
+      /*var matchingServices = {};
+      Object.keys(services).forEach(function(i) {
         if(me.getUrlDomain(url) == me.getUrlDomain(services[i].url))
           matchingServices[services[i].name] = services[i];
-      }      
-      deferred.resolve(matchingServices);
+      });   
+      deferred.resolve(matchingServices);*/
+      deferred.resolve(services);
 
     }, 500);
     return deferred.promise;
   };
-  this.getBlankService = function(){
+  this.newServiceWithName = function(name){
     return {
-      name: "demo",
-      url: undefined,
+      name: name,
+      url: "*",
       input: {
         selector:undefined,
         preview: undefined
@@ -67,13 +68,20 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     var deferred = $q.defer();
     $timeout(function() {
 
+      if(currentServiceKey == undefined){
+        return deferred.promise;
+      }
+
       if(action) 
         action(services[currentServiceKey]);
 
-      console.log(services[currentServiceKey]); 
+      //console.log("SERVICE FROM STORAGE",currentServiceKey, services[currentServiceKey]); 
       
       deferred.resolve(services[currentServiceKey]);
-      browser.storage.local.set({currentServiceKey: services[currentServiceKey]});
+
+      /*var entry = {}; //DON'T DO THIS -> {currentServiceKey: services[currentServiceKey]}
+        entry[currentServiceKey] = services[currentServiceKey];
+      browser.storage.local.set(entry);*/
 
     }, 500);
     return deferred.promise;
@@ -83,7 +91,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       console.log(services[currentServiceKey]);  
     });
   };
-  this.getService = function() {
+  this.getService = function() { //Should be getCurrentService
 
     return this.asDeferred();
   };
@@ -105,7 +113,12 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   };
   this.setName = function(name) {
 
+    var me = this;
     return this.asDeferred(function(){
+
+      if(services[currentServiceKey] == undefined)
+        services[currentServiceKey] = me.newServiceWithName(name);
+
       services[currentServiceKey].name = name;  
     });
   };
