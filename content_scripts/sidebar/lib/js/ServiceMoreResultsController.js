@@ -19,17 +19,6 @@ function NoMoreResults(client){
 	};
 }
 
-
-function MoreElementsConfig(){
-
-	this.adaptPlaceholderExample = function(data) {
-		document.querySelector("#search_service_name").setAttribute(
-			"placeholder", 
-			document.querySelector("#search_service_name").getAttribute("placeholder") + " " + data.domainName
-		);
-	};
-};
-
 serviceCreator.controller('ServiceMoreResultsController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);

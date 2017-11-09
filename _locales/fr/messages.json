@@ -1,6 +1,18 @@
 {
+  "welcome":{
+    "message": "Accueil"
+  },
+  "matching_services_instructions":{
+    "message": "Les services de recherche suivants ont été définis pour cette page. Vous pouvez en modifier un existant ou en créer un nouveau service. "
+  },
+  "no_matching_services_instructions":{
+    "message": "Aucun service de recherche n'est pas défini pour cette page. Créez un nouveau service, s'il vous plaît."
+  },
+
+
+
   "new_service":{
-    "message": "Nouveau service de recherche"
+    "message": "Nouveau service"
   },
   "service_name":{
     "message": "Nom du service"

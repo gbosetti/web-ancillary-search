@@ -11,6 +11,7 @@ serviceCreator.controller('ServiceResultsNamingController', function($scope, $st
       }); 
     };
     $scope.saveDataModel = function() {
+      ServiceService.setCurrentServiceKey($scope.service.results.name);
       ServiceService.setResultsName($scope.service.results.name);
     };
     $scope.getValidationRules = function() {

@@ -32,6 +32,12 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         args: { scoped: "#search_service_name", callback: 'adaptPlaceholderExample' }
       });
     };
+    $scope.adaptPlaceholderExample = function(data) {
+      document.querySelector("#search_service_name").setAttribute(
+        "placeholder", 
+        document.querySelector("#search_service_name").getAttribute("placeholder") + " " + data.domainName
+      );
+    };
     $scope.removeErrorMessages = function() {
       $scope.hideErrorMessage("nameAlreadyExistsError");
     };

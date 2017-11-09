@@ -83,6 +83,10 @@ TemplatesCreator.prototype.adaptPlaceholder = function(tab, data) {
 
   this.sidebarManager.adaptPlaceholder(tab, data);
 };
+TemplatesCreator.prototype.getCurrentUrl = function(tab, data) {
+
+  this.sidebarManager.getCurrentUrl(tab, data);
+};
 TemplatesCreator.prototype.saveService = function(data) {
 
   this.storage.getFileAsync(data); //createEmptyFile

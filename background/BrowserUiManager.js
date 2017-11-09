@@ -72,6 +72,13 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
     me.templatesCreator.adaptPlaceholder(tab, data);
   });
 };
+BrowserUiManager.prototype.getCurrentUrl = function(data) {
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.getCurrentUrl(tab, data);
+  });
+};
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
 };

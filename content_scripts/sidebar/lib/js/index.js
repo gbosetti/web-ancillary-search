@@ -1,9 +1,13 @@
 var serviceCreator = angular.module("ServiceCreator", ['ui.router']);
 
 serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
-    $urlRouterProvider.when("", "/ServiceName");
+    $urlRouterProvider.when("", "/ExistingServiceCheck");
 
     $stateProvider
+        .state("ExistingServiceCheck", {
+            url: "/ExistingServiceCheck",
+            templateUrl: "existing-service-ckecking.html"
+        })
         .state("ServiceName", {
             url: "/ServiceName",
             templateUrl: "service-name.html"

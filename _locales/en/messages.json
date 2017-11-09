@@ -1,6 +1,18 @@
 {
+  "welcome":{
+    "message": "Welcome"
+  },
+  "matching_services_instructions":{
+    "message": "The following search services have been defined for this page. You can edit an existing one or create a new one."
+  },
+  "no_matching_services_instructions":{
+    "message": "There are no search services defined for this page. Please, create a new one."
+  },
+
+
+
   "new_service":{
-    "message": "New search service"
+    "message": "New service"
   },
   "service_name":{
     "message": "Service name"
