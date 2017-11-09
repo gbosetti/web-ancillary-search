@@ -13,9 +13,16 @@ serviceCreator.controller('ServiceResultsNamingController', function($scope, $st
     $scope.saveDataModel = function() {
       ServiceService.setResultsName($scope.service.results.name);
     };
-    $scope.areRequirementsMet = function(){
-    	return ($scope.service.results.name)? true:false;
-    };
+    $scope.getValidationRules = function() {
+      return {  
+        "rules": {
+          "results_tag": {
+            "minlength": 2,
+            "required": true
+          }
+        }
+      };
+    }
     $scope.loadSubformBehaviour = function() { };
     $scope.initialize();
 });

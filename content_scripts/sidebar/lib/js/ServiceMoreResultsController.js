@@ -11,6 +11,13 @@ function ClickBasedRetrieval(client){
 function ScrollDownBasedRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 }
+function NoMoreResults(client){
+	MoreResultsRetrieval.call(this, client);
+
+	this.getConfigurationFormState = function(data){ 
+		return;
+	};
+}
 
 
 function MoreElementsConfig(){
@@ -27,43 +34,49 @@ serviceCreator.controller('ServiceMoreResultsController', function($scope, $stat
 
     AbstractController.call(this, $scope, $state);
 
-    $scope.moreResults = {
-    	strategy: {
-    		className: undefined,
-    	}
+    $scope.service = {
+    	"moreResults": {
+	    	"className": 'NoMoreResults',
+	    }
     };
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        $scope.service.moreResults.strategy = service.moreResults.strategy;
+        $scope.service.moreResults = service.moreResults;
+
+        var option = document.querySelector("#" + $scope.service.moreResults.className);
+        if(option) option.checked = true;
       }); 
     };
     $scope.saveDataModel = function() {
-      ServiceService.setInput($scope.service.moreResults.strategy);
+      ServiceService.setMoreResultsStrategy($scope.service.moreResults.className);
     };
     $scope.undoActionsOnDom = function() {
-		$scope.disableDomElementSelection(me.triggablesSelector); 
+		$scope.disableDomElementSelection($scope.triggablesSelector); 
+    };
+    $scope.getValidationRules = function() { // areRequirementsMet < ... < areRequirementsMet
+		return {
+	        "more_res_mechanism": {
+	            "required": true
+	        }
+	    };
     };
     $scope.loadNextStep = function() {
       if($scope.areRequirementsMet()){
-
-      	var nextFormState = new window[me.moreResults.strategy]().getConfigurationFormState();
+      	var nextFormState = (new window[$scope.service.moreResults.className]()).getConfigurationFormState();
 	    if(nextFormState == undefined) nextFormState = "ServiceFilters";
-	    console.log(nextFormState);
-      }
+	    $state.go(nextFormState);
+      } 
     };
     $scope.loadSubformBehaviour = function() { 
-
+    	document.querySelectorAll(".list-group-item").forEach(function(elem){
+    		elem.onclick = function(){
+    			$scope.loadStrategyConfig(this);
+    		};
+    	});
     };
-    $scope.onTriggerSelection = function(data){
-		$scope.moreResults.strategy.onTriggerSelection(data);
-	}
 	$scope.showMissingRequirementMessage = function(){
-		$scope.moreResults.strategy.showMissingRequirementMessage();
-	};
-	$scope.areRequirementsMet = function(){
-
-		return $scope.moreResults.strategy.areRequirementsMet();
+		$scope.service.moreResults.showMissingRequirementMessage();
 	};
 	$scope.addParamsConfigurationControls = function(controls){
 		document.querySelector("#trigger_mechanism_params_area").appendChild(controls);
@@ -71,24 +84,19 @@ serviceCreator.controller('ServiceMoreResultsController', function($scope, $stat
 	$scope.isElementSelected = function(elemType) {
 		return ($scope.userDefInputXpath)? true : false;
 	};
-	$scope.loadStrategyConfig = function(option){
-		console.log("HOLA");
-		console.log(option);
-		if(!option.classList.contains("active")){
+	$scope.loadStrategyConfig = function(container){
 
-			console.log(1);
+		if(!container.classList.contains("active")){
+
 			$scope.unselectAllRadios();
-			console.log(2);
-			option.classList.add("active");
-			console.log(3);
-			option.querySelector("input[type=radio]").click();
-			console.log(4);
-			$scope.moreResults.strategy = option.querySelector("input[type=radio]").getAttribute("value");
+			container.classList.add("active");
+			$scope.service.moreResults.className = container.querySelector("input[type=radio]").getAttribute("value");
+			container.querySelector("input[type=radio]").click();
 		}
 	};
 	$scope.unselectAllRadios = function() {
 		document.querySelectorAll(".list-group-item").forEach(function(option){
-			option.classList.contains("active")
+			if(option.classList != undefined && option.classList.contains("active"))
 				option.classList.remove("active");
 		});
 	};

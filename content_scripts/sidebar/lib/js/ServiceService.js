@@ -28,6 +28,9 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
         name: undefined,
         selector:undefined,
         preview: undefined
+      },
+      moreResults: {
+        className: 'NoMoreResults',
       }
     };
   };
@@ -87,6 +90,12 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       buildingService.results.preview = preview;  
+    });
+  };
+  this.setMoreResultsStrategy = function(className) {
+
+    return this.asDeferred(function(){
+      buildingService.moreResults.className = className;  
     });
   };
 

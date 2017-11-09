@@ -14,13 +14,23 @@ function AbstractController ($scope, $state) {
     };
     $scope.loadDataModel = function() {};
     $scope.saveDataModel = function() {};
+    $scope.loadValidationRules = function() {
+      if(this.getValidationRules()) $('form').validate({  "rules": this.getValidationRules() });
+    };
+    $scope.getValidationRules = function() {};
+    $scope.evaluateValidationRules = function(){
+      var rules = this.getValidationRules();
+      if(rules){
+        return $("form").valid() ;
+      }
+      return false;
+    };
     $scope.areRequirementsMet = function(){
-      return true;
+      return this.evaluateValidationRules();
     };
     $scope.focusElement = function(selector) {
         document.querySelector(selector).focus();
     };
-    $scope.loadValidationRules = function() {};
     $scope.loadSubformBehaviour = function() {};
     $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped) {
       browser.runtime.sendMessage({ 

@@ -29,11 +29,13 @@ serviceCreator.controller('ServiceResultsSelectionController', function($scope, 
       	}
       }); 
     };
+    $scope.areRequirementsMet = function(){
+      return ($scope.service.results.selector)? true:false;
+    };
     $scope.saveDataModel = function() {
     	//Splitted because there are other properties of "Results" managed by other controllers
-    	console.log("saving", $scope.service);
     	ServiceService.setResultsSelector($scope.service.results.selector);	
-		ServiceService.setResultsPreview($scope.service.results.preview);	
+		  ServiceService.setResultsPreview($scope.service.results.preview);	
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();
