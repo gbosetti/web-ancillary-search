@@ -33,7 +33,7 @@
     "message": "Contrôle d'entrée"
   },
   "select_the_input_control": {
-    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a ng-click='value = 5' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercher'>contrôle d'entrée</a> du formulaire de recherche."
+    "message": "Veuillez cliquer sur l'élément de la page que vous identifiez comme <a ng-click='value = 5' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercher'>contrôle d'entrée</a> du formulaire de recherche."
   },
   "selected_input_control": {
     "message": "Contrôle d'entrée sélectionné"
@@ -51,7 +51,7 @@
     "message": "Déclencheur de recherche"
   },
   "select_the_trigger_control": {
-    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme le contrôle qui <b>déclenche</b> la recherche au formulaire."
+    "message": "Veuillez cliquer sur l'élément de la page que vous identifiez comme le contrôle qui <b>déclenche</b> la recherche au formulaire."
   },
   "click_on_control_to_trigger": {
     "message": "Cliquer sur un contrôle (bouton, ancre, etc.)"
@@ -74,11 +74,14 @@
 
 
 
+  "preview": {
+    "message": "Aperçu"
+  },
   "results_title": {
     "message": "Identification des résultats"
   },
   "results_selection_instructions": {
-    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez en tant que «conteneur» de chaque résultat renvoyé par le moteur de recherche. Ensuite indiquez le nombre d'instances que vous identifiez."
+    "message": "Veuillez cliquer sur l'élément «conteneur» de chaque résultat renvoyé par le moteur de recherche. Ensuite indiquez un nom et nombre d'instances."
   },
   "results_tagging_instructions": {
     "message": "Étiquettez le type de résultat que vous identifiez."
@@ -105,7 +108,7 @@
     "message": "Indiquez comment les résultats sont récupérés sur cette page."
   },
   "more_results_mechanism": {
-    "message": "Mécanisme utilisé dans la page:"
+    "message": "Mécanisme utilisé"
   },
   "click_on_next_for_more_results": {
     "message": "Cliquer sur un élément"

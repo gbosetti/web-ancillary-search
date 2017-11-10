@@ -1,4 +1,4 @@
-serviceCreator.controller('ServiceResultsNamingController', function($scope, $state, ServiceService) {
+serviceCreator.controller('ResultsNamingController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
     $scope.service = { 

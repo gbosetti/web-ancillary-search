@@ -1,9 +1,10 @@
-serviceCreator.controller('ServiceResultsSelectionController', function($scope, $state, ServiceService) {
+serviceCreator.controller('ResultsSelectionController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
 
     $scope.service = { 
       	results: {
+          name: undefined,
 	        selector: {
 	        	label: undefined,
 	        	value: undefined
@@ -16,6 +17,7 @@ serviceCreator.controller('ServiceResultsSelectionController', function($scope, 
       ServiceService.getService().then(function(service) {
       	$scope.service.results.selector = service.results.selector;
       	$scope.service.results.preview = service.results.preview;
+        $scope.service.results.name = service.results.name;
 
       	if($scope.service.results.selector){
 
@@ -29,13 +31,23 @@ serviceCreator.controller('ServiceResultsSelectionController', function($scope, 
       	}
       }); 
     };
+    $scope.getValidationRules = function() {
+      return {  
+          "results_tag": {
+            "minlength": 2,
+            "required": true
+          }
+      };
+    }
     $scope.areRequirementsMet = function(){
-      return ($scope.service.results.selector)? true:false;
+      
+      return ($("form").valid() && $scope.service.results.selector)? true:false;
     };
     $scope.saveDataModel = function() {
     	//Splitted because there are other properties of "Results" managed by other controllers
     	ServiceService.setResultsSelector($scope.service.results.selector);	
 		  ServiceService.setResultsPreview($scope.service.results.preview);	
+      ServiceService.setResultsName($scope.service.results.name);
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();
@@ -46,8 +58,8 @@ serviceCreator.controller('ServiceResultsSelectionController', function($scope, 
     };
     $scope.onElementSelection = function(data){
 
-    	$scope.showFormElement("#preview_group");
-		$scope.showFormElement("#selector_group");
+    	$scope.showAllHiddenElements();
+      $scope.focusElement("#results_tag");
 
     	$scope.service.results.preview = data.previewSource;
 		$scope.loadPreview("#result-preview-image", data.previewSource);

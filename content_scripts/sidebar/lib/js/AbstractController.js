@@ -127,8 +127,13 @@ function AbstractController ($scope, $state) {
     };
     $scope.hideErrorMessage = function(id) {
 
-        this.removeFormElement("#" + id);
+      this.removeFormElement("#" + id);
     };
+    $scope.hasErrorMessage = function(id) {
+
+      return (document.querySelector("#" + id))? true:false;
+    };
+
     $scope.removeFormElement = function(selector) {
 
        if(document.querySelector(selector)) 

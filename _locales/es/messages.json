@@ -33,7 +33,7 @@
     "message": "El control de entrada"
   },
   "select_the_input_control": {
-    "message": "Señalá y hacé click en el elemento de la página que identifiques como el control que <b>dispara</b> una búsqueda."
+    "message": "Hacé click en el elemento de la página que identifiques como el control que <b>dispara</b> una búsqueda."
   },
   "selected_input_control": {
     "message": "Elemento seleccionado"
@@ -74,11 +74,14 @@
 
 
 
+  "preview": {
+    "message": "Previsualización"
+  },
   "results_title": {
     "message": "Identificación de resultados"
   },
   "results_selection_instructions": {
-    "message": "Señalá el elemento de la página que identificás como «contenedor» de cada resultado devuelto por el motor de búsquedas, e indicá el número de ocurrencias que identificás de los resultados."
+    "message": "Señalá el elemento «contenedor» de cada resultado devuelto por el motor de búsquedas. Luego, indicá un nombre y el número de ocurrencias de los resultados."
   },
   "results_tagging_instructions": {
     "message": "Etiquetá el tipo de resultado que identificás."
@@ -105,7 +108,7 @@
     "message": "Indicá cómo se recuperan los resultados en esta página."
   },
   "more_results_mechanism": {
-    "message": "Mechanismo utilizado en la página:"
+    "message": "Mechanismo utilizado"
   },
   "click_on_next_for_more_results": {
     "message": "Click en elemento"

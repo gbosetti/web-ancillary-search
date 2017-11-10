@@ -24,10 +24,6 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
             url: "/ServiceResultsSelection",
             templateUrl: "service-results-selection.html"
         })
-        .state("ServiceResultsNaming", {
-            url: "/ServiceResultsNaming",
-            templateUrl: "service-results-naming.html"
-        })
         .state("ServiceMoreResults", {
             url: "/ServiceMoreResults",
             templateUrl: "service-more-results-strategies.html"

@@ -57,3 +57,7 @@ form{
     border-color: #f5f5f5 !important;
     color: black !important;
 }
+.active-item{
+    background: #f5f5f5 !important;
+    border-color: #dddddd !important;
+}

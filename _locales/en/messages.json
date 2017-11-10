@@ -74,11 +74,14 @@
 
 
 
+  "preview": {
+    "message": "Preview"
+  },
   "results_title": {
     "message": "Identification of results"
   },
   "results_selection_instructions": {
-    "message": "Please, click on the element of the page you identify as «container» of each result returned by the search engine. Then, choose the number of occurrences you identify."
+    "message": "Please, click on the «container element» of each result returned by the search engine. Then, choose a name and the number of occurrences of the results."
   },
   "results_tagging_instructions": {
     "message": "Tag the result type you identify."
@@ -105,7 +108,7 @@
     "message": "Indicate how the results are retrieved on this page."
   },
   "more_results_mechanism": {
-    "message": "Mechanism used in the page:"
+    "message": "Mechanism used in the page"
   },
   "click_for_more_results": {
     "message": "Click on element"
