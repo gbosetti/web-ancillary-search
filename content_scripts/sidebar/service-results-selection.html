@@ -14,7 +14,7 @@
 				<span i18n-data="results_selection_instructions"></span>
 			</div>
 			<!-- :::::::::: NAME :::::::::: --> 
-            <div class="form-group" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
+            <div class="form-group hidden" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
                 <label for="results_tag" i18n-data="results_tag"></label>
                 <div class="input-group">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-tag"></span></span>
@@ -22,13 +22,13 @@
                 </div>
             </div>
             <!-- :::::::::: XPATH :::::::::: --> 
-            <div id="selector_group" class="form-group" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
+            <div id="selector_group" class="form-group hidden" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
                 <label for="result-selector" i18n-data="results_occurrences"></label>
                 <select id="result-selector" class="form-control">
                 </select>
             </div>
             <!-- :::::::::: PREVIEW :::::::::: --> 
-            <div id="preview_group" class="form-group" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
+            <div id="preview_group" class="form-group hidden" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
                 <label for="preview-of-result" i18n-data="preview"></label>
                 <div id="preview-of-result" class="image-preview-container">
                     <img id="result-preview-image" class="image-preview" ng-src="{{service.results.preview}}"/> 
@@ -43,7 +43,7 @@
 						</button>
 					</li>
 			      	<li class="next active pull-right">
-			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceMoreResults')">
+			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ResultsProperties')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>
 			          	</button>

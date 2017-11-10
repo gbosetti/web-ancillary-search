@@ -125,6 +125,20 @@
 
 
 
+  "results_properties_title": {
+    "message": "Propiedades de los resultados"
+  },
+  "results_properties_instructions": {
+    "message": "Hacé click en cada una de las propiedades que quieras que tu servicio recupere. Luego, asignales un nombre."
+  },
+  "property_name": {
+    "message": "Nombre de propiedad"
+  },
+  "example_value": {
+    "message": "Valor de ejemplo"
+  },
+
+
 
   "next":{
     "message": "Siguiente"

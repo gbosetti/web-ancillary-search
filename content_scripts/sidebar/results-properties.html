@@ -1,0 +1,37 @@
+<div ng-controller="ResultsPropertiesController">
+	<div class="panel-heading">
+	   <div class="panel-title text-center">
+	   		<h2 class="title" i18n-data="results_properties_title">New service</h2>
+	   	</div>
+	</div> 
+
+	<div class="container" >    
+	    <form class="sidebar-form">    			
+			<div class="well">
+				<span type="button" class="close" data-dismiss="alert">
+					<span class="glyphicon glyphicon-info-sign"></span>
+				</span>
+				<span i18n-data="results_properties_instructions"></span>
+			</div>
+	        <!-- :::::::::: INPUT :::::::::: -->
+		    <div id="properties" class="list-group"></div>
+
+		    <nav> 
+		        <ul class="pager">
+		        	<li class="prev active pull-left">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceResultsSelection')">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						  	<span i18n-data="back">Back</span>
+						</button>
+					</li>
+		            <li class="next active pull-right">
+		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceMoreResults')"> <!-- ServiceInput -->
+		                    <span i18n-data="next">Next</span>
+		                    <span class="glyphicon glyphicon-triangle-right"></span>
+		                </button>
+		            </li>
+		        </ul>
+		    </nav> 
+	    </form>
+	</div>
+</div>

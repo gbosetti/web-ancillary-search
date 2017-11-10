@@ -88,16 +88,17 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       },
       trigger: {
           strategy: {
-            className: 'ClickBasedTrigger'
+            className: 'ClickBasedTrigger' /*and extra properties "by the strategy"*/
           }      
       },
       results: {
         name: undefined,
         selector:undefined,
-        preview: undefined
+        preview: undefined,
+        properties:{} /*{name relativeSelector}*/
       },
       moreResults: {
-        className: 'NoMoreResults',
+        className: 'NoMoreResults', /*and extra properties "by the strategy"*/
       }
     };
   };
@@ -112,7 +113,6 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       else{
 
         var returnElem = action();
-        console.log("returnElem", returnElem);
         deferred.resolve(returnElem);
       }
 

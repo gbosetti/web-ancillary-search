@@ -124,6 +124,22 @@
   },
 
 
+
+  "results_properties_title": {
+    "message": "Result's properties"
+  },
+  "results_properties_instructions": {
+    "message": "Click on each of the properties you want your service to retrieve. Then, give them a name."
+  },
+  "property_name": {
+    "message": "Property name"
+  },
+  "example_value": {
+    "message": "Example value"
+  },
+
+
+
   "next":{
     "message": "Next"
   },
