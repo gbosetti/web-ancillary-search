@@ -100,12 +100,14 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     var deferred = $q.defer();
 
       var serviceExists = false; 
-      for (var i = services.length - 1; i >= 0; i--) {
-        if(services[i].name == name){
+      Object.keys(services).some(function(key, index) {
+        console.log("key");
+        if (services[key].name == name) {
           serviceExists = true;
-          break;
+          console.log("breaking");
+          return;
         }
-      };
+      });
 
       deferred.resolve(serviceExists);
 

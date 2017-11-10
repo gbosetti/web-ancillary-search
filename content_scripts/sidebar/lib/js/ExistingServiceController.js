@@ -36,25 +36,14 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
     };
     $scope.loadServiceUI = function(service){
 
-      var listItem = document.createElement("button");
-          listItem.className = "list-group-item";
-          listItem.textContent = service.name;
+      var listItem = document.createElement("li");
+          listItem.className = "list-group-item justify-content-between list-group-item-action";
+          listItem.innerHTML =  service.name;
 
-      /*var heading = document.createElement("div");
-          heading.className = "list-group-item-heading";
-          listItem.appendChild(heading);
-
-      var label = document.createElement("label");
-          label.className = "list-group-item-label-for-radio";
-          label.setAttribute("for", service.name); 
-          label.textContent = service.name;
-          heading.appendChild(label); 
-
-      var description = document.createElement("p");
-          description.setAttribute("class", "list-group-item-text small"); 
-          description.textContent = "Displaying: [TODO:service.results.properties]";
-          //description.setAttribute("i18n-data", "click_for_more_results_info");
-          listItem.appendChild(description);*/
+      var label = document.createElement("span");
+          label.className = "btn btn-default btn-list";
+          label.innerHTML = "<i class='glyphicon glyphicon-edit'></i>";
+          listItem.appendChild(label);
 
       document.querySelector("#existing_services").appendChild(listItem);
   	};
