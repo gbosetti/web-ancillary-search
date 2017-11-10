@@ -10,9 +10,16 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
           $scope.service.name = service.name;
           $scope.service.url = service.url;
         }
+      });
+      ServiceService.getBuildingStrategy().then(function(buildingStrategy) {
+        console.log(buildingStrategy);
       }); 
     };
     $scope.saveDataModel = function() {
+
+      if($scope.service.name == undefined || $scope.service.name.trim() == '')
+        return;
+      
       ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name);
       ServiceService.setUrl($scope.service.url);

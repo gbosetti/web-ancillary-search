@@ -9,6 +9,10 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
         args: { scoped: ".next", callback: 'onUrlNotification' }
       });
     };
+    $scope.saveDataModel = function() {
+
+      ServiceService.setBuildingStrategy("NewServiceEdition");
+    };
     $scope.onUrlNotification = function(data){
 
       ServiceService.getMatchingServices(data.url).then(function(services) {
@@ -39,6 +43,13 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
       var listItem = document.createElement("li");
           listItem.className = "list-group-item justify-content-between list-group-item-action";
           listItem.innerHTML =  service.name;
+          listItem.onclick = function(){
+            ServiceService.setCurrentServiceKey(service.name).then(function(){
+              ServiceService.setBuildingStrategy("ExistingServiceEdition").then(function(){
+                $state.go('ServiceName'); //do not call loadNext
+              });
+            });
+          };
 
       var label = document.createElement("span");
           label.className = "btn btn-default btn-list";
