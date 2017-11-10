@@ -12,14 +12,14 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         }
       });
       ServiceService.getBuildingStrategy().then(function(buildingStrategy) {
-        console.log(buildingStrategy);
+        console.log("buildingStrategy", buildingStrategy);
       }); 
     };
     $scope.saveDataModel = function() {
 
       if($scope.service.name == undefined || $scope.service.name.trim() == '')
         return;
-      
+
       ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name);
       ServiceService.setUrl($scope.service.url);
@@ -43,6 +43,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
     $scope.loadSubformBehaviour = function() { 
 
       $scope.callPlaceholderNameAdaptation();
+      $scope.focusElement("#search_service_name");
     };
     $scope.callPlaceholderNameAdaptation = function() {
       //The only way I ound to communicate the iframe content to the outside

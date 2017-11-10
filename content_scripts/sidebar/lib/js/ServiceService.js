@@ -1,22 +1,57 @@
 //TODO: implement a state for being sure getMatchingServices is retrieving something when everything is fully loaded
 
+function BuildingStrategy(){
+  this.uniqueNameService = function(name, client, deferred){};
+  
+}
+function NewServiceEdition(){
+  BuildingStrategy.call(this);
+
+  this.uniqueNameService = function(name, client, deferred){
+      deferred.resolve(client.hasServiceNamed(name));
+  }
+}
+function ExistingServiceEdition(){
+  BuildingStrategy.call(this);
+
+  this.uniqueNameService = function(name, client, deferred){
+
+    if(client.services[client.currentServiceKey].name == name)
+      deferred.resolve(false);
+    else deferred.resolve(client.hasServiceNamed(name));
+  }
+}
+
+
 serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeout) {
 
-  var services, 
-      currentServiceKey, 
-      buildingStrategy;
+  this.services;
+  this.currentServiceKey;
+  this.buildingStrategy;
+  var $service = this;
   
   this.initialize = function(){
 
     browser.storage.local.get("services").then((storedServices) => {
 
         if(Object.keys(storedServices).length > 0){
-          services = storedServices;
+          $service.services = storedServices;
         }
         else {
-          services = {}; //check if this is necessary. I thunk this is the def value, but just in case
+          $service.services = {}; //check if this is necessary. I thunk this is the def value, but just in case
         }
     });
+  };
+  this.hasServiceNamed = function(name){
+
+    var serviceExists = false; 
+    Object.keys($service.services).some(function(key, index) {
+      if ($service.services[key].name == name) {
+        serviceExists = true;
+        return;
+      }
+    });
+    return serviceExists;
   };
   this.getUrlDomain = function(url){
 
@@ -33,12 +68,12 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     $timeout(function() {
 
       /*var matchingServices = {};
-      Object.keys(services).forEach(function(i) {
-        if(me.getUrlDomain(url) == me.getUrlDomain(services[i].url))
-          matchingServices[services[i].name] = services[i];
+      Object.keys($service.services).forEach(function(i) {
+        if(me.getUrlDomain(url) == me.getUrlDomain($service.services[i].url))
+          matchingServices[$service.services[i].name] = $service.services[i];
       });   
       deferred.resolve(matchingServices);*/
-      deferred.resolve(services);
+      deferred.resolve($service.services);
 
     }, 500);
     return deferred.promise;
@@ -86,29 +121,21 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   };
   this.logService = function() {
     this.asDeferred(function(){
-      console.log(services[currentServiceKey]);  
+      console.log($service.services[$service.currentServiceKey]);  
       return;
     });
   };
   this.getService = function() { //Should be getCurrentService
 
     return this.asDeferred(function(){
-      return services[currentServiceKey];  
+      return $service.services[$service.currentServiceKey];  
     });
   };
   this.uniqueNameService = function(name) {
 
     var deferred = $q.defer();
 
-      var serviceExists = false; 
-      Object.keys(services).some(function(key, index) {
-        if (services[key].name == name) {
-          serviceExists = true;
-          return;
-        }
-      });
-
-      deferred.resolve(serviceExists);
+      this.buildingStrategy.uniqueNameService(name, $service, deferred);
 
     return deferred.promise;
   };
@@ -117,80 +144,80 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     var me = this;
     return this.asDeferred(function(){
 
-      if(services[currentServiceKey] == undefined)
-        services[currentServiceKey] = me.newServiceWithName(name);
+      if($service.services[$service.currentServiceKey] == undefined)
+        $service.services[$service.currentServiceKey] = me.newServiceWithName(name);
 
-      services[currentServiceKey].name = name;  
+      $service.services[$service.currentServiceKey].name = name;  
       return;
     });
   };
   this.setInput = function(input) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].input = input;  
+      $service.services[$service.currentServiceKey].input = input;  
       return;
     });
   };
   this.setUrl = function(url) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].url = url;  
+      $service.services[$service.currentServiceKey].url = url;  
       return;
     });
   };
   this.setTrigger = function(trigger) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].trigger = trigger; 
+      $service.services[$service.currentServiceKey].trigger = trigger; 
       return;
     });
   };
   this.setCurrentServiceKey = function(key) {
 
     return this.asDeferred(function(){
-      currentServiceKey = key;
+      $service.currentServiceKey = key;
       return;
     });
   };
   this.setResultsName = function(name) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].results.name = name;  
+      $service.services[$service.currentServiceKey].results.name = name;  
       return;
     });
   };
   this.setResultsSelector = function(selector) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].results.selector = selector;  
+      $service.services[$service.currentServiceKey].results.selector = selector;  
       return;
     });
   };
   this.setResultsPreview = function(preview) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].results.preview = preview;  
+      $service.services[$service.currentServiceKey].results.preview = preview;  
       return;
     });
   };
   this.setMoreResultsStrategy = function(className) {
 
     return this.asDeferred(function(){
-      services[currentServiceKey].moreResults.className = className;  
+      $service.services[$service.currentServiceKey].moreResults.className = className;  
       return;
     });
   };
   this.setBuildingStrategy = function(strategy) { // ExistingServiceEdition || NewServiceEdition
 
     return this.asDeferred(function(){
-      buildingStrategy = strategy; 
+      $service.buildingStrategy = new window[strategy](); 
       return; 
     });
   };
-  this.getBuildingStrategy = function(strategy) { // ExistingServiceEdition || NewServiceEdition
+  this.getBuildingStrategy = function(strategy) { // TODO: remove
 
     return this.asDeferred(function(){
-      return buildingStrategy;  
+      return $service.buildingStrategy;  
     });
   };
 

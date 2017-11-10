@@ -51,7 +51,7 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
             });
           };
 
-      var label = document.createElement("span");
+      var label = document.createElement("button");
           label.className = "btn btn-default btn-list";
           label.innerHTML = "<i class='glyphicon glyphicon-edit'></i>";
           listItem.appendChild(label);

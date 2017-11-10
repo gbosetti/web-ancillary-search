@@ -21,6 +21,8 @@ serviceCreator.controller('ServiceResultsNamingController', function($scope, $st
           }
       };
     }
-    $scope.loadSubformBehaviour = function() { };
+    $scope.loadSubformBehaviour = function() { 
+      $scope.focusElement("#results_tag");
+    };
     $scope.initialize();
 });

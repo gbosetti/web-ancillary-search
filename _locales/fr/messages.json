@@ -21,7 +21,7 @@
     "message": "ex."
   },
   "name_the_service":{
-    "message": "Veuillez sélectionner un nom correspondant au <a href='#' data-toggle='tooltip' title='Un site Web qui vous permet de rechercher des informations sur le World Wide Web (par exemple Google, Amazon, etc.)'>moteur de recherche</a> que vous allez envelopper"
+    "message": "Veuillez sélectionner un nom correspondant au <a ng-click='value = 5' data-toggle='tooltip' title='Un site Web qui vous permet de rechercher des informations sur le World Wide Web (par exemple Google, Amazon, etc.)'>moteur de recherche</a> que vous allez envelopper"
   },
   "service_name_already_exists":{
     "message": "Ce nom est déjà pris par un autre service"
@@ -33,7 +33,7 @@
     "message": "Contrôle d'entrée"
   },
   "select_the_input_control": {
-    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a href='#' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercher'>contrôle d'entrée</a> du formulaire de recherche."
+    "message": "Veuillez pointer et cliquer sur l'élément de la page que vous identifiez comme <a ng-click='value = 5' data-toggle='tooltip' title='L&#39élément où vous écrivez ce que vous voulez rechercher'>contrôle d'entrée</a> du formulaire de recherche."
   },
   "selected_input_control": {
     "message": "Contrôle d'entrée sélectionné"
