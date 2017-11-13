@@ -1,6 +1,19 @@
 //TODO: somehow, the file is realoded and that makes it impossible to remove listeners :(
 console.log("\n\n\n********* LOADING THE 'PAGE SELECTOR' FILE *********\n\n\n");
 
+var scrappers = { // Because we can not use window instead
+	"XpathScrapper": function(){
+		this.getElements = function(selector){
+			return (new XPathInterpreter()).getElementsByXpath(selector, document);
+		};
+	},
+	"QuerySelectorScrapper": function(){
+		this.getElements = function(selector){
+			return document.querySelectorAll(selector);
+		};
+	}
+}
+
 function PageSelector(){
 	//this.createEventListeners();
 	this.selectableElemClass = "andes-selectable";
@@ -10,16 +23,17 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
-PageSelector.prototype.getSetOfXPathsByOccurrences = function(element){
+PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem){
 
 	var xpi = new XPathInterpreter(),
 		labeledXpaths = {}, 
-		xpaths = xpi.getMultipleXPaths(element, element.ownerDocument);
+		xpaths = xpi.getMultipleXPaths(element, relativeElem || element.ownerDocument);
+
+	console.log("xpaths with relativeElem? ",relativeElem, "\n\n", xpaths)
 
     for (var i = xpaths.length - 1; i >= 0; i--) {
 
         var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
-
         if(elemsBySelector > 0){
 
             if(labeledXpaths[elemsBySelector])
@@ -58,9 +72,10 @@ PageSelector.prototype.loadListeners = function(){
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem), 
+				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem), 
 				"previewSource": me.generatePreview(me.selectedElem),
-				"scoped": me.scoped
+				"scoped": me.scoped,
+				"exampleValue": me.selectedElem.textContent
 			}
 		});
 	};
@@ -166,7 +181,18 @@ PageSelector.prototype.getTargetElements = function(selector){
 PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
-    this.addSelectionListener(data.targetElementSelector, data.onElementSelection, "click", data.scoped);
+
+	var extractor = new scrappers[data.scrapperClass]();
+
+	var elements = extractor.getElements(data.targetElementSelector);
+	//this.refElem = extractor.getElement(data.refElemSelector);
+
+    this.addSelectionListener(
+    	elements, 
+    	data.onElementSelection, 
+    	"click", 
+    	data.scoped
+    );
     this.undarkifySidebarElements();
     this.darkify(document.body); 
 };
@@ -227,15 +253,17 @@ PageSelector.prototype.addAugmentedAction = function(elem, action){
 
 	elem.setAttribute("andes-actions", JSON.stringify(actions))
 }
-PageSelector.prototype.addSelectionListener = function(selector, onElementSelection, onEvent, scoped){
+PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped){
 
 	var me = this;
-	this.getTargetElements(selector).forEach(function(elem) { 
+		me.onElementSelectionMessage = onElementSelection; //callback
+		
+		me.scoped = scoped;
+
+	elements.forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingOnHover(elem);
 		me.addSelectableElemStyle(elem);
-		me.onElementSelectionMessage = onElementSelection; //callback
-		me.scoped = scoped;
 		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
     });	
 }

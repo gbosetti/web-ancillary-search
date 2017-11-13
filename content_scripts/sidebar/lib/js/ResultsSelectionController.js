@@ -48,6 +48,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     	ServiceService.setResultsSelector($scope.service.results.selector);	
 		  ServiceService.setResultsPreview($scope.service.results.preview);	
       ServiceService.setResultsName($scope.service.results.name);
+      //console.log($scope.service.results.selector);
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();
@@ -62,10 +63,10 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       $scope.focusElement("#results_tag");
 
     	$scope.service.results.preview = data.previewSource;
-		$scope.loadPreview("#result-preview-image", data.previewSource);
+		  $scope.loadPreview("#result-preview-image", data.previewSource);
 
-		$scope.fillOccurrencesSelector(data.selectors);
-		document.querySelector("#result-selector").onchange();
+  		$scope.fillOccurrencesSelector(data.selectors);
+  		document.querySelector("#result-selector").onchange();
 	}
 	$scope.fillOccurrencesSelector = function(selectors){
 

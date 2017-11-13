@@ -32,13 +32,15 @@ function AbstractController ($scope, $state) {
         document.querySelector(selector).focus();
     };
     $scope.loadSubformBehaviour = function() {};
-    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped) {
+    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector) {
       browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
         "args": {
-          targetElementSelector: controlsSelector,
-          onElementSelection: callbackMessage,
-          scoped: scoped
+          "targetElementSelector": controlsSelector,
+          "onElementSelection": callbackMessage,
+          "scoped": scoped,
+          "scrapperClass": scrapperClass || "QuerySelectorScrapper",
+          "refElemSelector": refElemSelector
         }
       });
     };

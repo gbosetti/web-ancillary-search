@@ -113,7 +113,7 @@ BrowserUiManager.prototype.enableElementSelection = function(data) {
   
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enableElementSelection(tab, data.targetElementSelector, data.onElementSelection, data.scoped);
+    me.templatesCreator.enableElementSelection(tab, data);
   });
 };
 BrowserUiManager.prototype.disableElementSelection = function(data) {

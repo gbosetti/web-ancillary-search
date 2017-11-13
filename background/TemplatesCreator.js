@@ -104,9 +104,10 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
   browser.tabs.sendMessage(tab.id, {call: "disableContextElementSelection"});
 }
-TemplatesCreator.prototype.enableElementSelection = function(tab, targetElementSelector, onElementSelection, scoped) {
+TemplatesCreator.prototype.enableElementSelection = function(tab, data) {
 
-	this.backPageSelector.enableElementSelection(tab, targetElementSelector, onElementSelection, scoped);
+  console.log("templates creatr...");
+	this.backPageSelector.enableElementSelection(tab, data);
 }
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
 

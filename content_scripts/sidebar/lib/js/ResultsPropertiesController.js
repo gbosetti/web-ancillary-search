@@ -2,17 +2,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
 
     AbstractController.call(this, $scope, $state);
     $scope.service = { 
-      properties: {
-        title: {
-          'name': 'title',
-          'relativeSelector': '//a',
-          'exampleValue': 'La casa de los conejos'
-        },
-        authors: {
-          'name': 'author',
-          'relativeSelector': '//a',
-          'exampleValue': 'Laura Alcoba'
-        }
+      results: {
+        properties: {}
       }
     };
     /*
@@ -24,11 +15,28 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
 
-        if(service)
-          $scope.service.properties = service.results.properties;
+        if(service){
+          $scope.service.results.properties = service.results.properties;
+        } 
+
+        var selector = $scope.getElementsSelector(service.results.selector.value);
+        $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
         
-        $scope.loadPropertiesIntoUI($scope.service.properties);
+        console.log("enableDomElementSelection", service.results.selector.value);
+        $scope.enableDomElementSelection( selector, "onElementSelection", ".well", "XpathScrapper", service.results.selector.value); //".//html[1]/body[1]/div[6]/div[3]/div[10]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div
       }); 
+    };
+    $scope.getElementsSelector = function(selector) {
+
+      return selector + "//*"; //( selector.length-3, selector.length == "[1]")? selector + "//*": selector + "[1]//*";
+    };
+    $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
+      
+      data.name = "";
+      data.exampleValue = data.exampleValue.length > 35? data.exampleValue.substring(0, 35) + "..." : data.exampleValue;
+
+      var propControl = this.addPropertyToSidebar(data);
+          propControl.querySelector("input").focus();
     };
     $scope.saveDataModel = function() {
       //ServiceService.setResultsName($scope.service.name);
@@ -36,15 +44,15 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     $scope.areRequirementsMet = function() {
       return true;
     }
-    $scope.loadPropertiesIntoUI = function(properties) { 
+    $scope.loadPropertiesIntoSidebar = function(properties) { 
       Object.keys(properties).forEach(function(key) {    
-        $scope.loadPropertyIntoUI(properties[key]);
+        $scope.addPropertyToSidebar(properties[key]);
       });  
     };
     $scope.removeProperty = function(prop) { 
       
     };
-    $scope.loadPropertyIntoUI = function(prop) { 
+    $scope.addPropertyToSidebar = function(prop) { 
       var property = document.createElement("div");
           property.className = "list-group-item";
 
@@ -78,6 +86,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
           property.appendChild(propValue);
 
       document.querySelector("#properties").appendChild(property);
+      return property; 
     };
     $scope.initialize();
 });

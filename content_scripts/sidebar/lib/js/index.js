@@ -20,8 +20,8 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
             url: "/ServiceTrigger",
             templateUrl: "service-trigger.html"
         })
-        .state("ServiceResultsSelection", {
-            url: "/ServiceResultsSelection",
+        .state("ResultsSelection", {
+            url: "/ResultsSelection",
             templateUrl: "service-results-selection.html"
         })
         .state("ResultsProperties", {
