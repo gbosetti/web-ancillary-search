@@ -21,9 +21,15 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
 
         var selector = $scope.getElementsSelector(service.results.selector.value);
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
-        
-        console.log("enableDomElementSelection", service.results.selector.value);
-        $scope.enableDomElementSelection( selector, "onElementSelection", ".well", "XpathScrapper", service.results.selector.value); //".//html[1]/body[1]/div[6]/div[3]/div[10]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div
+
+        //console.log("enableDomElementSelection", service.results.selector.value);
+        $scope.enableDomElementSelection( 
+          selector, 
+          "onElementSelection", 
+          ".well", 
+          "XpathScrapper", 
+          service.results.selector.value
+        ); //".//html[1]/body[1]/div[6]/div[3]/div[10]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div
       }); 
     };
     $scope.getElementsSelector = function(selector) {

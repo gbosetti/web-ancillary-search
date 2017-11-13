@@ -6,10 +6,22 @@ var scrappers = { // Because we can not use window instead
 		this.getElements = function(selector){
 			return (new XPathInterpreter()).getElementsByXpath(selector, document);
 		};
+		this.getElement = function(selector){
+			if(selector == undefined)
+				return;
+
+			var elems = (new XPathInterpreter()).getElementsByXpath(selector, document);
+			return (elems && elems.length > 0)? elems[0] : undefined; //(new XPathInterpreter()).getElementByXPath(selector, document);
+		};
 	},
 	"QuerySelectorScrapper": function(){
 		this.getElements = function(selector){
 			return document.querySelectorAll(selector);
+		};
+		this.getElement = function(selector){
+			if(selector == undefined)
+				return;
+			return document.querySelector(selector);
 		};
 	}
 }
@@ -185,7 +197,10 @@ PageSelector.prototype.enableElementSelection = function(data){
 	var extractor = new scrappers[data.scrapperClass]();
 
 	var elements = extractor.getElements(data.targetElementSelector);
-	//this.refElem = extractor.getElement(data.refElemSelector);
+
+	console.log("refElemSelector", data.refElemSelector);
+	var refElem = extractor.getElement(data.refElemSelector);
+	console.log("refElem", refElem);
 
     this.addSelectionListener(
     	elements, 

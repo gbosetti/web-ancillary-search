@@ -33,6 +33,8 @@ function AbstractController ($scope, $state) {
     };
     $scope.loadSubformBehaviour = function() {};
     $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector) {
+      
+      console.log("refElemSelector from abstract", refElemSelector);
       browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
         "args": {
