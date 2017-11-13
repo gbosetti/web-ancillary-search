@@ -61,3 +61,14 @@ form{
     background: #f5f5f5 !important;
     border-color: #dddddd !important;
 }
+.list-item-close-button {
+    border-radius: 0px 4px;
+    box-sizing: border-box;
+    display: block;
+    float: right;
+    margin-right: -15px;
+    margin-top: -11px;
+    border: none;
+    color: white;
+    background: #838383;
+}
