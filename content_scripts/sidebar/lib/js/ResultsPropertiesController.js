@@ -3,34 +3,45 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     AbstractController.call(this, $scope, $state);
     $scope.service = { 
       results: {
+        selector: '//div[1]',
         properties: {}
       }
     };
     /*
         {
-          'name': 'title',
-          'relativeSelector': '//a'
+          'name': 'author',
+          'relativeSelector': '//a',
+          'exampleValue': 'Laura Alcobe'
         }
     */
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
 
-        if(service){
-          $scope.service.results.properties = service.results.properties;
-        } 
+        $scope.service = service;
 
         var selector = $scope.getElementsSelector(service.results.selector.value);
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
+        $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector);
 
-        //console.log("enableDomElementSelection", service.results.selector.value);
         $scope.enableDomElementSelection( 
           selector, 
           "onElementSelection", 
           ".well", 
           "XpathScrapper", 
           service.results.selector.value
-        ); //".//html[1]/body[1]/div[6]/div[3]/div[10]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div
+        );
       }); 
+    };
+    $scope.highlightPropertiesInDom = function(properties, containerSelector) {
+
+      browser.runtime.sendMessage({ 
+        "call": "removeFullSelectionStyle"
+      })
+      .then(function handleResponse(message) {
+        Object.keys(properties).forEach(function(key) {    
+            $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
+        });
+      });
     };
     $scope.getElementsSelector = function(selector) {
 
@@ -38,11 +49,16 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
       
-      data.name = "";
-      data.exampleValue = data.exampleValue.length > 35? data.exampleValue.substring(0, 35) + "..." : data.exampleValue;
+      var prop = {
+        "name": "",
+        "exampleValue": data.exampleValue.length > 35? data.exampleValue.substring(0, 35) + "..." : data.exampleValue,
+        "relativeSelector": data.selectors[Object.keys(data.selectors)[0]][0]
+      };
 
-      var propControl = this.addPropertyToSidebar(data);
+      var propControl = this.addPropertyToSidebar(prop);
           propControl.querySelector("input").focus();
+
+      this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
     };
     $scope.saveDataModel = function() {
       //ServiceService.setResultsName($scope.service.name);
@@ -54,6 +70,20 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       Object.keys(properties).forEach(function(key) {    
         $scope.addPropertyToSidebar(properties[key]);
       });  
+    };
+    $scope.highlightPropertyInDom = function(relativeSelector, refElemSelector) { 
+      
+      browser.runtime.sendMessage({ 
+        "call": "selectMatchingElements",
+        "args": { 
+          "selector": relativeSelector, 
+          "scrapper": "XpathScrapper", 
+          "refElemSelector": refElemSelector
+        }
+      });
+    };
+    $scope.highlightPropertiesInDom = function(prop) { 
+      
     };
     $scope.removeProperty = function(prop) { 
       

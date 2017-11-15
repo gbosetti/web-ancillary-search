@@ -41,8 +41,6 @@ PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeE
 		labeledXpaths = {}, 
 		xpaths = xpi.getMultipleXPaths(element, relativeElem || element.ownerDocument);
 
-	console.log("xpaths with relativeElem? ",relativeElem, "\n\n", xpaths)
-
     for (var i = xpaths.length - 1; i >= 0; i--) {
 
         var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
@@ -80,7 +78,8 @@ PageSelector.prototype.loadListeners = function(){
 		me.removeClassFromMatchingElements(this.selectableElemClass);
 		me.removeClassFromMatchingElements(this.selectionClass);
 
-		//console.log("sending scoped from ", me.onElementSelectionMessage, " ... ", me.scoped);
+		//console.log("refElem: ", me.refElem);
+
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
@@ -135,12 +134,12 @@ PageSelector.prototype.selectMatchingElements = function(data){
 
 	this.removeFullSelectionStyle();
 
-	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, document);
+	var refElem = (data.scrapper && data.refElemSelector)? (new scrappers[data.scrapper]()).getElement(data.refElemSelector) : document;
+
+	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, refElem);
 	for (var i = elems.length - 1; i >= 0; i--) {
 		this.addSelectionClass(elems[i]);
-	}
-	//var me= this;
-	//setTimeout(function(){ me.removeFullSelectionStyle(this.selectionClass); }, 2000);
+	};
 };
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
@@ -195,12 +194,9 @@ PageSelector.prototype.enableElementSelection = function(data){
 	this.darkifyAllDomElements();
 
 	var extractor = new scrappers[data.scrapperClass]();
-
 	var elements = extractor.getElements(data.targetElementSelector);
 
-	console.log("refElemSelector", data.refElemSelector);
-	var refElem = extractor.getElement(data.refElemSelector);
-	console.log("refElem", refElem);
+	this.refElem = extractor.getElement(data.refElemSelector);
 
     this.addSelectionListener(
     	elements, 
