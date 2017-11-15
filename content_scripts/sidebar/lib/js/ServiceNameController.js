@@ -69,6 +69,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
           if(!nameAlreadyExists){
             $scope.saveDataModel();
             $scope.undoActionsOnDom();
+            ServiceService.setBuildingStrategy("ExistingServiceEdition"); //Since the service is created, and the user may go forwards and back to this form ans he needs the new strategy to check for the uniqueName
             $state.go(nextState);
           }
           else{
