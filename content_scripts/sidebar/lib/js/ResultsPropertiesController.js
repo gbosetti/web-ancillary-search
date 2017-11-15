@@ -34,13 +34,11 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.highlightPropertiesInDom = function(properties, containerSelector) {
 
-      browser.runtime.sendMessage({ 
-        "call": "removeFullSelectionStyle"
-      })
-      .then(function handleResponse(message) {
-        Object.keys(properties).forEach(function(key) {    
-            $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
-        });
+      console.log(properties);
+      console.log('containerSelector', containerSelector);
+
+      Object.keys(properties).forEach(function(key) {    
+          $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
       });
     };
     $scope.getElementsSelector = function(selector) {
@@ -81,9 +79,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
           "refElemSelector": refElemSelector
         }
       });
-    };
-    $scope.highlightPropertiesInDom = function(prop) { 
-      
     };
     $scope.removeProperty = function(prop) { 
       

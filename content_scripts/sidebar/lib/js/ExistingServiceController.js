@@ -51,10 +51,23 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
             });
           };
 
-      var label = document.createElement("button");
-          label.className = "btn btn-default btn-list";
-          label.innerHTML = "<i class='glyphicon glyphicon-edit'></i>";
-          listItem.appendChild(label);
+      var removeButton = document.createElement("button");
+          removeButton.className = "btn btn-default btn-list";
+          removeButton.innerHTML = "<i class='glyphicon glyphicon-remove'></i>";
+          removeButton.onclick = function(evt){
+
+            evt.preventDefault(); evt.stopImmediatePropagation();
+            this.parentElement.remove();
+            /*ServiceService.setBuildingStrategy("ExistingServiceEdition").then(function(){
+              $state.go('ServiceName'); //do not call loadNext
+            });*/
+          };
+          listItem.appendChild(removeButton);
+
+          var editButton = document.createElement("button");
+          editButton.className = "btn btn-default btn-list";
+          editButton.innerHTML = "<i class='glyphicon glyphicon-edit'></i>";
+          listItem.appendChild(editButton);
 
       document.querySelector("#existing_services").appendChild(listItem);
   	};
