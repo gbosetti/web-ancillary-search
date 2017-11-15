@@ -34,8 +34,8 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     browser.storage.local.get("services").then((storedServices) => {
 
-        if(Object.keys(storedServices).length > 0){
-          $service.services = storedServices;
+        if(storedServices.services && Object.keys(storedServices.services).length > 0){
+          $service.services = storedServices.services;
         }
         else {
           $service.services = {}; //check if this is necessary. I thunk this is the def value, but just in case
@@ -148,13 +148,19 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
         $service.services[$service.currentServiceKey] = me.newServiceWithName(name);
 
       $service.services[$service.currentServiceKey].name = name;  
+
+      $service.updateServices();
       return;
     });
+  };
+  this.updateServices = function(){
+    browser.storage.local.set({ "services": $service.services });
   };
   this.setInput = function(input) {
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].input = input;  
+      $service.updateServices();
       return;
     });
   };
@@ -162,6 +168,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].url = url;  
+      $service.updateServices();
       return;
     });
   };
@@ -169,6 +176,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].trigger = trigger; 
+      $service.updateServices();
       return;
     });
   };
@@ -190,6 +198,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].results.selector = selector;  
+      $service.updateServices();
       return;
     });
   };

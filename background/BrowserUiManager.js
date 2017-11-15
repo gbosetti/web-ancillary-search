@@ -53,14 +53,10 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
-BrowserUiManager.prototype.loadUrlAtSidebar = function(data) {
-
-  this.templatesCreator.loadUrlAtSidebar(data.url, data.filePaths);
-};
-BrowserUiManager.prototype.createNewServiceFromData = function(data) {
+/*BrowserUiManager.prototype.createNewServiceFromData = function(data) {
 
   this.templatesCreator.createNewServiceFromData(data.service);
-};
+};*/
 BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 
   this.templatesCreator.loadInputControlSelection(data);

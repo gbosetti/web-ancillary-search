@@ -18,7 +18,7 @@ BackgroundPageSelector.prototype.restoreDomElementsBehaviour = function(tab) {
 	this.getStatusByTab(tab).restoreDomElementsBehaviour(tab);
 };
 BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
-	console.log("Back page selector ...");
+
 	this.getStatusByTab(tab).enableElementSelection(tab, data);
 };
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
@@ -64,7 +64,7 @@ BackgroundPageSelector.prototype.sendDisableSelectionMessage = function(tab, sel
     });
 };
 BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, data){
-	console.log("Enabling...");
+
 	browser.tabs.sendMessage(tab.id, {
     	"call": "enableElementSelection",
     	"args":data

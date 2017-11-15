@@ -11,7 +11,7 @@ function TemplatesCreator(){
     ],
     [this]
   ); 
-  this.storage = new StorageFilesManager();
+  //this.storage = new StorageFilesManager();
   this.backPageSelector = new BackgroundPageSelector();
   this.listenForTabChanges();
 }
@@ -87,18 +87,14 @@ TemplatesCreator.prototype.getCurrentUrl = function(tab, data) {
 
   this.sidebarManager.getCurrentUrl(tab, data);
 };
-TemplatesCreator.prototype.saveService = function(data) {
+/*TemplatesCreator.prototype.saveService = function(data) {
 
   this.storage.getFileAsync(data); //createEmptyFile
-};
-TemplatesCreator.prototype.loadUrlAtSidebar = function(url, filePaths) {
-
-	this.sidebarManager.loadChromeUrl(url, filePaths); 
-};
-TemplatesCreator.prototype.createNewServiceFromData = function(data) {
+};*/
+/*TemplatesCreator.prototype.createNewServiceFromData = function(data) {
 
   this.storage.createFileWithData(data);
-};
+};*/
 TemplatesCreator.prototype.disableDomSelection = function(tab) {
 
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
@@ -106,7 +102,6 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
 }
 TemplatesCreator.prototype.enableElementSelection = function(tab, data) {
 
-  console.log("templates creatr...");
 	this.backPageSelector.enableElementSelection(tab, data);
 }
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
