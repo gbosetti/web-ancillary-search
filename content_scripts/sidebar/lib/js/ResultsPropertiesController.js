@@ -20,6 +20,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         $scope.service = service;
 
         var selector = $scope.getElementsSelector(service.results.selector.value);
+
+        console.log("loading properties: ", $scope.service.results.properties);
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
         $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector);
 
@@ -32,10 +34,34 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         );
       }); 
     };
-    $scope.highlightPropertiesInDom = function(properties, containerSelector) {
+    /*$scope.loadValidationRules = function() {
+      $('form').validate({  "rules": {} });
+    };
+    $scope.getValidationRules = function() {
+      return {};
+    };*/
+    $scope.areRequirementsMet = function() {
+      
+      var inputs = document.querySelectorAll("input"),
+          inputsAreFilled = true;
+      for (var i = inputs.length - 1; i >= 0; i--) {
+        if(inputs[i].value.length <= 2){
+          inputsAreFilled = false;
 
-      console.log(properties);
-      console.log('containerSelector', containerSelector);
+          this.removeFormElementById(inputs[i].id + "_error");
+          this.showErrorMessageByElems(
+            inputs[i].id + "_error", 
+            inputs[i], 
+            "this_field_is_required");
+        } else {
+          // I don't know why I can not access the elem from the abstract class behaviour. So...
+          this.removeFormElementById(inputs[i].id + "_error");
+        }
+      }
+
+      return inputsAreFilled;
+    };
+    $scope.highlightPropertiesInDom = function(properties, containerSelector) {
 
       Object.keys(properties).forEach(function(key) {    
           $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
@@ -54,18 +80,33 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       };
 
       var propControl = this.addPropertyToSidebar(prop);
-          propControl.querySelector("input").focus();
+      propControl.querySelector("input").focus();
 
       this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
     };
     $scope.saveDataModel = function() {
-      //ServiceService.setResultsName($scope.service.name);
+
+      $scope.service.results.properties = $scope.getUserEditedProperties();
+      ServiceService.setProperties($scope.service.results.properties).then(function(){
+        ServiceService.updateServices();
+      });
     };
-    $scope.areRequirementsMet = function() {
-      return true;
-    }
+    $scope.getUserEditedProperties = function() { 
+      var props = {}, propsElems = document.querySelectorAll(".list-group-item");
+
+      for (var i = propsElems.length - 1; i >= 0; i--) {
+
+        var prop = propsElems[i].querySelector("button").prop; 
+            prop.name = propsElems[i].querySelector("input").value;
+
+        props[prop.name] = prop;
+      };
+
+      return props;
+    };
     $scope.loadPropertiesIntoSidebar = function(properties) { 
-      Object.keys(properties).forEach(function(key) {    
+      Object.keys(properties).forEach(function(key) {  
+        console.log("loading key: ", key);  
         $scope.addPropertyToSidebar(properties[key]);
       });  
     };
@@ -80,9 +121,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         }
       });
     };
-    $scope.removeProperty = function(prop) { 
-      
-    };
     $scope.addPropertyToSidebar = function(prop) { 
       var property = document.createElement("div");
           property.className = "list-group-item";
@@ -92,7 +130,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
           closebutton.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
           closebutton.prop = prop;
           closebutton.onclick = function(){
-            $scope.removeProperty(this.prop);
+            //$scope.removeProperty(this.prop);
             this.parentElement.remove();
           };
           property.appendChild(closebutton);
@@ -107,9 +145,14 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
 
       var propNameInput = document.createElement("input");
           propNameInput.setAttribute("type", "text");
-          propNameInput.className = "form-control";
+          propNameInput.className = "form-control resultProperty";
+          propNameInput.id = Date.now(); //for the validation
           propNameInput.value = prop.name;
           propNameGroup.appendChild(propNameInput);
+          /*$(propNameInput).rules('add', {
+              "minlength": 2,
+              "required": true
+          });*/
 
       var propValue = document.createElement("i");
           //propValue.className = "list-group-item-text small";

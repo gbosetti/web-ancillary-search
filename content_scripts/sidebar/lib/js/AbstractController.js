@@ -15,7 +15,7 @@ function AbstractController ($scope, $state) {
     $scope.loadDataModel = function() {};
     $scope.saveDataModel = function() {};
     $scope.loadValidationRules = function() {
-      if(this.getValidationRules()) $('form').validate({  "rules": this.getValidationRules() });
+      if(this.getValidationRules()) $('form').validate(this.getValidationRules());
     };
     $scope.getValidationRules = function() {};
     $scope.evaluateValidationRules = function(){
@@ -113,7 +113,7 @@ function AbstractController ($scope, $state) {
       $scope.loadSubformBehaviour();
       $scope.localize();
     };
-    $scope.showErrorMessage = function(id, afterPositionSelector, localizationString) {
+    $scope.showErrorMessageByElems = function(id, referenceNode, localizationString) {
 
         var formGroup = document.createElement("div");
           formGroup.setAttribute("class", "form-group");
@@ -125,19 +125,27 @@ function AbstractController ($scope, $state) {
 
         formGroup.appendChild(label);
 
-        var referenceNode = document.querySelector(afterPositionSelector);
         referenceNode.parentElement.insertBefore(formGroup, referenceNode.nextSibling);
+        referenceNode.focus();
+    };
+    $scope.showErrorMessage = function(id, afterPositionSelector, localizationString) {
 
+        this.showErrorMessageByElems(id, document.querySelector(afterPositionSelector), localizationString);
     };
     $scope.hideErrorMessage = function(id) {
 
-      this.removeFormElement("#" + id);
+      $scope.removeFormElement("#" + id);
     };
     $scope.hasErrorMessage = function(id) {
 
       return (document.querySelector("#" + id))? true:false;
     };
+    $scope.removeFormElementById = function(id) {
 
+      var errorElem = document.getElementById(id);
+          if(errorElem)
+            errorElem.remove();
+    };
     $scope.removeFormElement = function(selector) {
 
        if(document.querySelector(selector)) 

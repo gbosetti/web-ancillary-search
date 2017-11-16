@@ -34,10 +34,15 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
     };
     $scope.getValidationRules = function() {
       return {  
-        "search_service_name": {
-            "minlength": 2,
-            "required": true
-        }
+          "rules": {
+            "search_service_name": {
+                "minlength": 2,
+                "required": true
+            }
+          },
+          "messages": {
+            search_service_name: browser.i18n.getMessage("this_field_is_required")
+          }
       };
     }
     $scope.loadSubformBehaviour = function() { 

@@ -45,8 +45,13 @@ serviceCreator.controller('ServiceMoreResultsController', function($scope, $stat
     };
     $scope.getValidationRules = function() { // areRequirementsMet < ... < areRequirementsMet
 		return {
-	        "more_res_mechanism": {
-	            "required": true
+			"rules": {
+		        "more_res_mechanism": {
+		            "required": true
+		        }
+		    },
+	        "messages": {
+	          more_res_mechanism: browser.i18n.getMessage("this_field_is_required")
 	        }
 	    };
     };

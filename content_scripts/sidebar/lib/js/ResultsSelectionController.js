@@ -33,10 +33,18 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     };
     $scope.getValidationRules = function() {
       return {  
-          "results_tag": {
-            "minlength": 2,
-            "required": true
-          }
+        "rules": {
+            "results_tag": {
+              "minlength": 2,
+              "required": true
+            }
+        },
+        "messages": {
+          results_tag: browser.i18n.getMessage("this_field_is_required")
+        },
+        "errorPlacement": function(error, element) {
+           error.appendTo('#results_tag_container');
+        }
       };
     }
     $scope.areRequirementsMet = function(){
@@ -47,12 +55,14 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     	//Splitted because there are other properties of "Results" managed by other controllers
     	ServiceService.setResultsSelector($scope.service.results.selector);	
 		  ServiceService.setResultsPreview($scope.service.results.preview);	
-      ServiceService.setResultsName($scope.service.results.name);
+      ServiceService.setResultsName($scope.service.results.name).then(function(){
+        ServiceService.updateServices();
+      });
       //console.log($scope.service.results.selector);
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();
-		$scope.disableDomElementSelection("tr, div:not(#andes-sidebar)");
+		  $scope.disableDomElementSelection("tr, div:not(#andes-sidebar)");
     };
     $scope.loadSubformBehaviour = function() { 
       $scope.enableDomElementSelection("tr, div:not(#andes-sidebar)", "onElementSelection", ".well");

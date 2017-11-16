@@ -137,6 +137,9 @@
   "example_value": {
     "message": "Exemple de valeur"
   },
+  "this_field_is_required": {
+    "message": "Ce champ est requis"
+  },
 
 
 

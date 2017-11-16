@@ -208,7 +208,6 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].results.selector = selector;  
-      $service.updateServices();
       return;
     });
   };
@@ -237,6 +236,13 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       return $service.buildingStrategy;  
+    });
+  };
+  this.setProperties = function(properties) { // ExistingServiceEdition || NewServiceEdition
+    //todo: add one by one, do not save an external collection
+    return this.asDeferred(function(){
+      $service.properties = properties; 
+      return; 
     });
   };
 
