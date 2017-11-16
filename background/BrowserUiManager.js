@@ -53,10 +53,6 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
-/*BrowserUiManager.prototype.createNewServiceFromData = function(data) {
-
-  this.templatesCreator.createNewServiceFromData(data.service);
-};*/
 BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 
   this.templatesCreator.loadInputControlSelection(data);
@@ -97,13 +93,6 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
     tab.id, "✗", "gray");
 
   this.templatesCreator.disableHarvesting(tab);
-};
-BrowserUiManager.prototype.enablePageRegularBehaviour = function() {
-  
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enablePageRegularBehaviour(tab);
-  });
 };
 BrowserUiManager.prototype.enableElementSelection = function(data) {
   

@@ -207,6 +207,7 @@ function OpenSidebar(context){
 		browser.runtime.sendMessage({ call: "onSidebarClosed" });
 	};
 	this.toggle = function() {
+		console.log("toggle from OPEN");
 		this.close();
 	};
 }
@@ -215,10 +216,12 @@ function ClosedSidebar(context){
 	SidebarStatus.call(this, context);
 	this.open = function() {
 		this.sidebar.widget.style.display = "";
-		context.displayStatus = new OpenSidebar(context);
 		browser.runtime.sendMessage({ call: "onFrameReadyForLoadingUrl" });
+
+		context.displayStatus = new OpenSidebar(context);
 	};
 	this.toggle = function() {
+		console.log("toggle from CLOSED");
 		this.open();
 	};
 }

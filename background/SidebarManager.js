@@ -1,5 +1,7 @@
 function SidebarManager(defaultFile, defaultDependencies, listeners){
 
+	console.log("**************\nINSTANCIATING THE SIDEBAR MANAGER\n**************");
+
 	this.defaultFile = defaultFile;
 	this.defaultDependencies = defaultDependencies;
 	this.status = {};
@@ -31,6 +33,7 @@ SidebarManager.prototype.notifyListeners = function() {
 }
 SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
+	//this.open();  salta a onSidebarStatusChange
 	this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
 	this.notifyListeners();
 }
@@ -134,6 +137,7 @@ SidebarManager.prototype.close = function() {
 	});
 };
 
+//El estado sirve para diferenciar cuando se ha cargado los scripts necesarios en el contexto de la página y cuándo no. Hayq ue prevenir cargarlos dos veces.
 function SidebarManagerStatus(context){
 	this.open = function(tab){
 		this.sendOpenMessage(tab);
@@ -145,14 +149,26 @@ function SidebarManagerStatus(context){
 	this.isOpen = function(){
 		return false;
 	};
+	this.isLoaded = function(){
+		return false;
+	};
 	this.toggleSidebar = function(tab, callback){};
+	this.log = function(){};
 }
 
-function LoadedSidebar(context){
+
+
+
+function LoadedSidebar(context){ // SUPERCLASS
 	SidebarManagerStatus.call(this, context);
 	this.toggleSidebar = function(tab, callback){
+
+		this.log(); 
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
+	};
+	this.isLoaded = function(){
+		return true;
 	};
 }
 function LoadedClosedSidebar(context){
@@ -160,22 +176,32 @@ function LoadedClosedSidebar(context){
 	this.isOpen = function(){
 		return false;
 	};
+	this.log = function(){
+		console.log("LoadedCLOSED-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
+	}
 }
 function LoadedOpenSidebar(context){
 	LoadedSidebar.call(this, context);
 	this.isOpen = function(){
 		return true;
 	};
+	this.log = function(){
+		console.log("LoadedOPEN-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
+	}
 	this.close = function(tab){
 		context.status[tab.id] = new LoadedClosedSidebar(context);
 	}
 }
+
+
+
 
 function NoLoadedSidebar(context){
 	SidebarManagerStatus.call(this, context);
 
 	var status = this;
 	this.toggleSidebar = function(tab, callback){
+		console.log("instantiating CS_SIDEBAR and sending the open message");
 		this.open(tab);
 		if(callback) callback(tab);
 	};

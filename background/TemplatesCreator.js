@@ -2,14 +2,8 @@ function TemplatesCreator(){
   this.targetElement = undefined;
   this.sidebarManager = new SidebarManager(
     "/content_scripts/sidebar/index.html", 
-    [
-      /*,
-      "/content_scripts/vendor/jquery/dist/jquery.min.js",
-      "/content_scripts/vendor/angular/index.js",
-      "/content_scripts/vendor/angular-route/index.js",
-      "/content_scripts/sidebar/script.js"*/
-    ],
-    [this]
+    [],
+    [this] /* listeners that should implement onSidebarStatusChange */
   ); 
   //this.storage = new StorageFilesManager();
   this.backPageSelector = new BackgroundPageSelector();
@@ -17,9 +11,14 @@ function TemplatesCreator(){
 }
 TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
 
-  if(sidebarStatus.isOpen())
+  /*if(sidebarStatus.isOpen()){ //sidebarStatus es del SidebarManager
+    console.log("preventing since sidebar is open");
     this.backPageSelector.preventDomElementsBehaviour(tab);
-  else this.backPageSelector.restoreDomElementsBehaviour(tab);
+  }
+  else {
+    this.backPageSelector.restoreDomElementsBehaviour(tab);
+  }*/
+  this.backPageSelector.toggleDomElementsBehaviour(tab);
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
@@ -51,10 +50,6 @@ TemplatesCreator.prototype.onResultsContainerSelection = function(data) {
 
   this.sidebarManager.onResultsContainerSelection(data);
 };
-TemplatesCreator.prototype.enablePageRegularBehaviour = function(tab) { 
-
-  this.backPageSelector.enablePageRegularBehaviour(tab);
-}
 TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.sidebarManager.onFrameReadyForLoadingUrl();

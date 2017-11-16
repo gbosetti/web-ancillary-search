@@ -1,34 +1,45 @@
 function BackgroundPageSelector(){
-	this.status = {};
+	this.loadingStatus = {}; //a property for each tab
+	this.pageBehaviourStatus = {};
 }
-BackgroundPageSelector.prototype.getStatusByTab = function(tab) {
-	if (this.status[tab.id] == undefined)
+BackgroundPageSelector.prototype.getLoadingStatusByTab = function(tab) {
+	if (this.loadingStatus[tab.id] == undefined)
 		this.initializeStateForTab(tab.id);
 	
-	return this.status[tab.id];
+	return this.loadingStatus[tab.id];
+};
+BackgroundPageSelector.prototype.getPageBehaviourStatusByTab = function(tab) {
+	if (this.pageBehaviourStatus[tab.id] == undefined)
+		this.pageBehaviourStatus[tab.id] = new RegularBehaviourEnabled(this); 
+	
+	return this.pageBehaviourStatus[tab.id];
 };
 BackgroundPageSelector.prototype.initializeStateForTab = function(tabId) { 
 
-	this.status[tabId] = new UnloadedPageSelector(this); 
+	this.loadingStatus[tabId] = new UnloadedPageSelector(this); 
 }
 BackgroundPageSelector.prototype.preventDomElementsBehaviour = function(tab) {
-	this.getStatusByTab(tab).preventDomElementsBehaviour(tab);
+	this.getLoadingStatusByTab(tab).preventDomElementsBehaviour(tab);
 };
 BackgroundPageSelector.prototype.restoreDomElementsBehaviour = function(tab) {
-	this.getStatusByTab(tab).restoreDomElementsBehaviour(tab);
+	this.getLoadingStatusByTab(tab).restoreDomElementsBehaviour(tab);
+};
+BackgroundPageSelector.prototype.toggleDomElementsBehaviour = function(tab) {
+
+	this.getPageBehaviourStatusByTab(tab).toggleDomElementsBehaviour(tab);
 };
 BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
 
-	this.getStatusByTab(tab).enableElementSelection(tab, data);
+	this.getLoadingStatusByTab(tab).enableElementSelection(tab, data);
 };
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
-	this.getStatusByTab(tab).disableElementSelection(tab, selector);
+	this.getLoadingStatusByTab(tab).disableElementSelection(tab, selector);
 };
 BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab) {
 
 	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" });
 }
-BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callback) {
+BackgroundPageSelector.prototype.loadRequiredFiles = function(tab, callback) {
 
 	BackgroundResourcesLoader.syncLoadStyles([
   		new BackgroundResource("/content_scripts/page-actions/andes-highlighting.css")
@@ -40,11 +51,6 @@ BackgroundPageSelector.prototype.loadDomHighlightingExtras = function(tab, callb
   		new BackgroundResource("/content_scripts/page-actions/PageSelector.js")
   	], tab, callback);
 };
-BackgroundPageSelector.prototype.enablePageRegularBehaviour = function(tab) { 
-
-	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" });
-	browser.tabs.sendMessage(tab.id, { "call": "removeEventBlockers" });
-}
 BackgroundPageSelector.prototype.sendPreventDomElementsBehaviour = function(tab){
 	browser.tabs.sendMessage(tab.id, {
     	"call": "preventDomElementsBehaviour"
@@ -71,6 +77,36 @@ BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, data
     });
 };
 
+
+
+
+
+function PageBehaviourStatus(context){
+	this.toggleDomElementsBehaviour = function(tab){};
+}
+function RegularBehaviourEnabled(context){
+	PageBehaviourStatus.call(this);
+
+	this.toggleDomElementsBehaviour = function(tab){
+		//console.log("REGULAR > prevent");
+		context.getLoadingStatusByTab(tab).preventDomElementsBehaviour(tab);
+		context.pageBehaviourStatus[tab.id] = new RegularBehaviourDisabled(context);
+	};
+}
+function RegularBehaviourDisabled(context){
+	PageBehaviourStatus.call(this);
+
+	this.toggleDomElementsBehaviour = function(tab){
+		//console.log("REGULAR DISABLED > restore");
+		context.getLoadingStatusByTab(tab).restoreDomElementsBehaviour(tab);
+		context.pageBehaviourStatus[tab.id] = new RegularBehaviourEnabled(context);
+	};
+}
+
+
+
+
+
 function PageSelectorStatus(context){
 	this.enableElementSelection = function(tab, data){};
 	this.preventDomElementsBehaviour = function(tab){};
@@ -80,29 +116,33 @@ function UnloadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
 	this.preventDomElementsBehaviour = function(tab){
 		
-		context.status[tab.id] = new LoadedPageSelector(context);
-		context.loadDomHighlightingExtras(tab, function(){
+		//console.log("PREVENT FROM UNLOADED [NOSENSE]");
+		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		context.loadRequiredFiles(tab, function(){
 			context.sendPreventDomElementsBehaviour(tab);
 		});
 	};
 	this.restoreDomElementsBehaviour = function(tab){
 		
-		context.status[tab.id] = new LoadedPageSelector(context);
-		context.loadDomHighlightingExtras(tab, function(){
+		//console.log("RESTORE FROM UNLOADED");
+		//context.sendRestoreDomElementsBehaviour(tab);
+
+		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		context.loadRequiredFiles(tab, function(){
 			context.sendRestoreDomElementsBehaviour(tab);
 		});
 	};
 	this.enableElementSelection = function(tab, data){
 
-		context.status[tab.id] = new LoadedPageSelector(context);
-		context.loadDomHighlightingExtras(tab, function(){
+		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		context.loadRequiredFiles(tab, function(){
 			context.sendEnableSelectionMessage(tab, data);
 		});
 	};
 	this.disableElementSelection = function(tab, selector){
 
-		context.status[tab.id] = new LoadedPageSelector(context);
-		context.loadDomHighlightingExtras(tab, function(){
+		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		context.loadRequiredFiles(tab, function(){
 			context.sendDisableSelectionMessage(tab, selector);
 		});
 	};
@@ -110,9 +150,13 @@ function UnloadedPageSelector(context){
 function LoadedPageSelector(context){
 	PageSelectorStatus.call(this, context);
 	this.preventDomElementsBehaviour = function(tab){
+
+		//console.log("PREVENT FROM LOADED");
 		context.sendPreventDomElementsBehaviour(tab);
 	};
 	this.restoreDomElementsBehaviour = function(tab){
+
+		//console.log("RESTORE FROM LOADED");
 		context.sendRestoreDomElementsBehaviour(tab);
 	};
 	this.enableElementSelection = function(tab, data){
