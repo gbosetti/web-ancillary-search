@@ -42,7 +42,8 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
 
       var listItem = document.createElement("li");
           listItem.className = "list-group-item justify-content-between list-group-item-action";
-          listItem.innerHTML =  service.name;
+          listItem.innerHTML =  service.name.length > 20? service.name.substring(0, 20) + '...' : service.name;
+          listItem.setAttribute("serviceId", service.name);
           listItem.onclick = function(){
             ServiceService.setCurrentServiceKey(service.name).then(function(){
               ServiceService.setBuildingStrategy("ExistingServiceEdition").then(function(){
@@ -55,12 +56,12 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
           removeButton.className = "btn btn-default btn-list";
           removeButton.innerHTML = "<i class='glyphicon glyphicon-remove'></i>";
           removeButton.onclick = function(evt){
-
             evt.preventDefault(); evt.stopImmediatePropagation();
-            this.parentElement.remove();
-            /*ServiceService.setBuildingStrategy("ExistingServiceEdition").then(function(){
-              $state.go('ServiceName'); //do not call loadNext
-            });*/
+
+            var control = this;
+            ServiceService.removeService(control.parentElement.getAttribute("serviceId")).then(function(){
+              control.parentElement.remove();
+            });
           };
           listItem.appendChild(removeButton);
 

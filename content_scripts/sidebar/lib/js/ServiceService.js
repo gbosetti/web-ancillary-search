@@ -131,6 +131,16 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       return $service.services[$service.currentServiceKey];  
     });
   };
+  this.removeService = function(key){
+
+    return this.asDeferred(function(){
+      if ($service.services.hasOwnProperty(key)){
+        delete $service.services[key];
+        $service.updateServices();
+      }
+      return;
+    });
+  };
   this.uniqueNameService = function(name) {
 
     var deferred = $q.defer();
