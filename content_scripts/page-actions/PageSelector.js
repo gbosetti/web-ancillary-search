@@ -257,12 +257,22 @@ PageSelector.prototype.getAugmentedActions = function(elem){
 	}
 	return [];
 }
+PageSelector.prototype.isActionIncluded = function(action, actions){
+
+	for (var i = actions.length - 1; i >= 0; i--) {
+		if(actions[i].listener == existingAction.listener && actions[i].listener == existingAction.listener){
+			return true;
+		}
+	}
+	return false;
+}
 PageSelector.prototype.addAugmentedAction = function(elem, action){
 
 	var actions = this.getAugmentedActions(elem);
+	if(!this.isActionIncluded(action, actions)) {
 		actions.push(action);
-
-	elem.setAttribute("andes-actions", JSON.stringify(actions))
+		elem.setAttribute("andes-actions", JSON.stringify(actions))
+	}
 }
 PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped){
 

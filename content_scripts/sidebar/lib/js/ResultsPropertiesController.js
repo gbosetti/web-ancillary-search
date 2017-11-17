@@ -18,7 +18,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       ServiceService.getService().then(function(service) {
 
         $scope.service = service;
-
         var selector = $scope.getElementsSelector(service.results.selector.value);
 
         console.log("loading properties: ", $scope.service.results.properties);
