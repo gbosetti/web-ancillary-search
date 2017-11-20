@@ -159,8 +159,6 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
         $service.services[$service.currentServiceKey] = me.newServiceWithName(name);
 
       $service.services[$service.currentServiceKey].name = name;  
-
-      $service.updateServices();
       return;
     });
   };

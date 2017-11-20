@@ -20,6 +20,10 @@ BrowserUiManager.prototype.onResultsContainerSelection = function(data) {
 
   this.templatesCreator.onResultsContainerSelection(data);
 };
+BrowserUiManager.prototype.populateApisMenu = function(data) { 
+
+  this.searchTool.createContextMenus();
+};
 BrowserUiManager.prototype.selectMatchingElements = function(data) { 
 
   var me = this;

@@ -23,7 +23,10 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         return;
 
       ServiceService.setCurrentServiceKey($scope.service.name);
-      ServiceService.setName($scope.service.name);
+      ServiceService.setName($scope.service.name).then(function(){
+        ServiceService.updateServices();
+        browser.runtime.sendMessage({ call: "populateApisMenu" });
+      });
       ServiceService.setUrl($scope.service.url);   
     };
     $scope.saveUrl = function() {
