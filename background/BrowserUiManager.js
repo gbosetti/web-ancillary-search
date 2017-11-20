@@ -64,11 +64,11 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
     me.templatesCreator.adaptPlaceholder(tab, data);
   });
 };
-BrowserUiManager.prototype.getCurrentUrl = function(data) {
+BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.getCurrentUrl(tab, data);
+    me.templatesCreator.getCurrentUrl(tab, data, sendResponse);
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {

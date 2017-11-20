@@ -33,12 +33,18 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         );
       }); 
     };
-    /*$scope.loadValidationRules = function() {
-      $('form').validate({  "rules": {} });
+    $scope.loadPrevStep = function(aState) {
+      if(this.areRequirementsMet()){
+        $scope.saveDataModel();
+        $scope.undoActionsOnDom();
+        $state.go(aState);
+      }
     };
-    $scope.getValidationRules = function() {
-      return {};
-    };*/
+    $scope.undoActionsOnDom = function(aState) {
+      $scope.removeFullSelectionStyle();
+      var elemsSelector = $scope.getElementsSelector($scope.service.results.selector.value);
+      $scope.disableDomElementSelection(elemsSelector);
+    };
     $scope.areRequirementsMet = function() {
       
       var inputs = document.querySelectorAll("input"),

@@ -52,13 +52,14 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 }
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
-	console.log(data.resultSpec.properties[0].xpath.includes('img'));
-	var conceptDomElems = this.getExternalContent(data.url, data.resultSpec.xpath, data.callbackMethod);
+	console.log("DATA", data);
+
+	var conceptDomElems = this.getExternalContent(data.url, data.results.selector /*properties[0].selector*/, data.callbackMethod);
 	
 	browser.runtime.sendMessage({
 		call: data.callbackMethod,
 		args: {
-			"results": this.extractConcepts(conceptDomElems,data.resultSpec.properties)
+			"results": this.extractConcepts(conceptDomElems,data.results.properties)
 		}
 	});
 };

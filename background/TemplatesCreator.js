@@ -78,9 +78,9 @@ TemplatesCreator.prototype.adaptPlaceholder = function(tab, data) {
 
   this.sidebarManager.adaptPlaceholder(tab, data);
 };
-TemplatesCreator.prototype.getCurrentUrl = function(tab, data) {
+TemplatesCreator.prototype.getCurrentUrl = function(tab, data, sendResponse) {
 
-  this.sidebarManager.getCurrentUrl(tab, data);
+  this.sidebarManager.getCurrentUrl(tab, data, sendResponse);
 };
 /*TemplatesCreator.prototype.saveService = function(data) {
 

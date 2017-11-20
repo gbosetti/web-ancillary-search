@@ -46,7 +46,7 @@ SearchTool.prototype.toggleLoadedScriptsInTab = function(tabId) {
 SearchTool.prototype.createContextMenus = function() {
 
   //por ahora una sola entarda
-  this.fakeApiDefinitions(); //to be removed on production
+  //this.fakeApiDefinitions(); //to be removed on production
   this.createApisMenu();
   this.populateApisMenu();
 }
@@ -160,8 +160,11 @@ SearchTool.prototype.createApisMenu = function(){
   });
 }
 SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's context menu
-	var me = this, getApiSpecifications = browser.storage.local.get(null); //TODO: use the class: filereader
-	getApiSpecifications.then((apiSpecs) => {
+	var me = this, getApiSpecifications = browser.storage.local.get("services"); //TODO: use the class: filereader
+	getApiSpecifications.then((storage) => {
+
+    var apiSpecs = storage.services;
+    console.log("apiSpecs",apiSpecs);
 
 		for (spec in apiSpecs) {
 			var menu = browser.contextMenus.create({
@@ -198,11 +201,12 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 		"tabId": tab.id
 	};
 
+  console.log(apiSpecs);
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
 			"url": apiSpecs[info.menuItemId].url, 
-			"resultSpec": apiSpecs[info.menuItemId].results, 
+			"results": apiSpecs[info.menuItemId].results, 
 			"callbackMethod": "presentResults"
 		}
 	});

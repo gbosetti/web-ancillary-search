@@ -98,14 +98,9 @@ SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 		args: data
 	});
 };
-SidebarManager.prototype.getCurrentUrl = function(tab, data) {
+SidebarManager.prototype.getCurrentUrl = function(tab, data, sendResponse) {
 
-	data.url = tab.url;
-
-	browser.tabs.sendMessage(tab.id, {
-		call: data.callback, 
-		args: data
-	});
+	sendResponse(tab.url);
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {
 

@@ -4,29 +4,28 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
 
     $scope.loadSubformBehaviour = function() {
 
-      browser.runtime.sendMessage({
-        call: "getCurrentUrl",
-        args: { scoped: ".next", callback: 'onUrlNotification' }
+      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(function(url){
+        $scope.onUrlNotification(url);
       });
     };
     $scope.saveDataModel = function() {
 
       ServiceService.setBuildingStrategy("NewServiceEdition");
     };
-    $scope.onUrlNotification = function(data){
+    $scope.onUrlNotification = function(url){
 
-      ServiceService.getMatchingServices(data.url).then(function(services) {
+      ServiceService.getMatchingServices(url).then(function(services) {
         
         if(Object.keys(services).length > 0){
           $scope.loadExistingServicesInstructions();
           $scope.loadExistingServices(services);
+          console.log(services);
         }
         else {
           $scope.loadNoServicesFoundInstructions();
         }
         $scope.localize();
         ServiceService.setCurrentServiceKey(undefined);
-
       }); 
     };
     $scope.loadExistingServicesInstructions = function(){

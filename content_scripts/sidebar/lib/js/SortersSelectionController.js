@@ -8,14 +8,12 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
       ServiceService.getService().then(function(service) {
         if(service){
           $scope.service.name = service.name;
-          //$scope.service.url = service.url;
+          $scope.service.url = service.url;
         }
       });
-
-      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(function(url){
-        console.log(url);
-        $scope.service.url = url;
-      });
+      ServiceService.getBuildingStrategy().then(function(buildingStrategy) {
+        console.log("buildingStrategy", buildingStrategy);
+      }); 
     };
     $scope.saveDataModel = function() {
 
@@ -24,7 +22,12 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
 
       ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name);
-      ServiceService.setUrl($scope.service.url);   
+      ServiceService.setUrl($scope.service.url);
+
+      /*browser.runtime.sendMessage({
+        call: "getCurrentUrl",
+        args: { scoped: ".next", callback: 'saveUrl' }
+      });*/      
     };
     $scope.saveUrl = function() {
       ServiceService.setUrl($scope.service.url);

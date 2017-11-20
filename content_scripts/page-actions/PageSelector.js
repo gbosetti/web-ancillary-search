@@ -132,8 +132,6 @@ PageSelector.prototype.highlightMatchingElements = function(data){
 };
 PageSelector.prototype.selectMatchingElements = function(data){
 
-	//this.removeFullSelectionStyle();
-
 	var refElem = (data.scrapper && data.refElemSelector)? (new scrappers[data.scrapper]()).getElement(data.refElemSelector) : document;
 
 	var elems = (new XPathInterpreter()).getElementsByXpath(data.selector, refElem);

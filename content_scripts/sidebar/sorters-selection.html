@@ -1,0 +1,41 @@
+<div ng-controller="ServiceInputController">
+	<div class="panel-heading">
+	   <div class="panel-title text-center">
+	   		<h2 class="title" i18n-data="new_service"></h2>
+	   	</div>
+	</div> 
+	<div class="container">    
+		<form class="sidebar-form">     
+			<div class="well">
+				<span type="button" class="close" data-dismiss="alert">
+				<span class="glyphicon glyphicon-info-sign"></span>
+				</span>
+				<span i18n-data="select_the_input_control"></span>
+			</div>
+			<!-- :::::::::: PREVIEW :::::::::: -->
+			<div id="preview-area" class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
+			  	<label for="" i18n-data="selected_input_control">Service name</label>
+			  	<div id="preview-of-property">
+		            <img id="property-preview-image" class="image-preview" ng-src="{{service.input.preview}}"/> 
+		        </div>
+			</div>
+
+			<nav> 
+			  <ul class="pager">
+			    	<li class="prev active pull-left">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceName')">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						  	<span i18n-data="back">Back</span>
+						</button>
+					</li>
+			      	<li class="next active pull-right" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
+			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceTrigger')">
+			              	<span i18n-data="next">Next</span>
+			              	<span class="glyphicon glyphicon-triangle-right"></span>
+			          	</button>
+			      	</li>
+			  </ul>
+			</nav> 
+	    </form>
+	</div>
+</div>

@@ -81,6 +81,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.newServiceWithName = function(name){
     return {
       name: name,
+      startingUrl: undefined,
       url: "*",
       input: {
         selector:undefined,
@@ -178,7 +179,6 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].url = url;  
-      $service.updateServices();
       return;
     });
   };
