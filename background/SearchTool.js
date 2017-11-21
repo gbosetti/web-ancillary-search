@@ -205,15 +205,20 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 		"tabId": tab.id
 	};
 
-  console.log(apiSpecs);
+  var me = this;
+
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
 			"url": apiSpecs[info.menuItemId].url, 
-			"results": apiSpecs[info.menuItemId].results, 
-			"callbackMethod": "presentResults"
+			"results": apiSpecs[info.menuItemId].results
 		}
-	});
+	}).then(response => {
+    //Browser console
+    //console.log("Message from the content script:");
+    console.log(response);
+    me.presentResults(response.results);
+  });
 
 }
 SearchTool.prototype.presentResults = function(results) {

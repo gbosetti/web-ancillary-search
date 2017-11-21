@@ -52,48 +52,52 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 }
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
-	console.log("DATA", data);
 
-	var conceptDomElems = this.getExternalContent(data.url, data.results.selector /*properties[0].selector*/, data.callbackMethod);
-	
-	browser.runtime.sendMessage({
-		call: data.callbackMethod,
-		args: {
-			"results": this.extractConcepts(conceptDomElems,data.results.properties)
-		}
+	console.log("DATA", data);
+	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
+	var results = this.extractConcepts(conceptDomElems,data.results.properties)
+
+	return Promise.resolve({
+		"response": "Hi from content script",
+		"results": results
 	});
 };
 
 ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
-		console.log(domElements);
 	var concepts = [], me= this;
-	propSpecs.forEach(function(prop){
-		var propValues = me.getMultipleElements(prop.xpath, domElements[0]);
-		var nameProp = prop.name;
-		for (i = 0; i < propValues.length; i++) { 
-			if (concepts[i]){
-				if(propValues[i] && propValues[i].textContent){
-					concepts[i][nameProp] = propValues[i].textContent;
-				}else {
-					concepts[i][nameProp] = propValues[i].src;
-				}
-			}
-			else{
-				concept = {};
-				concepts[i] = concept;
-				if(propValues[i] && propValues[i].textContent){
-					concepts[i][nameProp] = propValues[i].textContent;
-				}else {
-					concepts[i][nameProp] = propValues[i].src;
-				}
-			}
-			
-		}
-	});
-	console.log(concepts);
-	return concepts;
+	var keys = Object.keys(propSpecs);
+	
+	if(keys.length > 0){
+		keys.forEach(function(key){
 
+			var propElems = me.getMultipleElements(
+				propSpecs[key].relativeSelector, domElements[0]);
+
+			for (i = 0; i < propElems.length; i++) { 
+				if (concepts[i]){ //si hay concepto, se agrega propiedad
+					if(propElems[i] && propElems[i].textContent){
+						concepts[i][key] = propElems[i].textContent;
+					}else {
+						concepts[i][key] = propElems[i].src;
+					}
+				} //si no hay concepto, se crea
+				else{
+					concept = {};
+					concepts[i] = concept;
+					if(propElems[i] && propElems[i].textContent){
+						concepts[i][key] = propElems[i].textContent;
+					}else {
+						concepts[i][key] = propElems[i].src;
+					}
+				}
+				
+			}
+		});
+	} else alert("There are no properties defined. Results can not be extracted.");
+	
+	console.log("concepts", concepts);
+	return concepts;
 }
 
 ResultsVisualizer.prototype.getExternalContent = function(url, selector){
@@ -106,7 +110,8 @@ ResultsVisualizer.prototype.getExternalContent = function(url, selector){
 };
 ResultsVisualizer.prototype.getParsedDocument = function(responseText){
 
-    return new window.DOMParser().parseFromString(responseText, "text/html");
+    var doc = new window.DOMParser().parseFromString(responseText, "text/html");
+    return doc;
 };
 ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
@@ -448,10 +453,10 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
 
 /////////////////////////////////////////////
 var presenter = new ResultsVisualizer();
-browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
-
+browser.runtime.onMessage.addListener(request => {
+  
 	if(presenter[request.call]) {
 		console.log("calling " + request.call + " (.../visualizations.js)");
-		presenter[request.call](request.args);
+		return presenter[request.call](request.args);
 	}
 });
