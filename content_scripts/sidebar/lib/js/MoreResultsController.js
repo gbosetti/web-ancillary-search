@@ -5,7 +5,7 @@ function ClickBasedRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 
 	this.getConfigurationFormState = function(data){ 
-		return "ServiceMoreResultsSelection";
+		return "SortersSelection";
 	};
 }
 function ScrollDownBasedRetrieval(client){
@@ -19,7 +19,7 @@ function NoMoreResults(client){
 	};
 }
 
-serviceCreator.controller('ServiceMoreResultsController', function($scope, $state, ServiceService) {
+serviceCreator.controller('MoreResultsController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
 

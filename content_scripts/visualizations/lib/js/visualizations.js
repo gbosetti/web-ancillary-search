@@ -96,7 +96,6 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 		});
 	} else alert("There are no properties defined. Results can not be extracted.");
 	
-	console.log("concepts", concepts);
 	return concepts;
 }
 

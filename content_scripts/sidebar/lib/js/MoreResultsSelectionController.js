@@ -1,4 +1,4 @@
-serviceCreator.controller('ServiceMoreResultsSelectionController', function($scope, $state) {
+serviceCreator.controller('SortersController', function($scope, $state) {
 
 	$scope.inputSelectors;
 

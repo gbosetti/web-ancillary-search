@@ -160,6 +160,16 @@
   },
 
 
+  
+  "sorters_title":{
+    "message": "Definición de clasificadores"
+  },
+  "select_a_sorter_control":{
+    "message": "Hacé click en el elemento que permite ordenar los resultados presentados en la página."
+  },
+
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }

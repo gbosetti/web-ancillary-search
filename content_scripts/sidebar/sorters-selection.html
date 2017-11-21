@@ -1,7 +1,7 @@
-<div ng-controller="ServiceInputController">
+<div ng-controller="SortersController">
 	<div class="panel-heading">
 	   <div class="panel-title text-center">
-	   		<h2 class="title" i18n-data="new_service"></h2>
+	   		<h2 class="title" i18n-data="sorters_title"></h2>
 	   	</div>
 	</div> 
 	<div class="container">    
@@ -10,15 +10,10 @@
 				<span type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</span>
-				<span i18n-data="select_the_input_control"></span>
+				<span i18n-data="select_a_sorter_control"></span>
 			</div>
 			<!-- :::::::::: PREVIEW :::::::::: -->
-			<div id="preview-area" class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
-			  	<label for="" i18n-data="selected_input_control">Service name</label>
-			  	<div id="preview-of-property">
-		            <img id="property-preview-image" class="image-preview" ng-src="{{service.input.preview}}"/> 
-		        </div>
-			</div>
+
 
 			<nav> 
 			  <ul class="pager">

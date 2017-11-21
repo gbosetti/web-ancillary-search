@@ -161,6 +161,15 @@
 
 
 
+  "sorters_title":{
+    "message": "Définition des trieurs"
+  },
+  "select_a_sorter_control":{
+    "message": "Cliquez sur l'élément qui vous permet de trier les résultats présentés sur la page."
+  },
+
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }

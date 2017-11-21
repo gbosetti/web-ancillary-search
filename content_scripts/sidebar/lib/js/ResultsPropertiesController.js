@@ -20,7 +20,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         $scope.service = service;
         var selector = $scope.getElementsSelector(service.results.selector.value);
 
-        console.log("loading properties: ", $scope.service.results.properties);
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
         $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector);
 
@@ -111,7 +110,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.loadPropertiesIntoSidebar = function(properties) { 
       Object.keys(properties).forEach(function(key) {  
-        console.log("loading key: ", key);  
         $scope.addPropertyToSidebar(properties[key]);
       });  
     };

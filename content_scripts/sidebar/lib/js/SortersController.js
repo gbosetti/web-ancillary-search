@@ -1,10 +1,10 @@
-serviceCreator.controller('ServiceNameController', function($scope, $state, ServiceService) {
+serviceCreator.controller('SortersController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state);
 
     $scope.service = { name: "", url: undefined};
 
-    $scope.loadDataModel = function() {
+    /*$scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
         if(service){
           $scope.service.name = service.name;
@@ -23,11 +23,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
       ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name);
       ServiceService.setUrl($scope.service.url);
-
-      /*browser.runtime.sendMessage({
-        call: "getCurrentUrl",
-        args: { scoped: ".next", callback: 'saveUrl' }
-      });*/      
+    
     };
     $scope.saveUrl = function() {
       ServiceService.setUrl($scope.service.url);
@@ -83,7 +79,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
           };
         }); 
       };
-    };
+    };*/
     
     $scope.initialize();
 });

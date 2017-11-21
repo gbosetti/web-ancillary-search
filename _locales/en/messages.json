@@ -161,6 +161,15 @@
 
 
 
+  "sorters_title":{
+    "message": "Sorters definition"
+  },
+  "select_a_sorter_control":{
+    "message": "Please, click on the element that should sort the results in the page."
+  },
+
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }

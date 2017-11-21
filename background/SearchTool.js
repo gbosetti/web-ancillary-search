@@ -214,9 +214,6 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 			"results": apiSpecs[info.menuItemId].results
 		}
 	}).then(response => {
-    //Browser console
-    //console.log("Message from the content script:");
-    console.log(response);
     me.presentResults(response.results);
   });
 
