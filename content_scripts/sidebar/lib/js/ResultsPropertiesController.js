@@ -19,9 +19,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
 
         $scope.service = service;
         var selector = $scope.getElementsSelector(service.results.selector.value);
-
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
-        $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
 
         $scope.enableDomElementSelection( 
           selector, 
@@ -30,7 +28,9 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
           "XpathScrapper", 
           service.results.selector.value,
           false
-        );
+        ).then(function(){
+          $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
+        });
       }); 
     };
     $scope.loadPrevStep = function(aState) {
@@ -68,7 +68,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.highlightPropertiesInDom = function(properties, containerSelector) {
 
-      Object.keys(properties).forEach(function(key) {    
+      Object.keys(properties).forEach(function(key) {   
+          console.log("highlighting: ", key, properties[key].relativeSelector); 
           $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
       });
     };

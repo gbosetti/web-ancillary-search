@@ -179,8 +179,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 
             browser.storage.local.get("services").then((updatedStorage) => {
               apiSpecs = updatedStorage.services;
-
-              console.log("apiSpecs", apiSpecs);
+              //console.log("apiSpecs", apiSpecs);
 
               var propId = info.menuItemId;
 
@@ -192,7 +191,6 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
                 me.sendExtenralResults(tab, info, apiSpecs[info.menuItemId]);
                 me.toggleLoadedScriptsInTab(tab.id);
               }); 
-
             });
 				}
 			});

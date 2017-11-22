@@ -122,6 +122,12 @@
   "scroll_down_for_more_results_info": {
     "message": "En esta página es necesario hacer scroll hacia abajo para obtener, automáticamente, más resultados (es usual que se muestre un «mensaje de carga» mientras se recuperan los resultados)."
   },
+  "no_retrieval_strategy": {
+    "message": "Ninguno"
+  },
+  "no_retrieval_strategy_info": {
+    "message": "Elegir esta opción hará que sea imposible recuperar más resultados que los enumerados en la primera página de resultados."
+  },
 
 
 

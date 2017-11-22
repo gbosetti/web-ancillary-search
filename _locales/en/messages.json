@@ -122,6 +122,12 @@
   "scroll_down_for_more_results_info": {
     "message": "In this page, you have to scroll down in the page and it automatically loads more results (usually displaying a «loading» message while retrieving the results)."
   },
+  "no_retrieval_strategy": {
+    "message": "None"
+  },
+  "no_retrieval_strategy_info": {
+    "message": "Choosing this option will make it impossible to retrieve more results than the ones listed in the first page."
+  },
 
 
 

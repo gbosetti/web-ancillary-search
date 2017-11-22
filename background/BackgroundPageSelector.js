@@ -28,9 +28,10 @@ BackgroundPageSelector.prototype.toggleDomElementsBehaviour = function(tab) {
 
 	this.getPageBehaviourStatusByTab(tab).toggleDomElementsBehaviour(tab);
 };
-BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
+BackgroundPageSelector.prototype.enableElementSelection = function(tab, data, sendResponse) {
 
 	this.getLoadingStatusByTab(tab).enableElementSelection(tab, data);
+	sendResponse("almost done!");
 };
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	this.getLoadingStatusByTab(tab).disableElementSelection(tab, selector);

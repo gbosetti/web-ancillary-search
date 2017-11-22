@@ -122,6 +122,12 @@
   "scroll_down_for_more_results_info": {
     "message": "Sur cette page il faut faire défiler vers le bas pour obtenir automatiquement plus de résultats (il est habituel de visualizer un «message de chargement» pendant que les résultats sont récupérés)."
   },
+  "no_retrieval_strategy": {
+    "message": "Aucun"
+  },
+  "no_retrieval_strategy_info": {
+    "message": "En choisissant cette option, il sera impossible de récupérer plus de résultats que ceux listés dans la première page."
+  },
 
 
 

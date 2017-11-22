@@ -36,7 +36,7 @@ function AbstractController ($scope, $state, ServiceService) {
       
       removeStyleOnSelection = (removeStyleOnSelection == undefined)? true : removeStyleOnSelection;
       //console.log("refElemSelector from abstract", refElemSelector);
-      browser.runtime.sendMessage({ 
+      return browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
         "args": {
           "targetElementSelector": controlsSelector,

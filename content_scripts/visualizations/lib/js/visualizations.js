@@ -7,9 +7,6 @@ function ResultsVisualizer(){
 
 ResultsVisualizer.prototype.showResults = function(data) {
 	this.panel = this.buildPanel(data);
-
-	console.log("RECEIVING DTA", data);
-
 	this.results = data.results;
 	//window[data.visualizer]());  
 	//TODO: Definir un patron para que el usuario elija el tipo de visualización
@@ -57,11 +54,9 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
 	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
-	console.log("--- NO PROPS:", conceptDomElems);
 
 	var results = this.extractConcepts(conceptDomElems,data.results.properties)
 
-	console.log("--- WITH PROPS:", conceptDomElems,data.results.properties, results);
 	return Promise.resolve({
 		"response": "Hi from content script",
 		"results": results
@@ -80,8 +75,6 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 			var propElems = me.getMultiplePropsFromElements(
 				propSpecs[key].relativeSelector, domElements);
 
-			console.log("propElems", propElems);
-
 			for (i = 0; i < propElems.length; i++) { 
 				if (concepts[i]){ //si hay concepto, se agrega propiedad
 					if(propElems[i] && propElems[i].textContent){
@@ -98,7 +91,6 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 						concepts[i][key] = propElems[i].src;
 					}
 				}
-				console.log("concepts[i]", concepts[i]);
 			}
 		});
 	} else alert("There are no properties defined. Results can not be extracted.");
@@ -126,16 +118,12 @@ ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
 };
 ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-
 	var props = [], keys = Object.keys(relativeDomElems);
-	//console.log("-----", relativeDomElems);
 
 	if(keys.length > 0){
 		keys.forEach(function(key){
-			console.log("-----", key, relativeDomElems[key], relativeSelector);
 			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[key]);
 				props.push(prop);
-			console.log("-----", prop);
 		});
 	}
 	return props; 
@@ -377,7 +365,6 @@ Datatables.prototype.getDependencies = function(visualizer) {
 Datatables.prototype.presentData = function(concepts, iframe) {
 
 	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
-	console.log("Present data:", concepts);
 
 	var me = this;
 	var v = this.visualizer;
