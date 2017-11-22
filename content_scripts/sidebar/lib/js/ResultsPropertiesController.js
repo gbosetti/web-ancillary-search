@@ -45,10 +45,27 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       var elemsSelector = $scope.getElementsSelector($scope.service.results.selector.value);
       $scope.disableDomElementSelection(elemsSelector);
     };
-    $scope.areRequirementsMet = function() {
-      
+    $scope.arePropertiesDefined = function() {
+
+      var inputs = document.querySelectorAll("input");
+      if (inputs && inputs.length>0){
+
+        this.removeFormElementById("no_props_error");
+        this.showErrorMessageByElems(
+          "no_props_error", 
+          document.querySelector(".list-group"), 
+          "props_are_required");
+        return true;
+      };
+
+      this.removeFormElementById("no_props_error");
+      return false;
+    };
+    $scope.arePropertiesValuesDefined = function() {
+
       var inputs = document.querySelectorAll("input"),
           inputsAreFilled = true;
+
       for (var i = inputs.length - 1; i >= 0; i--) {
         if(inputs[i].value.length <= 2){
           inputsAreFilled = false;
@@ -66,10 +83,14 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
 
       return inputsAreFilled;
     };
+    $scope.areRequirementsMet = function() {
+      
+      return (this.arePropertiesDefined() && this.arePropertiesValuesDefined());
+    };
     $scope.highlightPropertiesInDom = function(properties, containerSelector) {
 
       Object.keys(properties).forEach(function(key) {   
-          console.log("highlighting: ", key, properties[key].relativeSelector); 
+          //console.log("highlighting: ", key, properties[key].relativeSelector); 
           $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
       });
     };

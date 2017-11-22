@@ -11,7 +11,7 @@ function ClickBasedRetrieval(client){
 function ScrollDownBasedRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 }
-function NoMoreResults(client){
+function NoRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 
 	this.getConfigurationFormState = function(data){ 
@@ -25,7 +25,7 @@ serviceCreator.controller('MoreResultsController', function($scope, $state, Serv
 
     $scope.service = {
     	"moreResults": {
-	    	"className": 'NoMoreResults',
+	    	"className": 'NoRetrieval',
 	    }
     };
 
@@ -35,6 +35,7 @@ serviceCreator.controller('MoreResultsController', function($scope, $state, Serv
 
         var option = document.querySelector("#" + $scope.service.moreResults.className);
         if(option) option.checked = true;
+        else document.querySelector("#NoRetrieval").click();
       }); 
     };
     $scope.saveDataModel = function() {
@@ -58,7 +59,7 @@ serviceCreator.controller('MoreResultsController', function($scope, $state, Serv
     $scope.loadNextStep = function() {
       if($scope.areRequirementsMet()){
       	var nextFormState = (new window[$scope.service.moreResults.className]()).getConfigurationFormState();
-	    if(nextFormState == undefined) nextFormState = "ServiceFilters";
+	    if(nextFormState == undefined) nextFormState = "SortersSelection";
 	    $state.go(nextFormState);
       } 
     };

@@ -146,6 +146,9 @@
   "this_field_is_required": {
     "message": "Este campo es obligatorio"
   },
+  "props_are_required": {
+    "message": "Es necesario definir al menos una propiedad, ya que esta es la información que será recuperada cuando uses el servicio desde el menú contextual."
+  },
 
 
 

@@ -146,6 +146,9 @@
   "this_field_is_required": {
     "message": "This field is required"
   },
+  "props_are_required": {
+    "message": "It is mandatory to define at least one property, since it is the information that will be retrieved when you use the service from the contextual menu."
+  },
 
 
 

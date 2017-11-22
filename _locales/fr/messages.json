@@ -146,6 +146,9 @@
   "this_field_is_required": {
     "message": "Ce champ est requis"
   },
+  "props_are_required": {
+    "message": "Il est nécessaire de définir au moins une propriété, car ce sont les informations qui seront récupérées lorsque vous utiliserez le service dans le menu contextuel."
+  },
 
 
 
