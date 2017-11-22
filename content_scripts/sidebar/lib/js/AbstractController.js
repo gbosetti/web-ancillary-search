@@ -32,8 +32,9 @@ function AbstractController ($scope, $state) {
         document.querySelector(selector).focus();
     };
     $scope.loadSubformBehaviour = function() {};
-    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector) {
+    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector, removeStyleOnSelection) {
       
+      removeStyleOnSelection = (removeStyleOnSelection == undefined)? true : removeStyleOnSelection;
       //console.log("refElemSelector from abstract", refElemSelector);
       browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
@@ -42,7 +43,8 @@ function AbstractController ($scope, $state) {
           "onElementSelection": callbackMessage,
           "scoped": scoped,
           "scrapperClass": scrapperClass || "QuerySelectorScrapper",
-          "refElemSelector": refElemSelector
+          "refElemSelector": refElemSelector,
+          "removeStyleOnSelection": removeStyleOnSelection
         }
       });
     };

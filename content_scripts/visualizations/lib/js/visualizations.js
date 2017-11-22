@@ -53,7 +53,6 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
-	console.log("DATA", data);
 	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
 	var results = this.extractConcepts(conceptDomElems,data.results.properties)
 

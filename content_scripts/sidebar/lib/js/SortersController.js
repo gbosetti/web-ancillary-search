@@ -21,7 +21,7 @@ serviceCreator.controller('SortersController', function($scope, $state, ServiceS
         return;
 
       ServiceService.setCurrentServiceKey($scope.service.name);
-      ServiceService.setName($scope.service.name);
+      ServiceService.setName($scope.data.results.selectorrvice.name);
       ServiceService.setUrl($scope.service.url);
     
     };

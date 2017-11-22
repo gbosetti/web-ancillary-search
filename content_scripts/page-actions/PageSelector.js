@@ -74,11 +74,11 @@ PageSelector.prototype.loadListeners = function(){
 
 	this.selectionListener = function(evt){
 
-		me.removeClassFromMatchingElements("andes-highlighted-on-hover");
-		me.removeClassFromMatchingElements(this.selectableElemClass);
-		me.removeClassFromMatchingElements(this.selectionClass);
-
-		//console.log("refElem: ", me.refElem);
+		if(me.removeStyleOnSelection){
+			me.removeClassFromMatchingElements("andes-highlighted-on-hover");
+			me.removeClassFromMatchingElements(this.selectableElemClass);
+			me.removeClassFromMatchingElements(this.selectionClass);
+		}
 
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
@@ -196,11 +196,14 @@ PageSelector.prototype.enableElementSelection = function(data){
 
 	this.refElem = extractor.getElement(data.refElemSelector);
 
+	console.log("IS IT DEFINED???????", data.removeStyleOnSelection);
+
     this.addSelectionListener(
     	elements, 
     	data.onElementSelection, 
     	"click", 
-    	data.scoped
+    	data.scoped,
+    	data.removeStyleOnSelection
     );
     this.undarkifySidebarElements();
     this.darkify(document.body); 
@@ -255,7 +258,7 @@ PageSelector.prototype.getAugmentedActions = function(elem){
 	}
 	return [];
 }
-PageSelector.prototype.isActionIncluded = function(action, actions){
+PageSelector.prototype.isActionIncluded = function(existingAction, actions){
 
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(actions[i].listener == existingAction.listener && actions[i].listener == existingAction.listener){
@@ -272,11 +275,11 @@ PageSelector.prototype.addAugmentedAction = function(elem, action){
 		elem.setAttribute("andes-actions", JSON.stringify(actions))
 	}
 }
-PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped){
+PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped, removeStyleOnSelection){
 
 	var me = this;
 		me.onElementSelectionMessage = onElementSelection; //callback
-		
+		me.removeStyleOnSelection = removeStyleOnSelection;
 		me.scoped = scoped;
 
 	elements.forEach(function(elem) { 
@@ -344,6 +347,8 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 	this.removeClassFromMatchingElements(this.selectionClass);
+
+	return Promise.resolve();
 }
 PageSelector.prototype.removeHighlightingOnHoverFrom = function(selector){
 	

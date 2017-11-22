@@ -35,9 +35,11 @@ BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	this.getLoadingStatusByTab(tab).disableElementSelection(tab, selector);
 };
-BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab) {
+BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
-	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" });
+	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" }).then(function(){
+		sendResponse("done!");
+	});
 }
 BackgroundPageSelector.prototype.loadRequiredFiles = function(tab, callback) {
 

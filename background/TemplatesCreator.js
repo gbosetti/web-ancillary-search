@@ -24,9 +24,9 @@ TemplatesCreator.prototype.toggleSidebar = function() {
 
 	this.sidebarManager.toggleSidebar();
 }
-TemplatesCreator.prototype.removeFullSelectionStyle = function(tab) {
+TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
-  this.backPageSelector.removeFullSelectionStyle(tab);
+  this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
 }
 TemplatesCreator.prototype.listenForTabChanges = function() { 
 
@@ -95,9 +95,9 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
   browser.tabs.sendMessage(tab.id, {call: "disableContextElementSelection"});
 }
-TemplatesCreator.prototype.enableElementSelection = function(tab, data) {
+TemplatesCreator.prototype.enableElementSelection = function(tab, data, sendResponse) {
 
-	this.backPageSelector.enableElementSelection(tab, data);
+	this.backPageSelector.enableElementSelection(tab, data, sendResponse);
 }
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
 

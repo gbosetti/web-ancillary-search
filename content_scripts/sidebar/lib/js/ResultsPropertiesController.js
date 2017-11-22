@@ -21,14 +21,15 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
         var selector = $scope.getElementsSelector(service.results.selector.value);
 
         $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
-        $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector);
+        $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
 
         $scope.enableDomElementSelection( 
           selector, 
           "onElementSelection", 
           ".well", 
           "XpathScrapper", 
-          service.results.selector.value
+          service.results.selector.value,
+          false
         );
       }); 
     };

@@ -38,11 +38,11 @@ BrowserUiManager.prototype.loadVisalizerDependencies = function(data) {
     me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
   });
 }
-BrowserUiManager.prototype.removeFullSelectionStyle = function() { 
+BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendResponse) { 
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.removeFullSelectionStyle(tab);
+    me.templatesCreator.removeFullSelectionStyle(tab, sendResponse);
   });
 }
 BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
@@ -98,11 +98,11 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
 
   this.templatesCreator.disableHarvesting(tab);
 };
-BrowserUiManager.prototype.enableElementSelection = function(data) {
+BrowserUiManager.prototype.enableElementSelection = function(data, sendResponse) {
   
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enableElementSelection(tab, data);
+    me.templatesCreator.enableElementSelection(tab, data, sendResponse);
   });
 };
 BrowserUiManager.prototype.disableElementSelection = function(data) {

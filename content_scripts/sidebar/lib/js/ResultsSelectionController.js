@@ -19,6 +19,8 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       	$scope.service.results.preview = service.results.preview;
         $scope.service.results.name = service.results.name;
 
+        $scope.enableDomElementSelection("tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
+
       	if($scope.service.results.selector){
 
       		var availableSelectors = {};
@@ -64,19 +66,16 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     	$scope.removeFullSelectionStyle();
 		  $scope.disableDomElementSelection("tr, div:not(#andes-sidebar)");
     };
-    $scope.loadSubformBehaviour = function() { 
-      $scope.enableDomElementSelection("tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
-    };
-    $scope.onElementSelection = function(data){
+  $scope.onElementSelection = function(data){
 
-    	$scope.showAllHiddenElements();
-      $scope.focusElement("#results_tag");
+  	$scope.showAllHiddenElements();
+    $scope.focusElement("#results_tag");
 
-    	$scope.service.results.preview = data.previewSource;
-		  $scope.loadPreview("#result-preview-image", data.previewSource);
+  	$scope.service.results.preview = data.previewSource;
+	  $scope.loadPreview("#result-preview-image", data.previewSource);
 
-  		$scope.fillOccurrencesSelector(data.selectors);
-  		document.querySelector("#result-selector").onchange();
+		$scope.fillOccurrencesSelector(data.selectors);
+		document.querySelector("#result-selector").onchange();
 	}
 	$scope.fillOccurrencesSelector = function(selectors){
 
