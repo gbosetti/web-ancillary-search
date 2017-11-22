@@ -1,6 +1,6 @@
 serviceCreator.controller('ServiceInputController', function($scope, $state, ServiceService) {
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
     $scope.service = { 
       input: {
         selector:undefined,

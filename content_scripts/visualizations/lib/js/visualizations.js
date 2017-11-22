@@ -7,6 +7,9 @@ function ResultsVisualizer(){
 
 ResultsVisualizer.prototype.showResults = function(data) {
 	this.panel = this.buildPanel(data);
+
+	console.log("RECEIVING DTA", data);
+
 	this.results = data.results;
 	//window[data.visualizer]());  
 	//TODO: Definir un patron para que el usuario elija el tipo de visualización
@@ -54,8 +57,11 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
 	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
+	console.log("--- NO PROPS:", conceptDomElems);
+
 	var results = this.extractConcepts(conceptDomElems,data.results.properties)
 
+	console.log("--- WITH PROPS:", conceptDomElems,data.results.properties, results);
 	return Promise.resolve({
 		"response": "Hi from content script",
 		"results": results
@@ -66,12 +72,15 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
 	var concepts = [], me= this;
 	var keys = Object.keys(propSpecs);
+	//console.log("keys", keys);
 	
 	if(keys.length > 0){
 		keys.forEach(function(key){
 
-			var propElems = me.getMultipleElements(
-				propSpecs[key].relativeSelector, domElements[0]);
+			var propElems = me.getMultiplePropsFromElements(
+				propSpecs[key].relativeSelector, domElements);
+
+			console.log("propElems", propElems);
 
 			for (i = 0; i < propElems.length; i++) { 
 				if (concepts[i]){ //si hay concepto, se agrega propiedad
@@ -82,15 +91,14 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 					}
 				} //si no hay concepto, se crea
 				else{
-					concept = {};
-					concepts[i] = concept;
+					concepts[i] = {};
 					if(propElems[i] && propElems[i].textContent){
 						concepts[i][key] = propElems[i].textContent;
 					}else {
 						concepts[i][key] = propElems[i].src;
 					}
 				}
-				
+				console.log("concepts[i]", concepts[i]);
 			}
 		});
 	} else alert("There are no properties defined. Results can not be extracted.");
@@ -116,9 +124,21 @@ ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
 	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
     //return doc.querySelector(selector).textContent;
 };
-ResultsVisualizer.prototype.getMultipleElements = function(selector, node){
+ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-	return (new XPathInterpreter()).getElementsByXpath(selector, node);
+
+	var props = [], keys = Object.keys(relativeDomElems);
+	//console.log("-----", relativeDomElems);
+
+	if(keys.length > 0){
+		keys.forEach(function(key){
+			console.log("-----", key, relativeDomElems[key], relativeSelector);
+			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[key]);
+				props.push(prop);
+			console.log("-----", prop);
+		});
+	}
+	return props; 
 }
 ResultsVisualizer.prototype.getSingleElement = function(selector, node){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
@@ -357,6 +377,7 @@ Datatables.prototype.getDependencies = function(visualizer) {
 Datatables.prototype.presentData = function(concepts, iframe) {
 
 	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
+	console.log("Present data:", concepts);
 
 	var me = this;
 	var v = this.visualizer;
@@ -400,8 +421,12 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
 	        '</tr>'+
 	    '</table>'}
 	}
+	if (concepts[0] == undefined){
+		console.log(concepts);
+		alert("ERROR: no concepts found (visualizations.js)");
+		return;
+	}
 	var properties = Object.keys(concepts[0]);
-	console.log(properties[1]);
 
 	doc.defaultView["$"](doc).ready(function(){
 	var tableC =doc.defaultView["$"](table).DataTable({

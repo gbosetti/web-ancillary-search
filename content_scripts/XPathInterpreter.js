@@ -80,10 +80,17 @@ XPathInterpreter.prototype.getBetterPath = function(element) {
     return xPaths[0];        
 };
 XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
+    //WARNING: I THINK THIS IS NOT PROPERLY WORKING. USE -> getSingleElementByXpath
     var doc = node.ownerDocument;
     return  doc.evaluate( xpath, doc, null, 
         9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE*/
 }
+XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
+
+    var doc = (node && node.ownerDocument)? node.ownerDocument : node;
+    var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
+    return results.iterateNext(); 
+};
 XPathInterpreter.prototype.getElementsByXpath = function(xpath, node) {
     var nodes = [];
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;

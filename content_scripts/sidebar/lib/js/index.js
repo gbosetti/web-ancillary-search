@@ -49,9 +49,8 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
   if(request.args){
-    //console.log(request);
     var controller = angular.element(document.querySelector(request.args.scoped)).scope();
-    if(controller[request.call]){
+    if(controller != undefined && controller[request.call]){
       controller[request.call](request.args);
     }
   }

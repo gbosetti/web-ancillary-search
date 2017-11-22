@@ -1,6 +1,6 @@
 serviceCreator.controller('ServiceNameController', function($scope, $state, ServiceService) {
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { name: "", url: undefined};
 

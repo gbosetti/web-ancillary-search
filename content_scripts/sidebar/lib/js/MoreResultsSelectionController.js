@@ -2,7 +2,7 @@ serviceCreator.controller('SortersController', function($scope, $state) {
 
 	$scope.inputSelectors;
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.loadPrevStep = function() {
     	$scope.disableDomElementSelection("input");

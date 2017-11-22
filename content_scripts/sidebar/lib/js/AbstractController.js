@@ -1,4 +1,4 @@
-function AbstractController ($scope, $state) {
+function AbstractController ($scope, $state, ServiceService) {
 
     $scope.fileDescription = "default file, please override in subclass";
     $scope.triggablesSelector = "input, button, a, img:not(#andes-close-button):not(#andes-reposition-button)";
@@ -106,6 +106,7 @@ function AbstractController ($scope, $state) {
         $scope.saveDataModel();
         $scope.undoActionsOnDom();
         $state.go(nextState);
+        ServiceService.updateServices();
       }
     };
     $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.

@@ -41,28 +41,28 @@ SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
 };
 SearchTool.prototype.toggleLoadedScriptsInTab = function(tabId) {
 
-  this.loadedScriptsByTabs[tabId] = !this.areScriptsLoadedInTab(tabId);
+  this.loadedScriptsByTabs[tabId] = !this.areScriptsLoadedInTab(tabId);    
 };
-SearchTool.prototype.createContextMenus = function() {
+SearchTool.prototype.createContextMenus = function() {     
 
   //por ahora una sola entarda
   //this.fakeApiDefinitions(); //to be removed on production
-  var me = this;
-  browser.contextMenus.removeAll().then(function(){
+  var me = this;    
+  browser.contextMenus.removeAll().then(function(){ 
     me.createApisMenu();
-    me.populateApisMenu();
-  });
+    me.populateApisMenu();    
+  }); 
 }
-//This will be generated in the definition of each search service. It may also be retrieved from a server
+/*//This will be generated in the definition of each search service. It may also be retrieved from a server
 SearchTool.prototype.fakeApiDefinitions = function(){
   browser.storage.local.set({
     ebay: {
-      name:'ebay',
+      name:'ebay', 
       url:'https://www.ebay.com/sch/i.html?_odkw=ibei+compras&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR0.TRC0.H0.Xlas+venas+abiertas+de+america+latina.TRS0&_nkw=las+venas+abiertas+de+america+latina&_sacat=0',
       keywords:'',
       loadingResStrategy: "WriteAndClickToReload", 
       contentScriptWhen: "ready",
-      entry:'//form//table//input',
+      entry:'//form//table//input', 
       trigger:'//form//table/tbody/tr/td[3]/input',
       results: {
         name: 'Productos',
@@ -152,7 +152,7 @@ SearchTool.prototype.fakeApiDefinitions = function(){
     }
    
   });
-}
+}*/
 SearchTool.prototype.createApisMenu = function(){
 
   //The menu is created
@@ -168,7 +168,6 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
   browser.storage.local.get("services").then((storage) => {
 
     var apiSpecs = storage.services;
-    console.log("apiSpecs",apiSpecs);
 
 		for (spec in apiSpecs) {
 			var menu = browser.contextMenus.create({
@@ -177,15 +176,24 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				title: apiSpecs[spec].name,
 				contexts: ["selection"],
 				onclick: function(info,tab){ 
-          
-            //Acá adentro solo es loggueable si se anula el cierre de popups
-				    if(me.areScriptsLoadedInTab(tab.id)){
-					   	me.sendExtenralResults(tab, info, apiSpecs);
-				    }
-				    else me.loadVisalizers(tab, function(){ 
-  						me.sendExtenralResults(tab, info, apiSpecs);
-  						me.toggleLoadedScriptsInTab(tab.id);
-					}); 
+
+            browser.storage.local.get("services").then((updatedStorage) => {
+              apiSpecs = updatedStorage.services;
+
+              console.log("apiSpecs", apiSpecs);
+
+              var propId = info.menuItemId;
+
+              //Acá adentro solo es loggueable si se anula el cierre de popups
+              if(me.areScriptsLoadedInTab(tab.id)){
+                me.sendExtenralResults(tab, info, apiSpecs[info.menuItemId]);
+              }
+              else me.loadVisalizers(tab, function(){ 
+                me.sendExtenralResults(tab, info, apiSpecs[info.menuItemId]);
+                me.toggleLoadedScriptsInTab(tab.id);
+              }); 
+
+            });
 				}
 			});
 			menu.apiSpec= apiSpecs[spec];
@@ -194,10 +202,10 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 		console.log(`Error: ${error}`);
 	});
 }
-SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
+SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 
 	this.presentationParams = {
-		"resultsName": apiSpecs[info.menuItemId].results.name,
+		"resultsName": spec.results.name,
 		"selectedText": info.selectionText,
 		"seearchEngineName": info.menuItemId,
 		"results": [],
@@ -210,8 +218,8 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, apiSpecs) {
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
-			"url": apiSpecs[info.menuItemId].url, 
-			"results": apiSpecs[info.menuItemId].results
+			"url": spec.url, 
+			"results": spec.results
 		}
 	}).then(response => {
     me.presentResults(response.results);

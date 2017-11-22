@@ -102,7 +102,7 @@ function TypeAndWaitBasedTrigger(client, data){
 
 serviceCreator.controller('ServiceTriggerController', function($scope, $state, ServiceService) {
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { 
       	trigger: {

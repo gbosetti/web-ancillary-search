@@ -21,7 +21,7 @@ function NoMoreResults(client){
 
 serviceCreator.controller('MoreResultsController', function($scope, $state, ServiceService) {
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = {
     	"moreResults": {

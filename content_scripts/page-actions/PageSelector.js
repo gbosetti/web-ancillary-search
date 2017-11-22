@@ -74,11 +74,10 @@ PageSelector.prototype.loadListeners = function(){
 
 	this.selectionListener = function(evt){
 
-		if(me.removeStyleOnSelection){
-			me.removeClassFromMatchingElements("andes-highlighted-on-hover");
-			me.removeClassFromMatchingElements(this.selectableElemClass);
-			me.removeClassFromMatchingElements(this.selectionClass);
-		}
+		//Tiene que quitarlos en todas para la correcta generación de los xpaths
+		var matchingHighlighted = me.removeClassFromMatchingElements("andes-highlighted-on-hover");
+		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
+		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
 
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
@@ -89,6 +88,12 @@ PageSelector.prototype.loadListeners = function(){
 				"exampleValue": me.selectedElem.textContent
 			}
 		});
+
+		if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
+			me.addClassToMatchingElements(matchingHighlighted, "andes-highlighted-on-hover");
+			me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
+			me.addClassToMatchingElements(matchingSelection, this.selectionClass);
+		}		
 	};
 	this.mouseEnterSelection = function(evt) {  
 		me.removeStyleClass(me.selectedElem, "andes-highlighted-on-hover");
@@ -195,9 +200,6 @@ PageSelector.prototype.enableElementSelection = function(data){
 	var elements = extractor.getElements(data.targetElementSelector);
 
 	this.refElem = extractor.getElement(data.refElemSelector);
-
-	console.log("IS IT DEFINED???????", data.removeStyleOnSelection);
-
     this.addSelectionListener(
     	elements, 
     	data.onElementSelection, 
@@ -369,6 +371,14 @@ PageSelector.prototype.removeClassFromMatchingElements = function(className){
 	for (var i = 0; i < hElems.length; i++) {
 		hElems[i].classList.remove(className);
 	}
+	return hElems;
+}
+PageSelector.prototype.addClassToMatchingElements = function(elems, className){
+
+	for (var i = 0; i < elems.length; i++) {
+		this.addStyleClass(elems[i], className);
+	}
+	return elems;
 }
 PageSelector.prototype.undarkifySidebarElements = function(){
 

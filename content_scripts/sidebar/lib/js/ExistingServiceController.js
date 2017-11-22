@@ -1,6 +1,6 @@
 serviceCreator.controller('ExistingServiceController', function($scope, $state, ServiceService) {
 
-    AbstractController.call(this, $scope, $state);
+    AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.loadSubformBehaviour = function() {
 
