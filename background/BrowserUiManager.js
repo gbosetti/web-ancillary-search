@@ -49,9 +49,12 @@ BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() {
 
   this.templatesCreator.onFrameReadyForLoadingUrl();
 }
-BrowserUiManager.prototype.onSidebarClosed = function() { 
+BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) { 
 
-  this.templatesCreator.onSidebarClosed();
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.onSidebarClosed(tab, sendResponse);
+  });
 }
 BrowserUiManager.prototype.toggleSidebar = function() {
 

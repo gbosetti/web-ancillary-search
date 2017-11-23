@@ -54,10 +54,10 @@ TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() {
 
   this.sidebarManager.onFrameReadyForLoadingUrl();
 }
-TemplatesCreator.prototype.onSidebarClosed = function() { 
+TemplatesCreator.prototype.onSidebarClosed = function(tab, sendResponse) { 
 
   this.sidebarManager.onSidebarClosed();
-  this.backPageSelector.removeFullSelectionStyle();
+  this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
