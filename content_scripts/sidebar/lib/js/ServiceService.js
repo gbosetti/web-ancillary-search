@@ -223,6 +223,13 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       return;
     });
   };
+  this.setMoreResultsExtraProps = function(props) {
+
+    return this.asDeferred(function(){
+      $service.services[$service.currentServiceKey].moreResults.props = props;  
+      return;
+    });
+  };
   this.setBuildingStrategy = function(strategy) { // ExistingServiceEdition || NewServiceEdition
 
     return this.asDeferred(function(){

@@ -1,11 +1,13 @@
 function MoreResultsRetrieval(client){ 
-	this.getConfigurationFormState = function(data){};
+	this.getConfigurationFormState = function(){
+		return "SortersSelection";
+	};
 }
 function ClickBasedRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 
-	this.getConfigurationFormState = function(data){ 
-		return "SortersSelection";
+	this.getConfigurationFormState = function(){ 
+		return "MoreResultsOnClick";
 	};
 }
 function ScrollDownBasedRetrieval(client){
@@ -14,7 +16,7 @@ function ScrollDownBasedRetrieval(client){
 function NoRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
 
-	this.getConfigurationFormState = function(data){ 
+	this.getConfigurationFormState = function(){ 
 		return;
 	};
 }

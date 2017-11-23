@@ -80,6 +80,7 @@ serviceCreator.controller('SortersController', function($scope, $state, ServiceS
         }); 
       };
     };*/
+    $scope.areRequirementsMet = function() { return true };
     
     $scope.initialize();
 });

@@ -48,18 +48,17 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     $scope.arePropertiesDefined = function() {
 
       var inputs = document.querySelectorAll("input");
-      if (inputs && inputs.length>0){
 
-        this.removeFormElementById("no_props_error");
+      this.removeFormElementById("no_props_error");
+      if (inputs == undefined || inputs.length <= 0){
         this.showErrorMessageByElems(
           "no_props_error", 
           document.querySelector(".list-group"), 
           "props_are_required");
-        return true;
+        return false;
       };
 
-      this.removeFormElementById("no_props_error");
-      return false;
+      return true;
     };
     $scope.arePropertiesValuesDefined = function() {
 
@@ -110,6 +109,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       propControl.querySelector("input").focus();
 
       this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
+      this.removeFormElementById("no_props_error");
     };
     $scope.saveDataModel = function() {
 

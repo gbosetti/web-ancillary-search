@@ -30,11 +30,19 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
         })
         .state("ServiceMoreResults", {
             url: "/ServiceMoreResults",
-            templateUrl: "service-more-results-strategies.html"
+            templateUrl: "more-results-strategies.html"
+        })
+        .state("MoreResultsOnClick", {
+            url: "/MoreResultsOnClick",
+            templateUrl: "more-results-on-click.html"
         })
         .state("SortersSelection", {
             url: "/SortersSelection",
             templateUrl: "sorters-selection.html"
+        })
+        .state("EndOfProcess", {
+            url: "/EndOfProcess",
+            templateUrl: "end-of-process.html"
         });
 
 
