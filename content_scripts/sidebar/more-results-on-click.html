@@ -1,7 +1,7 @@
 <div ng-controller="MoreResultsOnClick">
 	<div class="panel-heading">
 	   <div class="panel-title text-center">
-	   		<h2 class="title" i18n-data="new_service"></h2>
+	   		<h2 class="title" i18n-data="more_results_on_click"></h2>
 	   	</div>
 	</div> 
 	<div class="container">    
@@ -10,13 +10,13 @@
 				<span type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</span>
-				<span i18n-data="select_the_input_control"></span>
+				<span i18n-data="more_results_on_click_instructions"></span>
 			</div>
 			<!-- :::::::::: PREVIEW :::::::::: -->
-			<div id="preview-area" class="form-group" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
-			  	<label for="" i18n-data="selected_input_control">Service name</label>
-			  	<div id="preview-of-property">
-		            <img id="property-preview-image" class="image-preview" ng-src="{{service.input.preview}}"/> 
+			<div id="preview-area" class="form-group hidden">
+			  	<label for="" i18n-data="selected_control"></label>
+			  	<div id="preview-of-property" class="preview-container">
+		            <img id="property-preview-image" class="image-preview" ng-src="{{service.moreResults.props.preview}}"/> 
 		        </div>
 			</div>
 
@@ -28,7 +28,7 @@
 						  	<span i18n-data="back">Back</span>
 						</button>
 					</li>
-			      	<li class="next active pull-right" ng-class="(service.input.selector == undefined)? 'hidden' : ''">
+			      	<li class="next active pull-right hidden">
 			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('SortersSelection')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>

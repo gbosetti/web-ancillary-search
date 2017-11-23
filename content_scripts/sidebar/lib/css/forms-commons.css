@@ -76,3 +76,7 @@ li .btn-list:last-child {
     color: white;
     background: #838383;
 }
+.preview-container {
+    background: #f5f5f5;
+    border-radius: 5px;
+}

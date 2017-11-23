@@ -33,7 +33,7 @@
     "message": "The input control"
   },
   "select_the_input_control": {
-    "message": "Please, point and click on the element of the page that you identify as the <a ng-click='value = 5' data-toggle='tooltip' title='The element where you write what you want to search'>input control</a> of the search form."
+    "message": "Please, click on the element of the page that you identify as the <a ng-click='value = 5' data-toggle='tooltip' title='The element where you write what you want to search'>input control</a> of the search form."
   },
   "selected_input_control": {
     "message": "Selected input control"
@@ -51,7 +51,7 @@
     "message": "The trigger control"
   },
   "select_the_trigger_control": {
-    "message": "Point and click on the page element that you identify as the control that <b>triggers</> a search"
+    "message": "Click on the page element that you identify as the control that <b>triggers</> a search"
   },
   "click_on_control_to_trigger": {
     "message": "Click on a control (button, anchor, etc.)"
@@ -127,6 +127,18 @@
   },
   "no_retrieval_strategy_info": {
     "message": "Choosing this option will make it impossible to retrieve more results than the ones listed in the first page."
+  },
+
+
+
+  "more_results_on_click": {
+    "message": "More results through a trigger"
+  },
+  "more_results_on_click_instructions": {
+    "message": "Please, click on the element of the page that you identify as the <a ng-click='value = 5'>trigger for retrieving more results</a>."
+  },
+  "selected_control": {
+    "message": "Selected control"
   },
 
 

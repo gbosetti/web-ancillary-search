@@ -131,6 +131,18 @@
 
 
 
+  "more_results_on_click": {
+    "message": "Más resultados mediante un disparador"
+  },
+  "more_results_on_click_instructions": {
+    "message": "Hacé click en el elemento de la págiina que identificás como el <a ng-click='value = 5'>disparador</a> para la obtención de más resultados."
+  },
+  "selected_control": {
+    "message": "Control seleccionado"
+  },
+
+
+
   "results_properties_title": {
     "message": "Propiedades de los resultados"
   },

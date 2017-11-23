@@ -63,6 +63,7 @@ serviceCreator.controller('MoreResultsController', function($scope, $state, Serv
       	var nextFormState = (new window[$scope.service.moreResults.className]()).getConfigurationFormState();
 	    if(nextFormState == undefined) nextFormState = "SortersSelection";
 	    $state.go(nextFormState);
+	    ServiceService.updateServices();
       } 
     };
     $scope.loadSubformBehaviour = function() { 

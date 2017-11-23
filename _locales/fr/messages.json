@@ -131,6 +131,18 @@
 
 
 
+  "more_results_on_click": {
+    "message": "Plus de résultats via un déclencheur"
+  },
+  "more_results_on_click_instructions": {
+    "message": "Cliquez sur l'élément de la page que vous identifiez comme le <a ng-click='value=5'>déclencheur pour récupérer plus de résultats</a>."
+  },
+  "selected_control": {
+    "message": "Contrôle sélectionné"
+  },
+
+
+
   "results_properties_title": {
     "message": "Propriétés des résultats"
   },

@@ -65,6 +65,8 @@ function AbstractController ($scope, $state, ServiceService) {
         formGroup.appendChild(label);
 
       var imgContainer = document.createElement("div");
+          imgContainer.className = "preview-container";
+          
       var previewImage = document.createElement("img");
         previewImage.setAttribute("id", previewElemId + "-img");
         previewImage.setAttribute("class", "image-preview");

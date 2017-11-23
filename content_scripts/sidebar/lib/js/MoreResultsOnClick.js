@@ -11,8 +11,16 @@ serviceCreator.controller('MoreResultsOnClick', function($scope, $state, Service
     };
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        if(service.moreResults.props)
+
+        console.log(service.moreResults);
+        if(service.moreResults.props){
           $scope.service.moreResults.props = service.moreResults.props;
+          $scope.showAllHiddenElements();
+        }
+        else{
+          $scope.hideFormElement("#preview-area");
+          $scope.hideFormElement(".next");
+        }
       }); 
     };
     $scope.saveDataModel = function() {
