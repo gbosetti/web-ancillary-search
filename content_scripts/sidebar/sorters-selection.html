@@ -1,5 +1,5 @@
 <div ng-controller="SortersController">
-	<div class="panel-heading">
+	<div class="panel-heading navbar-fixed-top">
 	   <div class="panel-title text-center">
 	   		<h2 class="title" i18n-data="sorters_title"></h2>
 	   	</div>
@@ -12,8 +12,40 @@
 				</span>
 				<span i18n-data="select_a_sorter_control"></span>
 			</div>
-			<!-- :::::::::: PREVIEW :::::::::: -->
-
+			<!-- :::::::::: SELECT :::::::::: -->
+		    <div class="form-group">
+		        <label for="more_results_mechanism" i18n-data="more_results_mechanism"></label>
+				<div class="list-group">
+					<div class="list-group-item list-group-item-action">
+						<div class="list-group-item-heading">
+							<input type="radio" id="NoRetrieval" name="more_res_mechanism" value="NoRetrieval" ckecked></input>
+							<label for="NoRetrieval" i18n-data="no_retrieval_strategy"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="no_retrieval_strategy_info"></p>
+					</div>
+					<div class="list-group-item list-group-item-action">
+						<div class="list-group-item-heading">
+							<input type="radio" id="ClickBasedRetrieval" name="more_res_mechanism" value="ClickBasedRetrieval"></input>
+							<label for="ClickBasedRetrieval" i18n-data="click_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="click_for_more_results_info"></p>
+					</div>
+					<div class="list-group-item list-group-item-action">
+						<div class="list-group-item-heading">
+							<input type="radio" id="ScrollDownBasedRetrieval" name="more_res_mechanism" value="ScrollDownBasedRetrieval"></input>
+							<label for="ScrollDownBasedRetrieval" i18n-data="scroll_down_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="scroll_down_for_more_results_info"></p>
+					</div>
+					<div class="list-group-item list-group-item-action">
+						<div class="list-group-item-heading">
+							<input type="radio" id="ScrollDownBasedRetrieval" name="more_res_mechanism" value="ScrollDownBasedRetrieval"></input>
+							<label for="ScrollDownBasedRetrieval" i18n-data="scroll_down_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="scroll_down_for_more_results_info"></p>
+					</div>
+				</div>
+			</div>
 
 			<nav> 
 			  <ul class="pager">

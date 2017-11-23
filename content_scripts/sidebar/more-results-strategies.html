@@ -1,5 +1,5 @@
 <div ng-controller="MoreResultsController">
-    <div class="panel-heading">
+    <div class="panel-heading navbar-fixed-top">
 		<div class="panel-title text-center">
 		  <h2 class="title" i18n-data="retrieving_more_results_mechanism"></h2>
 		</div>
@@ -38,8 +38,14 @@
 						</div>
 						<p class="list-group-item-text small" i18n-data="scroll_down_for_more_results_info"></p>
 					</div>
+					<div class="list-group-item list-group-item-action">
+						<div class="list-group-item-heading">
+							<input type="radio" id="RecordBasedRetrieval" name="more_res_mechanism" value="RecordBasedRetrieval"></input>
+    						<label for="RecordBasedRetrieval" i18n-data="record_action_for_more_results"></label>
+						</div>
+						<p class="list-group-item-text small" i18n-data="record_action_for_more_results_info"></p>
+					</div>
 				</div>
-
 		    </div>
 		    <div id="trigger_mechanism_params_area">
 		    	

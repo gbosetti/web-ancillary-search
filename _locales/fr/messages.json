@@ -128,6 +128,13 @@
   "no_retrieval_strategy_info": {
     "message": "En choisissant cette option, il sera impossible de récupérer plus de résultats que ceux listés dans la première page."
   },
+  "record_action_for_more_results": {
+    "message": "Enregistrer une série d'actions"
+  },
+  "record_action_for_more_results_info": {
+    "message": "Sur cette page il faut interagir avec plusieurs éléments afin de récupérer plus de résultats."
+  },
+
 
 
 

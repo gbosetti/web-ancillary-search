@@ -15,10 +15,9 @@ function ScrollDownBasedRetrieval(client){
 }
 function NoRetrieval(client){
 	MoreResultsRetrieval.call(this, client);
-
-	this.getConfigurationFormState = function(){ 
-		return;
-	};
+}
+function RecordBasedRetrieval(client){
+	MoreResultsRetrieval.call(this, client);
 }
 
 serviceCreator.controller('MoreResultsController', function($scope, $state, ServiceService) {

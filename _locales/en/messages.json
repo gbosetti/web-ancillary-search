@@ -128,7 +128,14 @@
   "no_retrieval_strategy_info": {
     "message": "Choosing this option will make it impossible to retrieve more results than the ones listed in the first page."
   },
+  "record_action_for_more_results": {
+    "message": "Record a series of actions"
+  },
+  "record_action_for_more_results_info": {
+    "message": "In this page, you have to interact with multiple elements in order to retrieve more results."
+  },
 
+  
 
 
   "more_results_on_click": {
