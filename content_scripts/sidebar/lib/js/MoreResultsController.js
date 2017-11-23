@@ -83,19 +83,13 @@ serviceCreator.controller('MoreResultsController', function($scope, $state, Serv
 	};
 	$scope.loadStrategyConfig = function(container){
 
-		if(!container.classList.contains("active-item")){
+      if(!container.classList.contains("active-item")){
 
-			$scope.unselectAllRadios();
-			container.classList.add("active-item");
-			$scope.service.moreResults.className = container.querySelector("input[type=radio]").getAttribute("value");
-			container.querySelector("input[type=radio]").click();
-		}
-	};
-	$scope.unselectAllRadios = function() {
-		document.querySelectorAll(".list-group-item").forEach(function(option){
-			if(option.classList != undefined && option.classList.contains("active-item"))
-				option.classList.remove("active-item");
-		});
-	};
+        $scope.unselectAllRadios();
+        container.classList.add("active-item");
+        $scope.service.moreResults.className = container.querySelector("input[type=radio]").getAttribute("value");
+        container.querySelector("input[type=radio]").click();
+      }
+    };
     $scope.initialize();
 });

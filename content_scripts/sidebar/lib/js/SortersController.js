@@ -1,86 +1,63 @@
+function SortersMechanism(client) {
+  this.getConfigurationFormState = function(){
+    return "EndOfProcess";
+  };
+}
+function NoSorters(client){
+  MoreResultsRetrieval.call(this, client);
+}
+function ClickBasedSorter(client){
+  MoreResultsRetrieval.call(this, client);
+}
+function MultipleActionsSorter(client){
+  MoreResultsRetrieval.call(this, client);
+}
+
+
 serviceCreator.controller('SortersController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state, ServiceService);
 
-    $scope.service = { name: "", url: undefined};
+    $scope.service = { 
+      sorters: undefined /*this should be a collection of sorters with at least a name and a selector*/
+    };
 
-    /*$scope.loadDataModel = function() {
+    $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        if(service){
-          $scope.service.name = service.name;
-          $scope.service.url = service.url;
+
+        if(service.sorters){
+          $scope.service.sorters = service.sorters;
         }
+        
+        document.querySelector("#" + $scope.service.sorters).checked = true;
       });
-      ServiceService.getBuildingStrategy().then(function(buildingStrategy) {
-        console.log("buildingStrategy", buildingStrategy);
-      }); 
     };
     $scope.saveDataModel = function() {
-
-      if($scope.service.name == undefined || $scope.service.name.trim() == '')
-        return;
-
-      ServiceService.setCurrentServiceKey($scope.service.name);
-      ServiceService.setName($scope.data.results.selectorrvice.name);
-      ServiceService.setUrl($scope.service.url);
-    
-    };
-    $scope.saveUrl = function() {
-      ServiceService.setUrl($scope.service.url);
-    };
-    $scope.getValidationRules = function() {
-      return {  
-          "rules": {
-            "search_service_name": {
-                "minlength": 2,
-                "required": true
-            }
-          },
-          "messages": {
-            search_service_name: browser.i18n.getMessage("this_field_is_required")
-          }
-      };
-    }
-    $scope.loadSubformBehaviour = function() { 
-
-      $scope.callPlaceholderNameAdaptation();
-      $scope.focusElement("#search_service_name");
-    };
-    $scope.callPlaceholderNameAdaptation = function() {
-      //The only way I ound to communicate the iframe content to the outside
-      browser.runtime.sendMessage({
-        call: "adaptPlaceholder",
-        args: { scoped: "#search_service_name", callback: 'adaptPlaceholderExample' }
+      ServiceService.setSorters($scope.service.sorters).then(function(){
+        ServiceService.updateServices();
+        ServiceService.logService();
       });
     };
-    $scope.adaptPlaceholderExample = function(data) {
-      document.querySelector("#search_service_name").setAttribute(
-        "placeholder", 
-        document.querySelector("#search_service_name").getAttribute("placeholder") + " " + data.domainName
-      );
+    $scope.loadSubformBehaviour = function() { 
+      document.querySelectorAll(".list-group-item").forEach(function(elem){
+        elem.onclick = function(){
+          $scope.loadStrategyConfig(this);
+        };
+      });
     };
-    $scope.removeErrorMessages = function() {
-      $scope.hideErrorMessage("nameAlreadyExistsError");
+    $scope.loadStrategyConfig = function(container){
+
+      if(!container.classList.contains("active-item")){
+
+        $scope.unselectAllRadios();
+        container.classList.add("active-item");
+        $scope.service.sorters = container.querySelector("input[type=radio]").getAttribute("value");
+        container.querySelector("input[type=radio]").click();
+      }
     };
-    $scope.loadNextStep = function(nextState) {
-
-      if($scope.areRequirementsMet()){
-        ServiceService.uniqueNameService($scope.service.name).then(function(nameAlreadyExists) {
-
-          if(!nameAlreadyExists){
-            $scope.saveDataModel();
-            $scope.undoActionsOnDom();
-            ServiceService.setBuildingStrategy("ExistingServiceEdition"); //Since the service is created, and the user may go forwards and back to this form ans he needs the new strategy to check for the uniqueName
-            $state.go(nextState);
-          }
-          else{
-            $scope.showErrorMessage("nameAlreadyExistsError", "#search_service_name", "service_name_already_exists");
-            $scope.focusElement("#search_service_name");
-          };
-        }); 
-      };
-    };*/
-    $scope.areRequirementsMet = function() { return true };
+    $scope.areRequirementsMet = function() { 
+      return true 
+    };
     
     $scope.initialize();
 });

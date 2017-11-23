@@ -60,7 +60,6 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       ServiceService.setResultsName($scope.service.results.name).then(function(){
         ServiceService.updateServices();
       });
-      //console.log($scope.service.results.selector);
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();

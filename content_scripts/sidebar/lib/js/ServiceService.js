@@ -87,8 +87,8 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
         selector:undefined,
         preview: undefined
       },
-      trigger: {
-          strategy: {
+      trigger: { /*TODO: this should be something similar to 'moreResults'*/
+          strategy: { 
             className: 'ClickBasedTrigger' /*and extra properties "by the strategy"*/
           }      
       },
@@ -99,8 +99,9 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
         properties:{} /*{name relativeSelector}*/
       },
       moreResults: {
-        className: 'NoMoreResults', /*and extra properties "by the strategy"*/
-      }
+        className: 'NoRetrieval', /*and extra properties "by the strategy"*/
+      },
+      sorters: 'NoSorters' /*TODO: this should be something similar to 'moreResults'*/
     };
   };
   this.asDeferred = function(action){
@@ -246,7 +247,14 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.setProperties = function(properties) { // ExistingServiceEdition || NewServiceEdition
     //todo: add one by one, do not save an external collection
     return this.asDeferred(function(){
-      $service.properties = properties; 
+      $service.services[$service.currentServiceKey].properties = properties; 
+      return; 
+    });
+  };
+  this.setSorters = function(sorters) {
+    //todo: add one by one, do not save an external collection
+    return this.asDeferred(function(){
+      $service.services[$service.currentServiceKey].sorters = sorters; 
       return; 
     });
   };

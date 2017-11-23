@@ -195,6 +195,24 @@
   "select_a_sorter_control":{
     "message": "Please, click on the element that should sort the results in the page."
   },
+  "none":{
+    "message": "Aucun"
+  },
+  "no_sorters":{
+    "message": "En choisissant cette option, il sera impossible pour l'utilisateur de trier les résultats recuperés par le service."
+  },
+  "click_to_sort":{
+    "message": "A single click"
+  },
+  "click_to_sort_info":{
+    "message": "On this page it is necessary to click on an element (button, link, etc) to sort the results."
+  },
+  "record_actions_to_sort":{
+    "message": "Multiple interactions"
+  },
+  "record_actions_to_sort_info":{
+    "message": "On this page it is necessary to carry out a series of actions (e.g. clicks, typing, etc.) on one or different elements to order the results."
+  },
 
 
 

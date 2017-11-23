@@ -156,4 +156,10 @@ function AbstractController ($scope, $state, ServiceService) {
        if(document.querySelector(selector)) 
         document.querySelector(selector).remove();
     };
+    $scope.unselectAllRadios = function() {
+      document.querySelectorAll(".list-group-item").forEach(function(option){
+        if(option.classList != undefined && option.classList.contains("active-item"))
+          option.classList.remove("active-item");
+      });
+    };
 }

@@ -130,7 +130,6 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     };
 
     $scope.onTriggerSelection = function(data){
-    	//console.log("*****************", $scope.service.trigger.strategy, data);
 		$scope.service.trigger.strategy.onTriggerSelection(data);
 	}
 	$scope.showMissingRequirementMessage = function(){

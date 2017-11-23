@@ -110,7 +110,7 @@
   "more_results_mechanism": {
     "message": "Mécanisme utilisé"
   },
-  "click_on_next_for_more_results": {
+  "click_for_more_results": {
     "message": "Cliquer sur un élément"
   },
   "click_for_more_results_info": {
@@ -194,6 +194,24 @@
   },
   "select_a_sorter_control":{
     "message": "Cliquez sur l'élément qui vous permet de trier les résultats présentés sur la page."
+  },
+  "none":{
+    "message": "Aucun"
+  },
+  "no_sorters":{
+    "message": "En choisissant cette option, il sera impossible pour l'utilisateur de trier les résultats recuperés par le service."
+  },
+  "click_to_sort":{
+    "message": "Cliquer sur un élément"
+  },
+  "click_to_sort_info":{
+    "message": "Sur cette page il est nécessaire de cliquer sur un élément (bouton, lien, etc) pour trier les résultats présentés."
+  },
+  "record_actions_to_sort":{
+    "message": "Enregistrer une série d'actions"
+  },
+  "record_actions_to_sort_info":{
+    "message": "Sur cette page, il faut effectuer une série d'actions (ex. clics, dactylographie, etc.) sur un ou plusieurs des éléments pour trier les résultats présentés."
   },
 
 
