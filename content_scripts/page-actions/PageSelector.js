@@ -213,14 +213,9 @@ PageSelector.prototype.enableElementSelection = function(data){
 PageSelector.prototype.disableElementSelection = function(data){
 
 	this.undarkifyAllDomElements();
-	console.log("A");
 	this.removeElemsHighlightingClass(data.selector);
-	console.log("B");
 	this.removeHighlightingOnHoverFrom(data.selector);
-	console.log("C");
-	//REMOVE LISTENER!
     this.removeAugmentedActionsFrom(data.selector, "click"); //TODO: do not just remove. add a default action (prevent)
-    console.log("DDD");
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -348,17 +343,11 @@ PageSelector.prototype.removeSelectionClass = function(elem){
 }
 PageSelector.prototype.removeFullSelectionStyle = function(){
 
-	console.log(1);
 	this.removeClassFromMatchingElements(this.obfuscatedClass);
-	console.log(2);
 	this.removeClassFromMatchingElements(this.selectableElemClass);
-	console.log(3);
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
-	console.log(4);
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
-	console.log(5);
 	this.removeClassFromMatchingElements(this.selectionClass);
-	console.log(6);
 
 	return Promise.resolve();
 }

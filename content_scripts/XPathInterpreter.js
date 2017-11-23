@@ -281,10 +281,8 @@ ClassXPathEngine.prototype.constructor = ClassXPathEngine;
 
 ClassXPathEngine.prototype.getPath = function(element, parent){
 
-    //console.log("1", element);
     if (!element) return;
     var elemClass = element.className;
-    //console.log("2", elemClass);
     if (!elemClass) return;
     var tagName = element.nodeName.toLowerCase();
     
