@@ -179,6 +179,18 @@
 
 
 
+  "end_of_process":{
+    "message": "Fin du processus"
+  },
+  "end_of_process_message":{
+    "message": "Vous avez fini la création du service. <br><br>Maintenant, vous pouvez l'utiliser en soulignant le contenu sur n'importe quelle page et en effectuant une recherche via le menu contextuel du navigateur. <br><br>Vous pouvez également modifier le service en ouvrant cette barre latérale lorsque vous naviguez sur ce même moteur de recherche."
+  },
+  "finish":{
+    "message": "Terminer"
+  },
+
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }

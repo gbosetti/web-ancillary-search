@@ -6,6 +6,10 @@ serviceCreator.controller('EndOfProcess', function($scope, $state, ServiceServic
 
       ServiceService.updateServices();
     };
+    $scope.finishServiceDefinition = function(){
+    	
+    	return browser.runtime.sendMessage({ "call": "toggleSidebar" });
+    };
 
     $scope.initialize();
 });

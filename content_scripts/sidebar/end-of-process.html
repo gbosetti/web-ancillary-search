@@ -1,7 +1,7 @@
 <div ng-controller="EndOfProcess">
 	<div class="panel-heading">
 	   <div class="panel-title text-center">
-	   		<h2 class="title" i18n-data="new_service">New service</h2>
+	   		<h2 class="title" i18n-data="end_of_process"></h2>
 	   	</div>
 	</div> 
 
@@ -11,9 +11,8 @@
 				<span type="button" class="close" data-dismiss="alert">
 					<span class="glyphicon glyphicon-info-sign"></span>
 				</span>
-				<span i18n-data="name_the_service"></span>
+				<span i18n-data="end_of_process_message"></span>
 			</div>
-	        DI END!
 
 		    <nav> 
 		        <ul class="pager">
@@ -24,9 +23,9 @@
 						</button>
 					</li>
 		            <li class="next active pull-right">
-		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep('ExistingServiceCheck')">
-		                    <span i18n-data="next">Next</span>
-		                    <span class="glyphicon glyphicon-save"></span>
+		                <button id="save-result" type="button" class="btn btn-primary" ng-click="finishServiceDefinition()">
+		                    <span i18n-data="finish">Finish</span>&nbsp;
+		                    <span class="glyphicon glyphicon-floppy-disk"></span>
 		                </button>
 		            </li>
 		        </ul>

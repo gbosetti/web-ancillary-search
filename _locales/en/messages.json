@@ -179,6 +179,18 @@
 
 
 
+  "end_of_process":{
+    "message": "End of process"
+  },
+  "end_of_process_message":{
+    "message": "Terminaste de crear el servicio. <br><br>Ahora lo podés utilizar subrayando contenido en cualquier página y realizando búsquedas mediante el menú contextual del navegador. <br><br>También podés editar este servicio abriendo este sidebar cuando estés navegando este mismo motor de búsqueda."
+  },
+  "finish":{
+    "message": "Finish"
+  },
+
+
+
   "ass":{
   	"message": "Augmented Search Services"
   }
