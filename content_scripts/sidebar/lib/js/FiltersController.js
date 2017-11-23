@@ -1,39 +1,39 @@
-function SortersMechanism(client) {
+function FiltersMechanism(client) {
   this.getConfigurationFormState = function(){
     return "EndOfProcess";
   };
 }
-function NoSorters(client){
-  SortersMechanism.call(this, client);
+function NoFilter(client){
+  FiltersMechanism.call(this, client);
 }
-function ClickBasedSorter(client){
-  SortersMechanism.call(this, client);
+function ClickBasedFilter(client){
+  FiltersMechanism.call(this, client);
 }
-function MultipleActionsSorter(client){
-  SortersMechanism.call(this, client);
+function MultipleActionsFilter(client){
+  FiltersMechanism.call(this, client);
 }
 
 
-serviceCreator.controller('SortersController', function($scope, $state, ServiceService) {
+serviceCreator.controller('FiltersController', function($scope, $state, ServiceService) {
 
     AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { 
-      sorters: undefined /*this should be a collection of sorters with at least a name and a selector*/
+      filters: undefined /*this should be a collection of filters with at least a name and a selector*/
     };
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
 
-        if(service.sorters){
-          $scope.service.sorters = service.sorters;
+        if(service.filters){
+          $scope.service.filters = service.filters;
         }
         
-        document.querySelector("#" + $scope.service.sorters).checked = true;
+        document.querySelector("#" + $scope.service.filters).checked = true;
       });
     };
     $scope.saveDataModel = function() {
-      ServiceService.setSorters($scope.service.sorters).then(function(){
+      ServiceService.setFilters($scope.service.filters).then(function(){
         ServiceService.updateServices();
         ServiceService.logService();
       });
@@ -51,7 +51,7 @@ serviceCreator.controller('SortersController', function($scope, $state, ServiceS
 
         $scope.unselectAllRadios();
         container.classList.add("active-item");
-        $scope.service.sorters = container.querySelector("input[type=radio]").getAttribute("value");
+        $scope.service.filters = container.querySelector("input[type=radio]").getAttribute("value");
         container.querySelector("input[type=radio]").click();
       }
     };

@@ -105,7 +105,7 @@
     "message": "Récupération de plus de résultats"
   },
   "more_results_mechanism_instructions": {
-    "message": "Indiquez comment les résultats sont récupérés sur cette page."
+    "message": "Indiquez comment les résultats sont récupérés dans cette page."
   },
   "more_results_mechanism": {
     "message": "Mécanisme utilisé"
@@ -114,13 +114,13 @@
     "message": "Cliquer sur un élément"
   },
   "click_for_more_results_info": {
-    "message": "Sur cette page il faut cliquer sur un élément comme un bouton ou une ancre pour récupérer plus de résultats. Ex. un bouton «Page suivante»."
+    "message": "Il faut cliquer sur un élément dans cette page comme un bouton ou une ancre pour récupérer plus de résultats. Ex. un bouton «Page suivante»."
   },
   "scroll_down_for_more_results": {
     "message": "Défiler vers le bas"
   },
   "scroll_down_for_more_results_info": {
-    "message": "Sur cette page il faut faire défiler vers le bas pour obtenir automatiquement plus de résultats (il est habituel de visualizer un «message de chargement» pendant que les résultats sont récupérés)."
+    "message": "Il faut faire défiler vers le bas pour obtenir automatiquement plus de résultats (il est habituel de visualizer un «message de chargement» pendant que les résultats sont récupérés)."
   },
   "no_retrieval_strategy": {
     "message": "Aucun"
@@ -132,7 +132,7 @@
     "message": "Enregistrer une série d'actions"
   },
   "record_action_for_more_results_info": {
-    "message": "Sur cette page il faut interagir avec plusieurs éléments afin de récupérer plus de résultats."
+    "message": "Il faut interagir avec plusieurs éléments dans cette page afin de récupérer plus de résultats."
   },
 
 
@@ -193,7 +193,7 @@
     "message": "Définition des trieurs"
   },
   "select_a_sorter_control":{
-    "message": "Cliquez sur l'élément qui vous permet de trier les résultats présentés sur la page."
+    "message": "Choisissez un mécanisme pour trier les résultats présentés sur la page."
   },
   "none":{
     "message": "Aucun"
@@ -205,13 +205,31 @@
     "message": "Cliquer sur un élément"
   },
   "click_to_sort_info":{
-    "message": "Sur cette page il est nécessaire de cliquer sur un élément (bouton, lien, etc) pour trier les résultats présentés."
+    "message": "Il faut cliquer sur un élément dans cette page (bouton, lien, etc) pour trier les résultats présentés."
   },
   "record_actions_to_sort":{
     "message": "Enregistrer une série d'actions"
   },
   "record_actions_to_sort_info":{
-    "message": "Sur cette page, il faut effectuer une série d'actions (ex. clics, dactylographie, etc.) sur un ou plusieurs des éléments pour trier les résultats présentés."
+    "message": "Il faut effectuer une série d'actions (ex. clics, dactylographie, etc.) sur un ou plusieurs des éléments pour trier les résultats présentés."
+  },
+
+
+
+  "filters_title":{
+    "message": "Définition des filtres"
+  },
+  "select_a_filter_control":{
+    "message": "Choisissez un mécanisme <b>pour filtrer les résultats</b> présentés sur la page."
+  },
+  "no_filters":{
+    "message": "En choisissant cette option, il sera impossible pour l'utilisateur de filtrer les résultats récupérés par le service."
+  },
+  "click_to_filter_info":{
+    "message": "Il faut cliquer sur un élément dans cette page (bouton, lien, etc) pour filtrer les résultats."
+  },
+  "record_actions_to_filter_info":{
+    "message": "Il faut effectuer une série d'actions (par exemple, clics, dactylographie, etc.) sur un ou plusieurs éléments pour filtrer les résultats."
   },
 
 

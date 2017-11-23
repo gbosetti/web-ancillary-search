@@ -41,9 +41,10 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       }
     };
     $scope.undoActionsOnDom = function(aState) {
-      $scope.removeFullSelectionStyle();
+      
       var elemsSelector = $scope.getElementsSelector($scope.service.results.selector.value);
       $scope.disableDomElementSelection(elemsSelector);
+      $scope.removeFullSelectionStyle();
     };
     $scope.arePropertiesDefined = function() {
 

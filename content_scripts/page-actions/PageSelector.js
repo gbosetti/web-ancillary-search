@@ -196,10 +196,11 @@ PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
 
-	var extractor = new scrappers[data.scrapperClass]();
-	var elements = extractor.getElements(data.targetElementSelector);
+	console.log("LAST USED PROPS SCRAPPER", data.scrapperClass);
+	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
+	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
 
-	this.refElem = extractor.getElement(data.refElemSelector);
+	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
     this.addSelectionListener(
     	elements, 
     	data.onElementSelection, 
@@ -215,7 +216,7 @@ PageSelector.prototype.disableElementSelection = function(data){
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
 	this.removeHighlightingOnHoverFrom(data.selector);
-
+	//REMOVE LISTENER!
     this.removeAugmentedActionsFrom(data.selector, "click"); //TODO: do not just remove. add a default action (prevent)
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
@@ -294,7 +295,7 @@ PageSelector.prototype.addSelectionListener = function(elements, onElementSelect
 PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 
 	var me = this;
-	this.getTargetElements(selector).forEach(function(elem) { 
+	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
 		me.removeAugmentedActions(elem);	
     });	
 }

@@ -40,6 +40,10 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
             url: "/SortersSelection",
             templateUrl: "sorters-selection.html"
         })
+        .state("FiltersMechanism", {
+            url: "/FiltersMechanism",
+            templateUrl: "filters-selection.html"
+        })
         .state("EndOfProcess", {
             url: "/EndOfProcess",
             templateUrl: "end-of-process.html"

@@ -101,7 +101,8 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
       moreResults: {
         className: 'NoRetrieval', /*and extra properties "by the strategy"*/
       },
-      sorters: 'NoSorters' /*TODO: this should be something similar to 'moreResults'*/
+      sorters: 'NoSorters', /*TODO: this should be something similar to 'moreResults'*/
+      filters: 'NoFilter' /*TODO: this should be something similar to 'moreResults'*/
     };
   };
   this.asDeferred = function(action){
@@ -255,6 +256,13 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
     //todo: add one by one, do not save an external collection
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].sorters = sorters; 
+      return; 
+    });
+  };
+  this.setFilters = function(filters) {
+    //todo: add one by one, do not save an external collection
+    return this.asDeferred(function(){
+      $service.services[$service.currentServiceKey].filters = filters; 
       return; 
     });
   };

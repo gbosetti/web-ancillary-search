@@ -193,7 +193,7 @@
     "message": "Definición de clasificadores"
   },
   "select_a_sorter_control":{
-    "message": "Hacé click en el elemento que permite ordenar los resultados presentados en la página."
+    "message": "Elegí un mecanismo para <b>ordenar los resultados</b> presentados en la página."
   },
   "none":{
     "message": "Ninguno"
@@ -212,6 +212,24 @@
   },
   "record_actions_to_sort_info":{
     "message": "En esta página es necesario realizar una serie de acciones (e.g. clicks, typing, etc.) sobre uno o diferentes elementos para ordenar los resultados presentados."
+  },
+
+
+
+  "filters_title":{
+    "message": "Definición de fltros"
+  },
+  "select_a_filter_control":{
+    "message": "Elegí un mecanismo para <b>filtrar los resultados</b> presentados en la página."
+  },
+  "no_filters":{
+    "message": "Elegir esta opción hará que sea imposible para el usuario de este servicio filtrar sus resultados."
+  },
+  "click_to_filter_info":{
+    "message": "En esta página es necesario hacer click en un elemento (botón, link, etc.) para filtrar los resultados."
+  },
+  "record_actions_to_filter_info":{
+    "message": "En esta página es necesario realizar una serie de acciones (e.g. clicks, tipear, etc.) en uno o varios elementos para filtrar los resultados."
   },
 
 

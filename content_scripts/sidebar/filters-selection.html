@@ -1,7 +1,7 @@
-<div ng-controller="SortersController">
+<div ng-controller="FiltersController">
 	<div class="panel-heading navbar-fixed-top">
 	   <div class="panel-title text-center">
-	   		<h2 class="title" i18n-data="sorters_title"></h2>
+	   		<h2 class="title" i18n-data="filters_title"></h2>
 	   	</div>
 	</div> 
 	<div class="container">    
@@ -10,7 +10,7 @@
 				<span type="button" class="close" data-dismiss="alert">
 				<span class="glyphicon glyphicon-info-sign"></span>
 				</span>
-				<span i18n-data="select_a_sorter_control"></span>
+				<span i18n-data="select_a_filter_control"></span>
 			</div>
 			<!-- :::::::::: SELECT :::::::::: -->
 		    <div class="form-group">
@@ -18,24 +18,24 @@
 				<div class="list-group">
 					<div class="list-group-item list-group-item-action">
 						<div class="list-group-item-heading">
-							<input type="radio" id="NoSorters" name="sorting_mechanism" value="NoSorters" ckecked></input>
-							<label for="NoSorters" i18n-data="none"></label>
+							<input type="radio" id="NoFilter" name="sorting_mechanism" value="NoFilter" ckecked></input>
+							<label for="NoFilter" i18n-data="none"></label>
 						</div>
-						<p class="list-group-item-text small" i18n-data="no_sorters"></p>
+						<p class="list-group-item-text small" i18n-data="no_filters"></p>
 					</div>
 					<div class="list-group-item list-group-item-action">
 						<div class="list-group-item-heading">
-							<input type="radio" id="ClickBasedSorter" name="sorting_mechanism" value="ClickBasedSorter"></input>
-							<label for="ClickBasedSorter" i18n-data="click_to_sort"></label>
+							<input type="radio" id="ClickBasedFilter" name="sorting_mechanism" value="ClickBasedFilter"></input>
+							<label for="ClickBasedFilter" i18n-data="click_to_sort"></label>
 						</div>
-						<p class="list-group-item-text small" i18n-data="click_to_sort_info"></p>
+						<p class="list-group-item-text small" i18n-data="click_to_filter_info"></p>
 					</div>
 					<div class="list-group-item list-group-item-action">
 						<div class="list-group-item-heading">
-							<input type="radio" id="MultipleActionsSorter" name="sorting_mechanism" value="MultipleActionsSorter"></input>
-							<label for="MultipleActionsSorter" i18n-data="record_actions_to_sort"></label>
+							<input type="radio" id="MultipleActionsFilter" name="sorting_mechanism" value="MultipleActionsFilter"></input>
+							<label for="MultipleActionsFilter" i18n-data="record_actions_to_sort"></label>
 						</div>
-						<p class="list-group-item-text small" i18n-data="record_actions_to_sort_info"></p>
+						<p class="list-group-item-text small" i18n-data="record_actions_to_filter_info"></p>
 					</div>
 				</div>
 			</div>
@@ -43,13 +43,13 @@
 			<nav> 
 			  <ul class="pager">
 			    	<li class="prev active pull-left">
-						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceMoreResults')">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('SortersSelection')">
 							<span class="glyphicon glyphicon-triangle-left"></span>
 						  	<span i18n-data="back">Back</span>
 						</button>
 					</li>
 			      	<li class="next active pull-right">
-			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('FiltersMechanism')">
+			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('EndOfProcess')">
 			              	<span i18n-data="next">Next</span>
 			              	<span class="glyphicon glyphicon-triangle-right"></span>
 			          	</button>

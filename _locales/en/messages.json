@@ -193,13 +193,13 @@
     "message": "Sorters definition"
   },
   "select_a_sorter_control":{
-    "message": "Please, click on the element that should sort the results in the page."
+    "message": "Choose a mechanism <b>to sort the results</b> presented on the page."
   },
   "none":{
     "message": "Aucun"
   },
   "no_sorters":{
-    "message": "En choisissant cette option, il sera impossible pour l'utilisateur de trier les résultats recuperés par le service."
+    "message": "By choosing this option, it will be impossible for the user to <b>sort</b> the results retrieved by the service."
   },
   "click_to_sort":{
     "message": "A single click"
@@ -212,6 +212,24 @@
   },
   "record_actions_to_sort_info":{
     "message": "On this page it is necessary to carry out a series of actions (e.g. clicks, typing, etc.) on one or different elements to order the results."
+  },
+
+
+
+  "filters_title":{
+    "message": "Filters definition"
+  },
+  "select_a_filter_control":{
+    "message": "Choose a mechanism <b>to filter the results</b> presented on the page."
+  },
+  "no_filters":{
+    "message": "By choosing this option, it will be impossible for the user to filter the results retrieved by the service."
+  },
+  "click_to_filter_info":{
+    "message": "On this page it is necessary to click on an element (button, link, etc) to filter the results."
+  },
+  "record_actions_to_filter_info":{
+    "message": "On this page it is necessary to carry out a series of actions (e.g. clicks, typing, etc.) on one or different elements to filter the results."
   },
 
 

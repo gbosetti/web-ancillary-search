@@ -113,6 +113,7 @@ function AbstractController ($scope, $state, ServiceService) {
     };
     $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
 
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       $scope.loadDataModel();
       $scope.loadValidationRules();
       $scope.loadSubformBehaviour();

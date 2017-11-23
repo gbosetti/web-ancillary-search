@@ -57,6 +57,7 @@ TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() {
 TemplatesCreator.prototype.onSidebarClosed = function() { 
 
   this.sidebarManager.onSidebarClosed();
+  this.backPageSelector.removeFullSelectionStyle();
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
