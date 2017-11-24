@@ -217,7 +217,8 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 		call: "retrieveExtenralResults", 
 		args: {
 			"url": spec.url, 
-			"results": spec.results
+			"results": spec.results,
+      "keywords": info.selectionText
 		}
 	}).then(response => {
     me.presentResults(response.results);

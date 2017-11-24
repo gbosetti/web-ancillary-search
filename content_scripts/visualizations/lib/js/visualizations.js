@@ -52,10 +52,9 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
-	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
-
+	console.log("///////////////////data", data);
+	var conceptDomElems = this.getExternalContent(data.url, data.keywords, data.input.selector, data.trigger.strategy, data.results.selector.value);
 	var results = this.extractConcepts(conceptDomElems,data.results.properties);
-	console.log("retrieved", results);
 
 	return Promise.resolve({
 		"response": "Hi from content script",
@@ -98,13 +97,26 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	return concepts;
 }
 
-ResultsVisualizer.prototype.getExternalContent = function(url, selector){
+ResultsVisualizer.prototype.getExternalContent = function(url, keywords, inputSel, triggerMechanism, resultsSel){
 
    const req = new window.XMLHttpRequest();
         req.open('GET', url, false);
         req.send(null);
 
-    return this.evaluateSelector(selector, this.getParsedDocument(req.responseText));
+    var parsedDoc = this.getParsedDocument(req.responseText); //with def results. we need to trigger
+
+    //TODO: implement the strategy class HERE (look at the triggerMechanism values for possibilities. Look in the full project for such class and other possibilities, please ) 
+    // **** This is the behaviour of the "trigger based strategy"
+    var inputControl = this.evaluateSelector(inputSel, parsedDoc);
+    	inputControl.value = keywords;
+
+    var triggerControl = this.evaluateSelector(triggerMechanism.selector, parsedDoc);
+    	triggerControl.click();
+    // **** This is the behaviour of the "trigger based strategy"
+
+    //parsedDoc
+
+    return this.evaluateSelector(resultsSel, parsedDoc);
 };
 ResultsVisualizer.prototype.getParsedDocument = function(responseText){
 
