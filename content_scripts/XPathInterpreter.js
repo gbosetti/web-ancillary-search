@@ -88,7 +88,7 @@ XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
 XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
 
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
-    var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
+    var results = doc.evaluate(xpath, node, null, XPathResult.ANY_TYPE, null); 
     return results.iterateNext(); 
 };
 XPathInterpreter.prototype.getElementsByXpath = function(xpath, node) {

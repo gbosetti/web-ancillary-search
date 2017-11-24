@@ -18,7 +18,6 @@ ResultsVisualizer.prototype.showResults = function(data) {
 	
 	this.loadExtraDependencies();
 };
-
 ResultsVisualizer.prototype.onExtraDependenciesLoaded = function(){
 
 	this.presentData(this.results, this.panel.childNodes[1].children[0]);
@@ -55,7 +54,8 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 
 	var conceptDomElems = this.getExternalContent(data.url, data.results.selector.value /*properties[0].selector*/, data.callbackMethod);
 
-	var results = this.extractConcepts(conceptDomElems,data.results.properties)
+	var results = this.extractConcepts(conceptDomElems,data.results.properties);
+	console.log("retrieved", results);
 
 	return Promise.resolve({
 		"response": "Hi from content script",
@@ -122,6 +122,8 @@ ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSele
 
 	if(keys.length > 0){
 		keys.forEach(function(key){
+			//console.log("relativeSelector: ", relativeSelector);
+			//console.log("relativeDomElems[key]: ", relativeDomElems[key]);
 			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[key]);
 				props.push(prop);
 		});

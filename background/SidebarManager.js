@@ -204,7 +204,7 @@ function NoLoadedSidebar(context){
 
 		BackgroundResourcesLoader.syncLoadScripts([
 	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
-	  		new BackgroundResource("/content_scripts/Sidebar.js")
+	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
 	  	], tab, function () {
 	        context.status[tab.id] = new LoadedOpenSidebar(context);
 	        status.sendOpenMessage(tab);
