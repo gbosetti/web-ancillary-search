@@ -10,6 +10,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
+        console.log(service);
         $scope.service.input = service.input;
       }); 
     };

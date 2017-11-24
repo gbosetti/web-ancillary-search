@@ -3,12 +3,13 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
     AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { name: "", url: undefined};
+    $scope.initialName;
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
         if(service){
           $scope.service.name = service.name;
-          //$scope.service.url = service.url;
+          $scope.initialName = service.name;
         }
       });
 
@@ -16,10 +17,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         $scope.service.url = url;
       });
     };
-    $scope.saveDataModel = function() {
-
-      if($scope.service.name == undefined || $scope.service.name.trim() == '')
-        return;
+    $scope.saveFullDataWithCurrentKey = function() {
 
       ServiceService.setCurrentServiceKey($scope.service.name);
       ServiceService.setName($scope.service.name).then(function(){
@@ -27,6 +25,18 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         browser.runtime.sendMessage({ call: "populateApisMenu" });
       });
       ServiceService.setUrl($scope.service.url);   
+    };
+    $scope.saveDataModel = function() {
+
+      if($scope.service.name == undefined || $scope.service.name.trim() == '')
+        return;
+
+      if($scope.initialName != undefined && $scope.initialName != $scope.service.name){
+        //update name
+        ServiceService.updateServiceKey($scope.initialName, $scope.service.name).then(function(){
+          $scope.saveFullDataWithCurrentKey();
+        });
+      } else $scope.saveFullDataWithCurrentKey();      
     };
     $scope.saveUrl = function() {
       ServiceService.setUrl($scope.service.url);
@@ -71,6 +81,7 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         ServiceService.uniqueNameService($scope.service.name).then(function(nameAlreadyExists) {
 
           if(!nameAlreadyExists){
+
             $scope.saveDataModel();
             $scope.undoActionsOnDom();
             ServiceService.setBuildingStrategy("ExistingServiceEdition"); //Since the service is created, and the user may go forwards and back to this form ans he needs the new strategy to check for the uniqueName

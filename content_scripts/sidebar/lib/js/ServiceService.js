@@ -8,6 +8,8 @@ function NewServiceEdition(){
   BuildingStrategy.call(this);
 
   this.uniqueNameService = function(name, client, deferred){
+
+      console.log("uniqueNameService  >  NewServiceEdition");
       deferred.resolve(client.hasServiceNamed(name));
   }
 }
@@ -16,6 +18,7 @@ function ExistingServiceEdition(){
 
   this.uniqueNameService = function(name, client, deferred){
 
+    console.log("uniqueNameService  >  ExistingServiceEdition");
     if(client.services[client.currentServiceKey].name == name)
       deferred.resolve(false);
     else deferred.resolve(client.hasServiceNamed(name));
@@ -147,8 +150,7 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
   this.uniqueNameService = function(name) {
 
     var deferred = $q.defer();
-
-      this.buildingStrategy.uniqueNameService(name, $service, deferred);
+    this.buildingStrategy.uniqueNameService(name, $service, deferred);
 
     return deferred.promise;
   };
@@ -229,6 +231,15 @@ serviceCreator.service("ServiceService", ["$q", "$timeout", function($q, $timeou
 
     return this.asDeferred(function(){
       $service.services[$service.currentServiceKey].moreResults.props = props;  
+      return;
+    });
+  };
+  this.updateServiceKey = function(oldKey, newKey) {
+
+    return this.asDeferred(function(){
+      $service.services[newKey] = $service.services[oldKey];
+      delete $service.services[oldKey];
+      $service.currentServiceKey = newKey;
       return;
     });
   };
