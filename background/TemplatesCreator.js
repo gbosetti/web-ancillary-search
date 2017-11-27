@@ -112,13 +112,13 @@ TemplatesCreator.prototype.getExternalContent = function(tab, data, sendResponse
           "content_scripts/visualizations/lib/js/form-manipulation.js"
         ], 
         this.contentWindow.document,
-        function(){console.log('files already loaded');}
+        function(){console.log('syncLoadScripts: done.');}
       );
 
-      sendResponse("nothing");
-      iframe.onload = undefined;
+      //sendResponse("nothing");
+      //iframe.onload = undefined;
     }
-    //iframe.src = data.service.url; not working
+    iframe.src = data.service.url; //not working
 
   window.document.body.appendChild(iframe);
 };

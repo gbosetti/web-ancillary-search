@@ -1,5 +1,6 @@
 function BrowserUiManager(){
   this.initialize();
+  this.frameLoaded = false;
 }
 BrowserUiManager.prototype.initialize = function() {
 
@@ -11,6 +12,14 @@ BrowserUiManager.prototype.initialize = function() {
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
   this.templatesCreator.onElementSelection(data);
+};
+BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
+
+  if(this.frameLoaded == false){
+    console.log("analyzing");
+    this.frameLoaded = true;
+
+  }else console.log("gotit!");
 };
 BrowserUiManager.prototype.onTriggerSelection = function(data) { 
 

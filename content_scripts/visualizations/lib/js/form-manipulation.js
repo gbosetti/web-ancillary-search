@@ -9,18 +9,16 @@ ExternalContentManipulator.prototype.extractFromUrl = function(url) {
 
 };
 
+//window.postMessage('Hello from the main page!', '*', []);
+//top.window.postMessage('2nd Hello from the main page!', '*', []);
 
-browser.runtime.sendMessage({ call: "externalResourcesIframeIsLoaded" });
+window.top.browserUI.externalResourcesIframeIsLoaded();
 
+//window.top.browser.runtime.sendMessage({ call: "externalResourcesIframeIsLoaded" });
 /*
 
-var frameManager = new ExternalContentManipulator();
-browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
-
-	if(pageManager[request.call]){
-		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
-		//Se lo llama con: browser.tabs.sendMessage
-		pageManager[request.call](request.args);
-	}
-});*/
-
+window.top.browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+	console.log("current tab ");
+	//window.top.browser.tabs.sendMessage(tabs[0].id, {call: "externalResourcesIframeIsLoaded"});
+});
+*/
