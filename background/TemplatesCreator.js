@@ -83,6 +83,59 @@ TemplatesCreator.prototype.getCurrentUrl = function(tab, data, sendResponse) {
 
   this.sidebarManager.getCurrentUrl(tab, data, sendResponse);
 };
+TemplatesCreator.prototype.extractInput = function(inputSel, doc){
+
+  console.log(doc)
+  var input = doc.evaluate( inputSel, doc, null, 9, null).singleNodeValue;
+  console.log(input);
+};
+TemplatesCreator.prototype.getExternalContent = function(tab, data, sendResponse) {
+
+  /*data.service.url, 
+    data.keywords, 
+    data.service.input.selector, 
+    data.service.trigger.strategy, 
+    data.service.results.selector.value,*/
+
+    var iframe = window.document.createElement('iframe');
+    iframe.id = "andes-results";
+    iframe.style.width = "1px";
+    iframe.style.height = "1px";
+
+    var me = this;
+    iframe.onload = function(){ 
+
+      me.loadContentScripts(data.service.input.selector, this.contentWindow.document);
+    }
+    iframe.src = data.service.url;
+
+  window.document.body.appendChild(iframe);
+
+  sendResponse("nothing");
+};
+TemplatesCreator.prototype.loadContentScripts = function(filePaths, doc) {
+  
+  new ContentResourcesLoader().syncLoadScripts(filePaths, doc);
+};
+TemplatesCreator.prototype.syncLoadScripts = function(filePaths, doc, callback) {
+
+  var me=this, path = filePaths.splice(0, 1)[0];
+  if(path){
+
+    var script = doc.createElement('script');
+    script.onload = function() {
+
+      me.syncLoadScripts(filePaths, doc, callback);
+    };
+    doc.getElementsByTagName('head')[0].appendChild(script);
+    console.log("loading ", path);
+    script.src = browser.extension.getURL(path);
+
+  }else{
+    if(callback) callback();
+  }   
+};
+
 /*TemplatesCreator.prototype.saveService = function(data) {
 
   this.storage.getFileAsync(data); //createEmptyFile

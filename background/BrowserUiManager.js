@@ -78,6 +78,13 @@ BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
     me.templatesCreator.getCurrentUrl(tab, data, sendResponse);
   });
 };
+BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.templatesCreator.getExternalContent(tab, data, sendResponse);
+  });
+};
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
   return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
 };

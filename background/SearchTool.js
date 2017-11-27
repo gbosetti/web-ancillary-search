@@ -216,12 +216,12 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
-			"url": spec.url, 
-			"results": spec.results,
+			"service": spec,
       "keywords": info.selectionText
 		}
 	}).then(response => {
-    me.presentResults(response.results);
+    console.log("***", response);
+    //me.presentResults(response.results); //TODO: remove this
   });
 
 }
