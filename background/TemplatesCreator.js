@@ -7,7 +7,7 @@ function TemplatesCreator(){
   ); 
   //this.storage = new StorageFilesManager();
   this.backPageSelector = new BackgroundPageSelector();
-  this.listenForTabChanges();
+  
 }
 TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
 
@@ -27,16 +27,6 @@ TemplatesCreator.prototype.toggleSidebar = function() {
 TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
   this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
-}
-TemplatesCreator.prototype.listenForTabChanges = function() { 
-
-  var me = this;
-  browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
-    if(tabInfo.status == "complete"){
-      me.sidebarManager.initializeStateForTab(tabId);
-      me.backPageSelector.initializeStateForTab(tabId);
-    } 
-  });
 }
 TemplatesCreator.prototype.onElementSelection = function(data) { 
 
@@ -89,72 +79,6 @@ TemplatesCreator.prototype.extractInput = function(inputSel, doc){
   var input = doc.evaluate( inputSel, doc, null, 9, null).singleNodeValue;
   console.log(input);
 };
-TemplatesCreator.prototype.getExternalContent = function(tab, data, sendResponse) {
-
-  /*data.service.url, 
-    data.keywords, 
-    data.service.input.selector, 
-    data.service.trigger.strategy, 
-    data.service.results.selector.value,*/
-
-    var iframe = window.document.createElement('iframe');
-    iframe.id = "andes-results";
-    iframe.style.width = "1px";
-    iframe.style.height = "1px";
-    //iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
-    iframe.setAttribute("referrerpolicy", "unsafe-url");
-    
-
-    var me = this;
-    iframe.onload = function(evt){ 
-
-      console.log(this.contentWindow);
-      console.log(this.contentWindow.document);
-      console.log(this.contentWindow.document.querySelector("a"));
-
-
-
-      /*me.syncLoadScripts(
-        [
-          "content_scripts/visualizations/lib/js/form-manipulation.js"
-        ], 
-        this.contentWindow.document,
-        function(){console.log('syncLoadScripts: done.');}
-      );*/
-
-      //sendResponse("nothing");
-      //iframe.onload = undefined;
-    }
-    iframe.src = data.service.url; //not working
-
-  window.document.body.appendChild(iframe);
-};
-TemplatesCreator.prototype.syncLoadScripts = function(filePaths, doc, callback) {
-
-  var me=this, path = filePaths.splice(0, 1)[0];
-  if(path){
-
-    var script = doc.createElement('script');
-    script.onload = function() {
-
-      me.syncLoadScripts(filePaths, doc, callback);
-    };
-    doc.getElementsByTagName('head')[0].appendChild(script);
-    console.log("loading ", path);
-    script.src = browser.extension.getURL(path);
-
-  }else{
-    if(callback) callback();
-  }   
-};
-/*TemplatesCreator.prototype.saveService = function(data) {
-
-  this.storage.getFileAsync(data); //createEmptyFile
-};*/
-/*TemplatesCreator.prototype.createNewServiceFromData = function(data) {
-
-  this.storage.createFileWithData(data);
-};*/
 TemplatesCreator.prototype.disableDomSelection = function(tab) {
 
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});

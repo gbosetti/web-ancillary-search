@@ -1,26 +1,31 @@
-console.log("IFRAME: ", window.location.href);
+function ExternalContentManipulator(){
 
-function ExternalContentManipulator(){}
+	this.initialize();
+}
+ExternalContentManipulator.prototype.initialize = function() {
+	this.notifyFrameLoaded();
+};
 ExternalContentManipulator.prototype.notifyFrameLoaded = function() {
-	// body...
+	browser.runtime.sendMessage({ call: "externalResourcesIframeIsLoaded" });
 };
-ExternalContentManipulator.prototype.extractFromUrl = function(url) {
+ExternalContentManipulator.prototype.extractFromUrl = function(data) {
 	// body...
 
+	var xpi = new XPathInterpreter();
+
+	var input = xpi.getSingleElementByXpath(data.service.input.selector, document);
+		input.value = data.keywords;
+
+	var trigger = xpi.getSingleElementByXpath(data.service.trigger.strategy.selector, document);
+		trigger.click();
 };
 
-console.log("ANCHOR: ", document.querySelector("a"));
+var extContentMan = new ExternalContentManipulator();
+browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
-//window.postMessage('Hello from the main page!', '*', []);
-//top.window.postMessage('2nd Hello from the main page!', '*', []);
-
-window.top.browserUI.externalResourcesIframeIsLoaded();
-
-//window.top.browser.runtime.sendMessage({ call: "externalResourcesIframeIsLoaded" });
-/*
-
-window.top.browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-	console.log("current tab ");
-	//window.top.browser.tabs.sendMessage(tabs[0].id, {call: "externalResourcesIframeIsLoaded"});
+	if(extContentMan[request.call]){
+		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		//Se lo llama con: browser.tabs.sendMessage
+		extContentMan[request.call](request.args);
+	}
 });
-*/

@@ -52,12 +52,12 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
-	browser.runtime.sendMessage({ call: "getExternalContent", args: data }).then(function(results){
+	browser.runtime.sendMessage({ call: "getExternalContent", args: data }).then(function(url){
 
-	    //var results = me.extractConcepts(conceptDomElems,data.results.properties);
+	    //console.log("FROM getExternalContent:", url);
 		return Promise.resolve({
 			"response": "Hi from content script",
-			"results": results
+			"results": url
 		});
 	});
 };

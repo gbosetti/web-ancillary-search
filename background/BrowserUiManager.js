@@ -1,6 +1,5 @@
 function BrowserUiManager(){
   this.initialize();
-  this.frameLoaded = false;
 }
 BrowserUiManager.prototype.initialize = function() {
 
@@ -8,19 +7,33 @@ BrowserUiManager.prototype.initialize = function() {
   //this.mainMenu = this.createExtensionMainMenu(); No tiene sentido porque después te lo mueve como quiere
   this.templatesCreator = new TemplatesCreator();
   this.searchTool = new SearchTool();
+  this.listenForTabChanges();
 };
+BrowserUiManager.prototype.listenForTabChanges = function() { 
+
+  var me = this;
+  this.listenForExternalRetrieval = false;
+
+  browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
+    
+    if(tabInfo.status == "complete"){
+
+      if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
+        //console.log("************ UPDATING", tabInfo.url);
+        me.currentQuerySpec = undefined;
+        me.listenForExternalRetrieval = undefined;
+        me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
+      }
+
+      //This is required for the templates templatesCreator
+      me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
+      me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
+    } 
+  });
+}
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
   this.templatesCreator.onElementSelection(data);
-};
-BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
-
-  if(this.frameLoaded == false){
-    console.log("analyzing");
-    this.frameLoaded = true;
-
-
-  }else console.log("gotit!");
 };
 BrowserUiManager.prototype.onTriggerSelection = function(data) { 
 
@@ -88,11 +101,39 @@ BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
     me.templatesCreator.getCurrentUrl(tab, data, sendResponse);
   });
 };
+BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
+  //TODO: move this behaviour to the searchTool class
+
+  this.listenForExternalRetrieval = true;
+  browser.tabs.sendMessage(this.currentQuerySpec.tabId, {
+    call: "extractFromUrl",
+    args: this.currentQuerySpec
+  });
+};
+BrowserUiManager.prototype.presentResultsFromQueriedUrl = function(data, tabId){
+  //TODO: move this behaviour to the searchTool class
+
+  this.sendResponse(data);
+  browser.tabs.remove(tabId)
+};
 BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
+  //TODO: move this behaviour to the searchTool class
 
   var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.getExternalContent(tab, data, sendResponse);
+  this.currentQuerySpec = data;
+  this.sendResponse = sendResponse;
+
+  var creating = browser.tabs.create({
+    url: data.service.url,
+    active: false
+  })
+  .then(function(tab) {
+
+    me.currentQuerySpec.tabId = tab.id;
+    BackgroundResourcesLoader.syncLoadScripts([
+      new BackgroundResource("/content_scripts/XPathInterpreter.js"),
+      new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
+    ], tab, function(){});
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
