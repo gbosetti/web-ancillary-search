@@ -53,16 +53,18 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
 	var me = this;
-	browser.runtime.sendMessage({ call: "getExternalContent", args: data }).then(function(url){
+	console.log("DATA", data);
+	browser.runtime.sendMessage({ "call": "getExternalContent", "args": data }).then(function(url){
 
 	    const req = new window.XMLHttpRequest();
         req.open('GET', url, false);
         req.send(null);
 
 	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
-	    var results = me.evaluateSelector(data.service.results.selector.value, parsedDoc);
-	    data.results = results;
+	    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);	
+		var results = me.extractConcepts(conceptDomElems, data.service.results.properties);
 
+	    data.results = results;
 	    me.showResults(data);
 		/*return Promise.resolve({
 			"response": "Hi from content script",
@@ -83,26 +85,29 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 			var propElems = me.getMultiplePropsFromElements(
 				propSpecs[key].relativeSelector, domElements);
 
+
 			for (i = 0; i < propElems.length; i++) { 
-				if (concepts[i]){ //si hay concepto, se agrega propiedad
-					if(propElems[i] && propElems[i].textContent){
-						concepts[i][key] = propElems[i].textContent;
-					}else {
-						concepts[i][key] = propElems[i].src;
-					}
-				} //si no hay concepto, se crea
-				else{
-					concepts[i] = {};
-					if(propElems[i] && propElems[i].textContent){
-						concepts[i][key] = propElems[i].textContent;
-					}else {
-						concepts[i][key] = propElems[i].src;
+				if (propElems[i] != null){
+
+					if (concepts[i]){ //si hay concepto, se agrega propiedad
+						if(propElems[i] && propElems[i].textContent){
+							concepts[i][key] = propElems[i].textContent;
+						}else {
+							concepts[i][key] = propElems[i].src;
+						}
+					} //si no hay concepto, se crea
+					else{
+						concepts[i] = {};
+						if(propElems[i] && propElems[i].textContent){
+							concepts[i][key] = propElems[i].textContent;
+						}else {
+							concepts[i][key] = propElems[i].src;
+						}
 					}
 				}
 			}
 		});
 	} else alert("There are no properties defined. Results can not be extracted.");
-	
 	return concepts;
 }
 ResultsVisualizer.prototype.getParsedDocument = function(responseText){
