@@ -19,6 +19,7 @@ BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
     console.log("analyzing");
     this.frameLoaded = true;
 
+
   }else console.log("gotit!");
 };
 BrowserUiManager.prototype.onTriggerSelection = function(data) { 

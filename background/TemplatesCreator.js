@@ -101,19 +101,26 @@ TemplatesCreator.prototype.getExternalContent = function(tab, data, sendResponse
     iframe.id = "andes-results";
     iframe.style.width = "1px";
     iframe.style.height = "1px";
+    //iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
+    iframe.setAttribute("referrerpolicy", "unsafe-url");
+    
 
     var me = this;
-    iframe.onload = function(){ 
+    iframe.onload = function(evt){ 
 
-      console.log(data.service.url);
+      console.log(this.contentWindow);
+      console.log(this.contentWindow.document);
+      console.log(this.contentWindow.document.querySelector("a"));
 
-      me.syncLoadScripts(
+
+
+      /*me.syncLoadScripts(
         [
           "content_scripts/visualizations/lib/js/form-manipulation.js"
         ], 
         this.contentWindow.document,
         function(){console.log('syncLoadScripts: done.');}
-      );
+      );*/
 
       //sendResponse("nothing");
       //iframe.onload = undefined;

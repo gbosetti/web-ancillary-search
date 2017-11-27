@@ -41,7 +41,9 @@
     "tabs",
     "storage",
     "<all_urls>",
-    "contextMenus"
+    "contextMenus",
+    "webRequest", 
+    "webRequestBlocking"
   ],
 
   "web_accessible_resources": [

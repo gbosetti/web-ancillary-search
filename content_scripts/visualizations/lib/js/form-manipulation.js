@@ -9,6 +9,8 @@ ExternalContentManipulator.prototype.extractFromUrl = function(url) {
 
 };
 
+console.log("ANCHOR: ", document.querySelector("a"));
+
 //window.postMessage('Hello from the main page!', '*', []);
 //top.window.postMessage('2nd Hello from the main page!', '*', []);
 
