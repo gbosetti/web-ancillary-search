@@ -212,7 +212,6 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 	};
 
   var me = this;
-
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
@@ -220,7 +219,7 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
       "keywords": info.selectionText
 		}
 	}).then(response => {
-    console.log("***", response);
+    console.log("response:", response);
     //me.presentResults(response.results); //TODO: remove this
   });
 

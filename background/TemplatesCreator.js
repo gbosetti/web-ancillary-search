@@ -105,17 +105,22 @@ TemplatesCreator.prototype.getExternalContent = function(tab, data, sendResponse
     var me = this;
     iframe.onload = function(){ 
 
-      me.loadContentScripts(data.service.input.selector, this.contentWindow.document);
+      console.log(data.service.url);
+
+      me.syncLoadScripts(
+        [
+          "content_scripts/visualizations/lib/js/form-manipulation.js"
+        ], 
+        this.contentWindow.document,
+        function(){console.log('files already loaded');}
+      );
+
+      sendResponse("nothing");
+      iframe.onload = undefined;
     }
-    iframe.src = data.service.url;
+    //iframe.src = data.service.url; not working
 
   window.document.body.appendChild(iframe);
-
-  sendResponse("nothing");
-};
-TemplatesCreator.prototype.loadContentScripts = function(filePaths, doc) {
-  
-  new ContentResourcesLoader().syncLoadScripts(filePaths, doc);
 };
 TemplatesCreator.prototype.syncLoadScripts = function(filePaths, doc, callback) {
 
@@ -135,7 +140,6 @@ TemplatesCreator.prototype.syncLoadScripts = function(filePaths, doc, callback) 
     if(callback) callback();
   }   
 };
-
 /*TemplatesCreator.prototype.saveService = function(data) {
 
   this.storage.getFileAsync(data); //createEmptyFile

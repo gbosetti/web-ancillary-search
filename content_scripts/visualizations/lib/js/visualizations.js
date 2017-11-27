@@ -445,7 +445,6 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }
-
 	 });
 });
 
