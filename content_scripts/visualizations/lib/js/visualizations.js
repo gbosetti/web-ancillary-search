@@ -10,11 +10,11 @@ ResultsVisualizer.prototype.showResults = function(data) {
 	this.results = data.results;
 	//window[data.visualizer]());  
 	//TODO: Definir un patron para que el usuario elija el tipo de visualización
-	if (data.seearchEngineName.includes("Image")){
+	/*if (data.seearchEngineName.includes("Image")){
 		this.setVisualizer(new ViewImage(this)); 
-	} else {
+	} else {*/
 		this.setVisualizer(new Datatables(this)); 
-	}
+	//}
 	
 	this.loadExtraDependencies();
 };
@@ -52,13 +52,22 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
+	var me = this;
 	browser.runtime.sendMessage({ call: "getExternalContent", args: data }).then(function(url){
 
-	    //console.log("FROM getExternalContent:", url);
-		return Promise.resolve({
+	    const req = new window.XMLHttpRequest();
+        req.open('GET', url, false);
+        req.send(null);
+
+	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
+	    var results = me.evaluateSelector(data.service.results.selector.value, parsedDoc);
+	    data.results = results;
+
+	    me.showResults(data);
+		/*return Promise.resolve({
 			"response": "Hi from content script",
-			"results": url
-		});
+			"results": results
+		});*/
 	});
 };
 

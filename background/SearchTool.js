@@ -202,29 +202,25 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 
-	this.presentationParams = {
-		"resultsName": spec.results.name,
-		"selectedText": info.selectionText,
-		"seearchEngineName": info.menuItemId,
-		"results": [],
-		"visualizer": "Datatables",
-		"tabId": tab.id
-	};
 
   var me = this;
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
-			"service": spec,
+      "resultsName": spec.results.name,
+      "selectedText": info.selectionText,
+      "seearchEngineName": info.menuItemId,
+      "visualizer": "Datatables",
+      "tabId": tab.id,
+      "service": spec,
       "keywords": info.selectionText
-		}
-	}).then(response => {
+    }
+	}); /*.then(response => {
     console.log("response:", response);
-    //me.presentResults(response.results); //TODO: remove this
-  });
-
+    me.presentResults(response.results); //TODO: remove this
+  });*/
 }
-SearchTool.prototype.presentResults = function(results) {
+/*SearchTool.prototype.presentResults = function(results) {
 	console.log(results);
 	this.presentationParams.results = results;
 
@@ -232,4 +228,4 @@ SearchTool.prototype.presentResults = function(results) {
 		call: "showResults", 
 		args: this.presentationParams
 	});
-};
+};*/
