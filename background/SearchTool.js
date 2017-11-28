@@ -35,8 +35,7 @@ SearchTool.prototype.executeSearchWith = function(data, tab, sendResponse){
   browser.tabs.sendMessage(tab.id, {
     call: "executeSearchWith", 
     args: data
-  }).then(function(){
-    console.log("DONE 6");
+  }).then(function(response){
     sendResponse("done");
   }); 
 };

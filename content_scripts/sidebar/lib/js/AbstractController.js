@@ -111,6 +111,10 @@ function AbstractController ($scope, $state, ServiceService) {
         ServiceService.updateServices();
       }
     };
+    $scope.goToStep = function(data) {
+
+        $state.go(data.state);
+    };
     $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
 
       document.body.scrollTop = document.documentElement.scrollTop = 0;

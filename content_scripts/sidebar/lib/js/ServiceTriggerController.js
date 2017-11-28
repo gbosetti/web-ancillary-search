@@ -71,7 +71,8 @@ function ClickBasedTrigger(client, props){
 	          "strategy": "ClickBasedTrigger",
 	          "props": {
 	          	"inputSelector": client.service.input.selector,
-		        "triggerSelector": client.service.trigger.strategy.selector
+		        "triggerSelector": client.service.trigger.strategy.selector,
+		        "nextAuthoringState": "ResultsSelection"
 	          }
 	        }
 	      });
@@ -135,7 +136,6 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
         ServiceService.updateServices();
 
         $scope.undoActionsOnDom().then(function(){
-        	console.log("DONE 7");
         	$state.go(nextState);
         });
       }

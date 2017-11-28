@@ -28,6 +28,11 @@ TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse
 
   this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
 }
+TemplatesCreator.prototype.goToStep = function(state, tabId) {
+
+  console.log(tabId);
+  browser.tabs.sendMessage(tabId, {call: "goToStep", args: { "state": state }});
+}
 TemplatesCreator.prototype.onElementSelection = function(data) { 
 
   this.sidebarManager.onElementSelection(data);

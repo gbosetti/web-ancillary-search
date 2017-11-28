@@ -18,6 +18,8 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
     
     if(tabInfo.status == "complete"){
 
+      console.log("UPDATING");
+      //Listening for simulating the search in a background tab
       if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
         //console.log("************ UPDATING", tabInfo.url);
         me.currentQuerySpec = undefined;
@@ -25,12 +27,31 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
         me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
       }
 
-      //This is required for the templates templatesCreator
+      //Updating the status for loading the templatesCreator files
       me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
       me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
+      console.log("tabId1", tabId);
+      me.tabId = tabId;
+
+      //To know if we need to resume the process
+      browser.storage.local.get("nextAuthoringState", function(storage){
+
+        if(storage.nextAuthoringState != undefined && storage.nextAuthoringState != null){
+
+          console.log("tabId2", tabId);
+          console.log("tabId3", me.tabId);
+          me.goToStep(storage.nextAuthoringState, tabId);
+          browser.storage.local.set({"nextAuthoringState": undefined });
+          me.toggleSidebar();          
+        }
+      });
     } 
   });
 }
+BrowserUiManager.prototype.goToStep = function(data) { 
+
+  this.templatesCreator.goToStep(data);
+};
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
   this.templatesCreator.onElementSelection(data);

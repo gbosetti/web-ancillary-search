@@ -36,11 +36,12 @@ function PageSelector(){
 	this.selectedElem;
 };
 PageSelector.prototype.executeSearchWith = function(data){
-  this.autocompleteInput(data.props.inputSelector);
-  this.simulateClick(data.props.triggerSelector);
 
-  console.log("DONE 5");
-  return Promise.resolve();
+	browser.storage.local.set({"nextAuthoringState": data.props.nextAuthoringState});
+
+	this.autocompleteInput(data.props.inputSelector);
+	this.simulateClick(data.props.triggerSelector);
+	return Promise.resolve();
 };
 PageSelector.prototype.autocompleteInput = function(inputSelector){
   var input = (new XPathInterpreter()).getSingleElementByXpath(inputSelector, document);
