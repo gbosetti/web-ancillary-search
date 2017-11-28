@@ -61,6 +61,13 @@ BrowserUiManager.prototype.loadVisalizerDependencies = function(data) {
     me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
   });
 }
+BrowserUiManager.prototype.executeSearchWith = function(data, sendResponse){
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.searchTool.executeSearchWith(data, tab, sendResponse);
+  });
+};
 BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendResponse) { 
 
   var me = this;
@@ -133,7 +140,7 @@ BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
     BackgroundResourcesLoader.syncLoadScripts([
       new BackgroundResource("/content_scripts/XPathInterpreter.js"),
       new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
-    ], tab, function(){});
+    ], tab, function(){}, "document_start");
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {

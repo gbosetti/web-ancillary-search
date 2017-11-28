@@ -35,6 +35,23 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
+PageSelector.prototype.executeSearchWith = function(data){
+  this.autocompleteInput(data.props.inputSelector);
+  this.simulateClick(data.props.triggerSelector);
+
+  console.log("DONE 5");
+  return Promise.resolve();
+};
+PageSelector.prototype.autocompleteInput = function(inputSelector){
+  var input = (new XPathInterpreter()).getSingleElementByXpath(inputSelector, document);
+  input.value = (input.value && input.value.trim().length > 0)? input.value : "demo";
+};
+PageSelector.prototype.simulateClick = function(triggerSelector){
+  	var button = (new XPathInterpreter()).getSingleElementByXpath(triggerSelector, document);
+  	button.removeEventListener("click", this.preventActionsListener);
+
+  	button.click();
+};
 PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem){
 
 	var xpi = new XPathInterpreter(),

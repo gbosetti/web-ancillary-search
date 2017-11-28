@@ -44,7 +44,6 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
-		//iframe.onload = function(){ /* TODO: change PresentationState */ }
 		iframe.src = browser.extension.getURL("/content_scripts/visualizations/index.html");
 	
 	return iframe;
@@ -52,8 +51,7 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
-	var me = this;
-	console.log("DATA", data);
+	var me = this; //TODO: hayq ue cambiar getExternalContent porque en realidad solo recupera una URL
 	browser.runtime.sendMessage({ "call": "getExternalContent", "args": data }).then(function(url){
 
 	    const req = new window.XMLHttpRequest();
@@ -66,10 +64,6 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 
 	    data.results = results;
 	    me.showResults(data);
-		/*return Promise.resolve({
-			"response": "Hi from content script",
-			"results": results
-		});*/
 	});
 };
 
@@ -77,7 +71,6 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
 	var concepts = [], me= this;
 	var keys = Object.keys(propSpecs);
-	//console.log("keys", keys);
 	
 	if(keys.length > 0){
 		keys.forEach(function(key){
@@ -126,8 +119,6 @@ ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSele
 
 	if(keys.length > 0){
 		keys.forEach(function(key){
-			//console.log("relativeSelector: ", relativeSelector);
-			//console.log("relativeDomElems[key]: ", relativeDomElems[key]);
 			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[key]);
 				props.push(prop);
 		});
@@ -415,7 +406,6 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
 	    '</table>'}
 	}
 	if (concepts[0] == undefined){
-		console.log(concepts);
 		alert("ERROR: no concepts found (visualizations.js)");
 		return;
 	}
@@ -471,7 +461,7 @@ var presenter = new ResultsVisualizer();
 browser.runtime.onMessage.addListener(request => {
   
 	if(presenter[request.call]) {
-		console.log("calling " + request.call + " (.../visualizations.js)");
+		//console.log("calling " + request.call + " (.../visualizations.js)");
 		return presenter[request.call](request.args);
 	}
 });
