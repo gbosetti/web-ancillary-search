@@ -37,8 +37,7 @@ function PageSelector(){
 };
 PageSelector.prototype.executeSearchWith = function(data){
 
-	browser.storage.local.set({"nextAuthoringState": data.props.nextAuthoringState});
-
+	browser.storage.local.set({"nextAuthoringState": data.props});
 	this.autocompleteInput(data.props.inputSelector);
 	this.simulateClick(data.props.triggerSelector);
 	return Promise.resolve();
@@ -251,10 +250,12 @@ PageSelector.prototype.undarkifyAllDomElements = function(){
 }
 PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 
-	var me = this, elems = this.lastUsedExtractor.getElements(selector); 
-	elems.forEach(function(elem) { 
-		me.removeSelectableElemStyle(elem);
-    });
+	if(this.lastUsedExtractor){
+		var me = this, elems = this.lastUsedExtractor.getElements(selector); 
+		elems.forEach(function(elem) { 
+			me.removeSelectableElemStyle(elem);
+	    });
+	}
 }
 PageSelector.prototype.hasAugmentedAction = function(target){
 
@@ -310,10 +311,12 @@ PageSelector.prototype.addSelectionListener = function(elements, onElementSelect
 }
 PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 
-	var me = this;
-	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
-		me.removeAugmentedActions(elem);	
-    });	
+	if(this.lastUsedExtractor){
+		var me = this;
+		(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
+			me.removeAugmentedActions(elem);	
+	    });	
+	}
 }
 PageSelector.prototype.generatePreview = function(element){
 
@@ -373,10 +376,12 @@ PageSelector.prototype.removeHighlightingOnHoverFrom = function(selector){
 	
 	this.selectedElem = undefined;
 
-	var me = this;
-	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem){
-		me.removeHighlightingOnHover(elem);
-	});
+	if(this.lastUsedExtractor){
+		var me = this;
+		(this.lastUsedExtractor.getElements(selector)).forEach(function(elem){
+			me.removeHighlightingOnHover(elem);
+		});
+	}
 }
 PageSelector.prototype.removeEventBlockers = function(){
 

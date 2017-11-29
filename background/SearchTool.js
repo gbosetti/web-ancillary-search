@@ -24,7 +24,7 @@ SearchTool.prototype.loadVisalizerDependencies = function(tab, dependencies, cal
 	for (var i = dependencies.js.length - 1; i >= 0; i--) {
 		dependencies.js[i] = new BackgroundResource(dependencies.js[i]);
 	}
-  	BackgroundResourcesLoader.syncLoadScripts(dependencies.js, tab, function(){
+  BackgroundResourcesLoader.syncLoadScripts(dependencies.js, tab, function(){
   		browser.tabs.sendMessage(tab.id, {
 			call: callbackMessage
 		});

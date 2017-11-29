@@ -72,7 +72,8 @@ function ClickBasedTrigger(client, props){
 	          "props": {
 	          	"inputSelector": client.service.input.selector,
 		        "triggerSelector": client.service.trigger.strategy.selector,
-		        "nextAuthoringState": "ResultsSelection"
+		        "nextAuthoringState": "ResultsSelection",
+		        "serviceKey": client.service.name
 	          }
 	        }
 	      });
@@ -117,6 +118,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { 
+    	name: '',
       	trigger: {
 	        strategy: new UnsetTrigger($scope)  
 	    }
@@ -125,6 +127,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
       	
+      	$scope.service.name = service.name;
       	$scope.service.input = service.input;
       	$scope.associateTriggeringStrategiesBehaviour(service.trigger.strategy);
       }); 

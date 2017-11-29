@@ -22,16 +22,11 @@ TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) 
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
-	this.sidebarManager.toggleSidebar();
+  return this.sidebarManager.toggleSidebar();
 }
 TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
   this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
-}
-TemplatesCreator.prototype.goToStep = function(state, tabId) {
-
-  console.log(tabId);
-  browser.tabs.sendMessage(tabId, {call: "goToStep", args: { "state": state }});
 }
 TemplatesCreator.prototype.onElementSelection = function(data) { 
 
@@ -45,9 +40,9 @@ TemplatesCreator.prototype.onResultsContainerSelection = function(data) {
 
   this.sidebarManager.onResultsContainerSelection(data);
 };
-TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
+TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function(sendResponse) { 
 
-  this.sidebarManager.onFrameReadyForLoadingUrl();
+  return this.sidebarManager.onFrameReadyForLoadingUrl(sendResponse);
 }
 TemplatesCreator.prototype.onSidebarClosed = function(tab, sendResponse) { 
 

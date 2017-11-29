@@ -30,28 +30,29 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
       //Updating the status for loading the templatesCreator files
       me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
       me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
-      console.log("tabId1", tabId);
-      me.tabId = tabId;
 
       //To know if we need to resume the process
       browser.storage.local.get("nextAuthoringState", function(storage){
 
+        console.log("nextAuthoringState", storage);
         if(storage.nextAuthoringState != undefined && storage.nextAuthoringState != null){
 
-          console.log("tabId2", tabId);
-          console.log("tabId3", me.tabId);
-          me.goToStep(storage.nextAuthoringState, tabId);
-          browser.storage.local.set({"nextAuthoringState": undefined });
-          me.toggleSidebar();          
+          me.executeOnCurrentTab(function(tab){
+
+            browser.storage.local.set({ "nextAuthoringState": undefined });
+            me.toggleSidebar().then(function(){
+              console.log("--- trying to load the proper");
+              me.initialState = storage.nextAuthoringState;
+              me.serviceKey = storage.serviceKey; 
+              //Sigue en getInitialState
+              //me.templatesCreator.goToStep(storage.nextAuthoringState, tab);
+            });
+          });         
         }
       });
     } 
   });
 }
-BrowserUiManager.prototype.goToStep = function(data) { 
-
-  this.templatesCreator.goToStep(data);
-};
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 
   this.templatesCreator.onElementSelection(data);
@@ -96,9 +97,9 @@ BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendRespons
     me.templatesCreator.removeFullSelectionStyle(tab, sendResponse);
   });
 }
-BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
+BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function(data, sendResponse) { 
 
-  this.templatesCreator.onFrameReadyForLoadingUrl();
+  return this.templatesCreator.onFrameReadyForLoadingUrl(sendResponse);
 }
 BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) { 
 
@@ -109,7 +110,7 @@ BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) {
 }
 BrowserUiManager.prototype.toggleSidebar = function() {
 
-  this.templatesCreator.toggleSidebar();
+  return this.templatesCreator.toggleSidebar();
 };
 BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 
@@ -121,6 +122,11 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
   this.executeOnCurrentTab(function(tab){
     me.templatesCreator.adaptPlaceholder(tab, data);
   });
+};
+BrowserUiManager.prototype.getInitialState = function(data, sendResponse) {
+
+  sendResponse({ "initialState": this.initialState, "serviceKey": this.serviceKey });
+  this.initialState = undefined;
 };
 BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
 
