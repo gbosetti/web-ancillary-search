@@ -133,7 +133,7 @@ BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
     BackgroundResourcesLoader.syncLoadScripts([
       new BackgroundResource("/content_scripts/XPathInterpreter.js"),
       new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
-    ], tab, function(){});
+    ], tab, function(){},"document_start");
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
