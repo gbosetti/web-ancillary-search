@@ -35,6 +35,7 @@ function AbstractController ($scope, $state, ServiceService) {
     $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector, removeStyleOnSelection) {
       
       removeStyleOnSelection = (removeStyleOnSelection == undefined)? true : removeStyleOnSelection;
+      //console.log("refElemSelector from abstract", refElemSelector);
       return browser.runtime.sendMessage({ 
         "call": "enableElementSelection",
         "args": {
@@ -110,14 +111,8 @@ function AbstractController ($scope, $state, ServiceService) {
         ServiceService.updateServices();
       }
     };
-    $scope.goToStep = function(state) {
-
-        console.log("GO TO state", state);
-        $state.go(state);
-    };
     $scope.initialize = function() { //Do not call this methid from the constructor --> Loading error.
 
-      console.log("initializing form", this);
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       $scope.loadDataModel();
       $scope.loadValidationRules();

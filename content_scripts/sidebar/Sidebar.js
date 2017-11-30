@@ -6,10 +6,10 @@ function Sidebar(){
 	//this.open();
 }
 Sidebar.prototype.toggle = function() { 
-	return this.displayStatus.toggle();
+	this.displayStatus.toggle();
 };
 Sidebar.prototype.open = function() {
-	return this.displayStatus.open();
+	this.displayStatus.open();
 };
 Sidebar.prototype.close = function() {
 	this.displayStatus.close();
@@ -22,24 +22,16 @@ Sidebar.prototype.getIframe = function() {
 };
 Sidebar.prototype.loadUrl = function(data) {
 
+	this.getIframe().src = data.url;
 	var me = this;
-	return new Promise(function(resolve, reject) {  
-		me.getIframe().src = data.url;
-		me.getIframe().onload = function(){
-			me.localize(this.contentWindow.document);
-			me.loadContentScripts(data.filePaths, this.contentWindow.document).then(function(){
-				resolve();
-			});
-		};
-	});
+	this.getIframe().onload = function(){
+		me.localize(this.contentWindow.document);
+		me.loadContentScripts(data.filePaths, this.contentWindow.document);
+	};
 };
-Sidebar.prototype.loadContentScripts = function(filePaths, doc, resolve) {
+Sidebar.prototype.loadContentScripts = function(filePaths, doc) {
 	
-	return new Promise(function(resolve, reject) {  
-		new ContentResourcesLoader().syncLoadScripts(filePaths, doc, function(){
-			resolve();
-		});
-	});
+	new ContentResourcesLoader().syncLoadScripts(filePaths, doc);
 };
 Sidebar.prototype.moveLeft = function() {
 	
@@ -168,6 +160,7 @@ Sidebar.prototype.createIframe = function() {
 	return frame;
 };
 
+
 // RENDERING SIDE STATUS
 
 function PositioningStatus(context){
@@ -201,7 +194,7 @@ function RightSidedBar(context){
 
 function SidebarStatus(context){
 	this.sidebar = context;
-	this.open = function(){ return Promise.resolve(); };
+	this.open = function(){ };
 	this.close = function(){};
 }
 
@@ -216,7 +209,6 @@ function OpenSidebar(context){
 	this.toggle = function() {
 		console.log("toggle from OPEN");
 		this.close();
-		return Promise.resolve();
 	};
 }
 
@@ -227,12 +219,10 @@ function ClosedSidebar(context){
 		browser.runtime.sendMessage({ call: "onFrameReadyForLoadingUrl" });
 
 		context.displayStatus = new OpenSidebar(context);
-		return Promise.resolve();
 	};
 	this.toggle = function() {
 		console.log("toggle from CLOSED");
 		this.open();
-		return Promise.resolve();
 	};
 }
 
@@ -241,7 +231,7 @@ var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
 	if(sidebar[request.call]) {
-		console.log("calling " + request.call + " (.../sidebar.js)");
-		return sidebar[request.call](request.args);
+		//console.log("calling " + request.call + " (.../sidebar.js)");
+		sidebar[request.call](request.args);
 	}
 });

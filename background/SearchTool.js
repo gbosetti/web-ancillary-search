@@ -24,21 +24,18 @@ SearchTool.prototype.loadVisalizerDependencies = function(tab, dependencies, cal
 	for (var i = dependencies.js.length - 1; i >= 0; i--) {
 		dependencies.js[i] = new BackgroundResource(dependencies.js[i]);
 	}
-  BackgroundResourcesLoader.syncLoadScripts(dependencies.js, tab, function(){
+  	BackgroundResourcesLoader.syncLoadScripts(dependencies.js, tab, function(){
   		browser.tabs.sendMessage(tab.id, {
 			call: callbackMessage
 		});
-  });
-}
-SearchTool.prototype.executeSearchWith = function(data, tab, sendResponse){
+  	});
 
-  browser.tabs.sendMessage(tab.id, {
-    call: "executeSearchWith", 
-    args: data
-  }).then(function(response){
-    sendResponse("done");
-  }); 
-};
+  	//STYLE
+  	/*for (var i = dependencies.css.length - 1; i >= 0; i--) {
+		dependencies.css[i] = new BackgroundResource(dependencies.css[i]);
+	}
+  	BackgroundResourcesLoader.syncLoadStyles(dependencies.css, tab);*/
+}
 SearchTool.prototype.areScriptsLoadedInTab = function(tabId) {
   return this.loadedScriptsByTabs[tabId]? this.loadedScriptsByTabs[tabId] : false;
 };
@@ -48,12 +45,114 @@ SearchTool.prototype.toggleLoadedScriptsInTab = function(tabId) {
 };
 SearchTool.prototype.createContextMenus = function() {     
 
+  //por ahora una sola entarda
+  //this.fakeApiDefinitions(); //to be removed on production
   var me = this;    
   browser.contextMenus.removeAll().then(function(){ 
     me.createApisMenu();
     me.populateApisMenu();    
   }); 
 }
+/*//This will be generated in the definition of each search service. It may also be retrieved from a server
+SearchTool.prototype.fakeApiDefinitions = function(){
+  browser.storage.local.set({
+    ebay: {
+      name:'ebay', 
+      url:'https://www.ebay.com/sch/i.html?_odkw=ibei+compras&_osacat=0&_from=R40&_trksid=p2045573.m570.l1313.TR0.TRC0.H0.Xlas+venas+abiertas+de+america+latina.TRS0&_nkw=las+venas+abiertas+de+america+latina&_sacat=0',
+      keywords:'',
+      loadingResStrategy: "WriteAndClickToReload", 
+      contentScriptWhen: "ready",
+      entry:'//form//table//input', 
+      trigger:'//form//table/tbody/tr/td[3]/input',
+      results: {
+        name: 'Productos',
+       //div[@id="ResultSetItems"]/ul',
+      
+        xpath:'//div[@id="ResultSetItems"]/ul/li', //li[@class="sresult lvresult clearfix li shic"],//div[@id="ResultSetItems"]/ul/li',
+        properties:[
+          {
+            name:'Name',
+            xpath:'//h3/a', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name: 'Price',
+            xpath: '//ul/li[contains(@class, "prc")]/span',
+            //extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Image',
+            xpath:'//div/div/a/img', 
+            extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          }
+        ]
+      },
+      visualization:{
+        colsDef: [{
+            title: "Name",
+            responsivePriority: 1
+          },{
+            title: "Price",
+            responsivePriority: 1
+          },{
+            title: "Image",
+            responsivePriority: 1
+          }]
+      }
+    },
+    bibliotecaUNLP: {
+      name:'bibliotecaUNLP',
+      url:'http://www.biblio.unlp.edu.ar/catalogo/opac/cgi-bin/pgopac.cgi?a=ISRCH&Profile=Default&cArea1=MATSTOCK%3A%3ACodBiblioteca&cTermino1=&cTodas1=N&cOperacion2=AND&cArea2=En+todas&cOperacion2=FIN&cTermino2=eduardo+galeano&bBuscar=Comenzar&cTodas2=S',
+      keywords:'',
+      loadingResStrategy: "WriteAndClickToReload", 
+      contentScriptWhen: "ready",
+      entry:'//table[@id="tb-resultados"]/tbody/tr',
+      trigger:'',
+      results: {
+        name: 'Libros',
+       //div[@id="ResultSetItems"]/ul',
+      
+        xpath:'//table[@id="tb-resultados"]/tbody/tr',//tr/td[3]', //li[@class="sresult lvresult clearfix li shic"],//div[@id="ResultSetItems"]/ul/li',
+        properties:[
+          {
+            name:'Name',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[3]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Year',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[6]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          },
+          {
+            name:'Editorial',
+            xpath:'//table[@id="tb-resultados"]/tbody/tr/td[5]', 
+          //  extractor: "SingleNodeExtractor"// new SingleNodeExtractor()
+          }
+
+        ]
+      },
+      visualization:{
+        colsDef: [{
+            title: "Name",
+            responsivePriority: 1
+          },
+          {
+            title: "Year",
+            responsivePriority: 1
+          },
+          {
+            title: "Editorial",
+            responsivePriority: 1
+          }
+
+
+        ]
+      }
+    }
+   
+  });
+}*/
 SearchTool.prototype.createApisMenu = function(){
 
   //The menu is created
@@ -103,6 +202,8 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 
+
+  var me = this;
 	browser.tabs.sendMessage(tab.id, {
 		call: "retrieveExtenralResults", 
 		args: {
@@ -114,5 +215,17 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
       "service": spec,
       "keywords": info.selectionText
     }
-	}); 
+	}); /*.then(response => {
+    console.log("response:", response);
+    me.presentResults(response.results); //TODO: remove this
+  });*/
 }
+/*SearchTool.prototype.presentResults = function(results) {
+	console.log(results);
+	this.presentationParams.results = results;
+
+	browser.tabs.sendMessage(this.presentationParams.tabId, {
+		call: "showResults", 
+		args: this.presentationParams
+	});
+};*/

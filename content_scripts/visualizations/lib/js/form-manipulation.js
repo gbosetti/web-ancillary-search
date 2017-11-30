@@ -24,6 +24,8 @@ var extContentMan = new ExternalContentManipulator();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
 	if(extContentMan[request.call]){
+		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
+		//Se lo llama con: browser.tabs.sendMessage
 		extContentMan[request.call](request.args);
 	}
 });

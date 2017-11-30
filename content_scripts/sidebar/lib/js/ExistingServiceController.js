@@ -76,14 +76,5 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
         $scope.loadServiceUI(services[key]);
       });
     }
-
-    browser.runtime.sendMessage({ call: "getInitialState" }).then(function(initialState){
-
-      console.log("INITIAL STATE", initialState);
-      if(initialState) {
-        ServiceService.setCurrentServiceKey(initialState.serviceKey);
-        $scope.goToStep(initialState.state);
-      }
-      else $scope.initialize();
-    }); 
+    $scope.initialize();
 });

@@ -83,6 +83,7 @@ BackgroundPageSelector.prototype.sendEnableSelectionMessage = function(tab, data
 
 
 
+
 function PageBehaviourStatus(context){
 	this.toggleDomElementsBehaviour = function(tab){};
 }
@@ -161,10 +162,9 @@ function LoadedPageSelector(context){
 		//console.log("RESTORE FROM LOADED");
 		context.sendRestoreDomElementsBehaviour(tab);
 	};
-	this.goToStep = function(tab, data){
-
-		context.sendGoToStep(tab, data);
-	}
+	this.enableElementSelection = function(tab, data){
+		context.sendEnableSelectionMessage(tab, data);
+	};
 	this.disableElementSelection = function(tab, selector){
 		context.sendDisableSelectionMessage(tab, selector);
 	};

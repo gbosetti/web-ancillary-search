@@ -5,7 +5,7 @@
 
 function ContentResourcesLoader(){
 	this.syncLoadScripts = function(filePaths, doc, callback) {
-  
+
 		var me=this, path = filePaths.splice(0, 1)[0];
 		if(path){
 
@@ -15,11 +15,12 @@ function ContentResourcesLoader(){
 			  me.syncLoadScripts(filePaths, doc, callback);
 			};
 			doc.getElementsByTagName('head')[0].appendChild(script);
+			console.log("loading ", path);
 			script.src = browser.extension.getURL(path);
 
 		}else{
 			if(callback) callback();
-		}	
+		}		
 	};
 	this.syncLoadStyles = function(filePaths, doc, callback){
 		for (var i = filePaths.length - 1; i >= 0; i--) {

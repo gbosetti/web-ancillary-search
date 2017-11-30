@@ -31,10 +31,10 @@ SidebarManager.prototype.notifyListeners = function() {
 		}
 	});
 }
-SidebarManager.prototype.onFrameReadyForLoadingUrl = function(sendResponse) { 
+SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
 	//this.open();  salta a onSidebarStatusChange
-	this.loadChromeUrl(this.defaultFile, this.defaultDependencies, sendResponse); 
+	this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
 	this.notifyListeners();
 }
 SidebarManager.prototype.onSidebarClosed = function() { 
@@ -42,7 +42,7 @@ SidebarManager.prototype.onSidebarClosed = function() {
 	this.close();
 	this.notifyListeners();
 }
-SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths, sendResponse) { //PUBLIC
+SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBLIC
 
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
@@ -51,8 +51,6 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths, sendResp
 				"url": browser.extension.getURL(chromeUrl),
 				"filePaths": filePaths
 			}
-		}).then(function(){
-			sendResponse("done!"); 
 		});
 	});
 };
@@ -86,15 +84,10 @@ SidebarManager.prototype.onResultsContainerSelection = function(data) {
 SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 
 	var me = this;
-	var prom = new Promise(function(resolve, reject) {
-
-		me.getCurrentTab(function(tab){
-			((me.getStatusForTab(tab)).toggleSidebar(tab, callback)).then(function(){
-				resolve();
-			});
-		});
+	this.getCurrentTab(function(tab){
+		//console.log("got current tab", tab);
+		me.getStatusForTab(tab).toggleSidebar(tab, callback);
 	});
-	return prom;
 };
 SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 
@@ -165,12 +158,9 @@ function LoadedSidebar(context){ // SUPERCLASS
 	SidebarManagerStatus.call(this, context);
 	this.toggleSidebar = function(tab, callback){
 
-		return new Promise(function(resolve, reject) {
-			browser.tabs.sendMessage(tab.id, {call: "toggle"}).then(function(){
-				resolve();
-			});
-			if(callback) callback(tab); //TODO: callback is not required now with sendResponse
-		});
+		this.log(); 
+		browser.tabs.sendMessage(tab.id, {call: "toggle"});
+		if(callback) callback(tab);
 	};
 	this.isLoaded = function(){
 		return true;
@@ -206,28 +196,18 @@ function NoLoadedSidebar(context){
 
 	var status = this;
 	this.toggleSidebar = function(tab, callback){
-		//console.log("instantiating CS_SIDEBAR and sending the open message");
-		var prom = this.open(tab);
-		if(callback) callback(tab); //TODO: callback is not required now with sendResponse
-		return prom;
+		console.log("instantiating CS_SIDEBAR and sending the open message");
+		this.open(tab);
+		if(callback) callback(tab);
 	};
-	this.open = function(tab, callback){
+	this.open = function(tab){
 
-		return new Promise(function(resolve, reject) {     
-
-		  	BackgroundResourcesLoader.syncLoadScripts([
-		  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
-		  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
-		  	], tab, function () {
-
-		        context.status[tab.id] = new LoadedOpenSidebar(context);
-		        browser.tabs.sendMessage(tab.id, {call: "open"}).then(function(){
-		        	
-						console.log("sending response");
-						resolve();
-				});
-		        if(callback) callback();
-		    });
-	    });		
+		BackgroundResourcesLoader.syncLoadScripts([
+	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
+	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
+	  	], tab, function () {
+	        context.status[tab.id] = new LoadedOpenSidebar(context);
+	        status.sendOpenMessage(tab);
+	    });
 	};
 }

@@ -18,8 +18,6 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
     
     if(tabInfo.status == "complete"){
 
-      console.log("UPDATING");
-      //Listening for simulating the search in a background tab
       if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
         //console.log("************ UPDATING", tabInfo.url);
         me.currentQuerySpec = undefined;
@@ -27,29 +25,9 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
         me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
       }
 
-      //Updating the status for loading the templatesCreator files
+      //This is required for the templates templatesCreator
       me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
       me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
-
-      //To know if we need to resume the process
-      browser.storage.local.get("nextAuthoringState", function(storage){
-
-        console.log("nextAuthoringState", storage);
-        if(storage.nextAuthoringState != undefined && storage.nextAuthoringState != null){
-
-          me.executeOnCurrentTab(function(tab){
-
-            browser.storage.local.set({ "nextAuthoringState": undefined });
-            me.toggleSidebar().then(function(){
-              console.log("--- trying to load the proper");
-              me.initialState = storage.nextAuthoringState;
-              me.serviceKey = storage.serviceKey; 
-              //Sigue en getInitialState
-              //me.templatesCreator.goToStep(storage.nextAuthoringState, tab);
-            });
-          });         
-        }
-      });
     } 
   });
 }
@@ -83,13 +61,6 @@ BrowserUiManager.prototype.loadVisalizerDependencies = function(data) {
     me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
   });
 }
-BrowserUiManager.prototype.executeSearchWith = function(data, sendResponse){
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.searchTool.executeSearchWith(data, tab, sendResponse);
-  });
-};
 BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendResponse) { 
 
   var me = this;
@@ -97,9 +68,9 @@ BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendRespons
     me.templatesCreator.removeFullSelectionStyle(tab, sendResponse);
   });
 }
-BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function(data, sendResponse) { 
+BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
-  return this.templatesCreator.onFrameReadyForLoadingUrl(sendResponse);
+  this.templatesCreator.onFrameReadyForLoadingUrl();
 }
 BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) { 
 
@@ -110,7 +81,7 @@ BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) {
 }
 BrowserUiManager.prototype.toggleSidebar = function() {
 
-  return this.templatesCreator.toggleSidebar();
+  this.templatesCreator.toggleSidebar();
 };
 BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 
@@ -122,11 +93,6 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
   this.executeOnCurrentTab(function(tab){
     me.templatesCreator.adaptPlaceholder(tab, data);
   });
-};
-BrowserUiManager.prototype.getInitialState = function(data, sendResponse) {
-
-  sendResponse({ "initialState": this.initialState, "serviceKey": this.serviceKey });
-  this.initialState = undefined;
 };
 BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
 
@@ -167,7 +133,7 @@ BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
     BackgroundResourcesLoader.syncLoadScripts([
       new BackgroundResource("/content_scripts/XPathInterpreter.js"),
       new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
-    ], tab, function(){}, "document_start");
+    ], tab, function(){});
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {

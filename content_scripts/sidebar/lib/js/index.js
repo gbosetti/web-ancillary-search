@@ -63,7 +63,6 @@ browser.runtime.onMessage.addListener(function callServiceNameActions(request, s
   if(request.args){
     var controller = angular.element(document.querySelector(request.args.scoped)).scope();
     if(controller != undefined && controller[request.call]){
-        console.log("***", request.call);
       controller[request.call](request.args);
     }
   }

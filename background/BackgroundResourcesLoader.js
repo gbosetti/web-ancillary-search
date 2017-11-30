@@ -1,18 +1,17 @@
 function BackgroundResourcesLoader(){}
-BackgroundResourcesLoader.syncLoadScripts = function(files, tab, callback, runAt) {
+BackgroundResourcesLoader.syncLoadScripts = function(files, tab, callback) {
 
-	runAt = (runAt)? runAt: "document_end";
-	this.syncLoadFiles(files, tab, "executeScript", callback, runAt); 
+	this.syncLoadFiles(files, tab, "executeScript", callback); 
 };
-BackgroundResourcesLoader.syncLoadStyles = function(files, tab, callback, runAt) {
+BackgroundResourcesLoader.syncLoadStyles = function(files, tab, callback) {
 
 	this.syncLoadFiles(files, tab, "insertCSS", callback); 
 };
-BackgroundResourcesLoader.syncLoadFiles = function(files, tab, fileTypeMessage, callback, runAt) {
+BackgroundResourcesLoader.syncLoadFiles = function(files, tab, fileTypeMessage, callback) {
 
 	var me = this, file = files.splice(0, 1)[0];
 	if(file){
-		browser.tabs[fileTypeMessage](tab.id, { "file": file.path, "runAt": runAt }).then(function(){
+		browser.tabs[fileTypeMessage](tab.id, { "file": file.path }).then(function(){
 			me.syncLoadFiles(files, tab, fileTypeMessage, callback);
 		});
 	}else{
@@ -24,6 +23,10 @@ BackgroundResourcesLoader.syncLoadFiles = function(files, tab, fileTypeMessage, 
 function BackgroundResource(path, className){ 
 	this.path = path;
 	this.className = className
+	//this.isLoadedAt = function(win){
+		// We are omitting the loading if the class do exist. Otherwise we have an error
+		// classes created with the class reserved word can not be redeclared
+	//}
 }
 
 /* PROS AND CONS: if you do use this to load the files, 

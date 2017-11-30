@@ -64,19 +64,6 @@ function ClickBasedTrigger(client, props){
 	};
 	this.undoActionsOnDom = function(){
 		client.disableDomElementSelection(client.triggablesSelector);
-
-		return browser.runtime.sendMessage({ 
-	        "call": "executeSearchWith",
-	        "args": {
-	          "strategy": "ClickBasedTrigger",
-	          "props": {
-	          	"inputSelector": client.service.input.selector,
-		        "triggerSelector": client.service.trigger.strategy.selector,
-		        "nextAuthoringState": "ResultsSelection",
-		        "serviceKey": client.service.name
-	          }
-	        }
-	      });
 	};
 	this.getMissingRequirementLocalizedId = function(){
 		return "click_on_trigger_error"
@@ -118,7 +105,6 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     AbstractController.call(this, $scope, $state, ServiceService);
 
     $scope.service = { 
-    	name: '',
       	trigger: {
 	        strategy: new UnsetTrigger($scope)  
 	    }
@@ -127,21 +113,8 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
       	
-      	$scope.service.name = service.name;
-      	$scope.service.input = service.input;
       	$scope.associateTriggeringStrategiesBehaviour(service.trigger.strategy);
       }); 
-    };
-    $scope.loadNextStep = function(nextState) {
-
-      if($scope.areRequirementsMet()){
-        $scope.saveDataModel();
-        ServiceService.updateServices();
-
-        $scope.undoActionsOnDom().then(function(){
-        	$state.go(nextState);
-        });
-      }
     };
     $scope.saveDataModel = function() {
     	ServiceService.setTrigger({
@@ -150,7 +123,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     };
     $scope.loadValidationRules = function() { }
     $scope.undoActionsOnDom = function() {
-    	return $scope.service.trigger.strategy.undoActionsOnDom();
+    	$scope.service.trigger.strategy.undoActionsOnDom();
     };
     $scope.loadSubformBehaviour = function() { 
       //mowing this to loadDataModel because some of the UI depend on the strategy

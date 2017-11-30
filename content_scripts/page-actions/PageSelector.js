@@ -35,23 +35,6 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
-PageSelector.prototype.executeSearchWith = function(data){
-
-	browser.storage.local.set({"nextAuthoringState": data.props});
-	this.autocompleteInput(data.props.inputSelector);
-	this.simulateClick(data.props.triggerSelector);
-	return Promise.resolve();
-};
-PageSelector.prototype.autocompleteInput = function(inputSelector){
-  var input = (new XPathInterpreter()).getSingleElementByXpath(inputSelector, document);
-  input.value = (input.value && input.value.trim().length > 0)? input.value : "demo";
-};
-PageSelector.prototype.simulateClick = function(triggerSelector){
-  	var button = (new XPathInterpreter()).getSingleElementByXpath(triggerSelector, document);
-  	button.removeEventListener("click", this.preventActionsListener);
-
-  	button.click();
-};
 PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem){
 
 	var xpi = new XPathInterpreter(),
@@ -250,12 +233,10 @@ PageSelector.prototype.undarkifyAllDomElements = function(){
 }
 PageSelector.prototype.removeElemsHighlightingClass = function(selector){
 
-	if(this.lastUsedExtractor){
-		var me = this, elems = this.lastUsedExtractor.getElements(selector); 
-		elems.forEach(function(elem) { 
-			me.removeSelectableElemStyle(elem);
-	    });
-	}
+	var me = this, elems = this.lastUsedExtractor.getElements(selector); 
+	elems.forEach(function(elem) { 
+		me.removeSelectableElemStyle(elem);
+    });
 }
 PageSelector.prototype.hasAugmentedAction = function(target){
 
@@ -311,12 +292,10 @@ PageSelector.prototype.addSelectionListener = function(elements, onElementSelect
 }
 PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 
-	if(this.lastUsedExtractor){
-		var me = this;
-		(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
-			me.removeAugmentedActions(elem);	
-	    });	
-	}
+	var me = this;
+	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
+		me.removeAugmentedActions(elem);	
+    });	
 }
 PageSelector.prototype.generatePreview = function(element){
 
@@ -376,12 +355,10 @@ PageSelector.prototype.removeHighlightingOnHoverFrom = function(selector){
 	
 	this.selectedElem = undefined;
 
-	if(this.lastUsedExtractor){
-		var me = this;
-		(this.lastUsedExtractor.getElements(selector)).forEach(function(elem){
-			me.removeHighlightingOnHover(elem);
-		});
-	}
+	var me = this;
+	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem){
+		me.removeHighlightingOnHover(elem);
+	});
 }
 PageSelector.prototype.removeEventBlockers = function(){
 

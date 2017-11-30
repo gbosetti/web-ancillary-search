@@ -22,7 +22,7 @@ TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) 
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
-  return this.sidebarManager.toggleSidebar();
+	this.sidebarManager.toggleSidebar();
 }
 TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
@@ -40,9 +40,9 @@ TemplatesCreator.prototype.onResultsContainerSelection = function(data) {
 
   this.sidebarManager.onResultsContainerSelection(data);
 };
-TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function(sendResponse) { 
+TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
 
-  return this.sidebarManager.onFrameReadyForLoadingUrl(sendResponse);
+  this.sidebarManager.onFrameReadyForLoadingUrl();
 }
 TemplatesCreator.prototype.onSidebarClosed = function(tab, sendResponse) { 
 
