@@ -5,8 +5,11 @@ function ResultsVisualizer(){
 	this.presentationState = new WaitingForRequest(this);
 }
 
-ResultsVisualizer.prototype.showResults = function(data) {
+ResultsVisualizer.prototype.showWidget = function(data) {
 	this.panel = this.buildPanel(data);
+};
+ResultsVisualizer.prototype.showResults = function(data) {
+
 	this.results = data.results;
 	//window[data.visualizer]());  
 	//TODO: Definir un patron para que el usuario elija el tipo de visualización
@@ -53,7 +56,7 @@ ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow)
 ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
 	var me = this;
-	console.log("DATA", data);
+	me.showWidget(data);
 	browser.runtime.sendMessage({ "call": "getExternalContent", "args": data }).then(function(url){
 
 	    const req = new window.XMLHttpRequest();

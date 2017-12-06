@@ -178,9 +178,7 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 				onclick: function(info,tab){ 
 
             browser.storage.local.get("services").then((updatedStorage) => {
-              apiSpecs = updatedStorage.services;
-              //console.log("apiSpecs", apiSpecs);
-
+              apiSpecs = updatedStorage.services;              
               var propId = info.menuItemId;
 
               //Acá adentro solo es loggueable si se anula el cierre de popups
@@ -199,6 +197,11 @@ SearchTool.prototype.populateApisMenu = function(){ //Add items to the browser's
 	}, function onError(error) {
 		console.log(`Error: ${error}`);
 	});
+}
+SearchTool.prototype.disableLoading = function(tab) {
+  browser.tabs.sendMessage(tab.id, {
+    call: "disableLoading"
+  });
 }
 SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 
