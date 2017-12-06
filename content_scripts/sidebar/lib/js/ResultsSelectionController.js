@@ -19,7 +19,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       	$scope.service.results.preview = service.results.preview;
         $scope.service.results.name = service.results.name;
 
-        $scope.enableDomElementSelection("tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
+        $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
 
       	if($scope.service.results.selector){
 
@@ -63,7 +63,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     };
     $scope.undoActionsOnDom = function() {
     	$scope.removeFullSelectionStyle();
-		  $scope.disableDomElementSelection("tr, div:not(#andes-sidebar)");
+		  $scope.disableDomElementSelection("li, tr, div:not(#andes-sidebar)");
     };
   $scope.onElementSelection = function(data){
 
