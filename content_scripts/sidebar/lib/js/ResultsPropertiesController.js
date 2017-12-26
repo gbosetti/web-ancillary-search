@@ -96,7 +96,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.getElementsSelector = function(selector) {
 
-      return selector + "//*"; //( selector.length-3, selector.length == "[1]")? selector + "//*": selector + "[1]//*";
+      return selector + "//span | " + selector + "//a"; //changed for the experiment. Prev value: //*
+      //( selector.length-3, selector.length == "[1]")? selector + "//*": selector + "[1]//*";
     };
     $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
       

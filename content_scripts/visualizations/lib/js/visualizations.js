@@ -58,7 +58,7 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 	var me = this;
 	me.showWidget(data);
 	browser.runtime.sendMessage({ "call": "getExternalContent", "args": data }).then(function(url){
-
+		
 	    const req = new window.XMLHttpRequest();
         req.open('GET', url, false);
         req.send(null);
