@@ -198,14 +198,17 @@ PageSelector.prototype.enableElementSelection = function(data){
 
 	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
-
+	console.log("REF ELEM SELECTOR", data.refElemSelector);
+	
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
+
     this.addSelectionListener(
     	elements, 
     	data.onElementSelection, 
     	"click", 
     	data.scoped,
-    	data.removeStyleOnSelection
+    	data.removeStyleOnSelection,
+    	data.generateRelativeSelector
     );
     this.undarkifySidebarElements();
     this.darkify(document.body); 
@@ -276,12 +279,13 @@ PageSelector.prototype.addAugmentedAction = function(elem, action){
 		elem.setAttribute("andes-actions", JSON.stringify(actions))
 	}
 }
-PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped, removeStyleOnSelection){
+PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped, removeStyleOnSelection, generateRelativeSelector){
 
 	var me = this;
 		me.onElementSelectionMessage = onElementSelection; //callback
 		me.removeStyleOnSelection = removeStyleOnSelection;
 		me.scoped = scoped;
+		me.generateRelativeSelector = generateRelativeSelector;
 
 	elements.forEach(function(elem) { 
 		me.undarkify(elem);	

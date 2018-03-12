@@ -32,7 +32,8 @@ function AbstractController ($scope, $state, ServiceService) {
         document.querySelector(selector).focus();
     };
     $scope.loadSubformBehaviour = function() {};
-    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector, removeStyleOnSelection) {
+    $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, 
+      scrapperClass, refElemSelector, removeStyleOnSelection, generateRelativeSelector) {
       
       removeStyleOnSelection = (removeStyleOnSelection == undefined)? true : removeStyleOnSelection;
       //console.log("refElemSelector from abstract", refElemSelector);
@@ -44,7 +45,8 @@ function AbstractController ($scope, $state, ServiceService) {
           "scoped": scoped,
           "scrapperClass": scrapperClass || "QuerySelectorScrapper",
           "refElemSelector": refElemSelector,
-          "removeStyleOnSelection": removeStyleOnSelection
+          "removeStyleOnSelection": removeStyleOnSelection,
+          "generateRelativeSelector": generateRelativeSelector || false
         }
       });
     };

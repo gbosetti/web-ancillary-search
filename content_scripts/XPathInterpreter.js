@@ -52,8 +52,8 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
 
                 for (var j = 0; j < path.length; j++) {
                     
-                    /*if(removeBase && path[j] != null && path[j].indexOf('.//')>-1)
-                        path[j] = path[j].slice(3,path[j].length);*/
+                    if(removeBase && path[j] != null && path[j].indexOf('.//')>-1)
+                        path[j] = path[j].slice(3,path[j].length);
 
                     xPathArray.push(path[j]);
                     /*if(!removeBase)

@@ -27,7 +27,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
           ".well", 
           "XpathScrapper", 
           service.results.selector.value,
-          false
+          false,
+          true
         ).then(function(){
           $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
         });

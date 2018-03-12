@@ -65,6 +65,8 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 
 	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
 	    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);	
+
+	    console.log("\n\n\n PROPERTIES ", data.service.results);
 		var results = me.extractConcepts(conceptDomElems, data.service.results.properties);
 
 	    data.results = results;
@@ -87,7 +89,7 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 
 			var propElems = me.getMultiplePropsFromElements(
 				propSpecs[key].relativeSelector, domElements);
-
+			console.log("propElems", propElems);
 
 			for (i = 0; i < propElems.length; i++) { 
 				if (propElems[i] != null){
@@ -125,14 +127,22 @@ ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
 };
 ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-	var props = [], keys = Object.keys(relativeDomElems);
+	var props = [], indexesOfInfoItems = Object.keys(relativeDomElems);
 
-	if(keys.length > 0){
-		keys.forEach(function(key){
-			//console.log("relativeSelector: ", relativeSelector);
-			//console.log("relativeDomElems[key]: ", relativeDomElems[key]);
-			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[key]);
+	//console.log("1. indexesOfInfoItems", indexesOfInfoItems);
+	//console.log("2. relativeDomElems", relativeDomElems);
+
+	if(indexesOfInfoItems.length > 0){
+		indexesOfInfoItems.forEach(function(index){
+			//console.log("3. info-item[index]", relativeDomElems[index]); // relativeDomElems[index] devuelve el info-item
+			//console.log("3. xpath of prop", relativeSelector); //devuelve el info-item
+			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[index]);
+				
+			//console.log("prop", prop);
+			if(prop) {
 				props.push(prop);
+				console.log("added");
+			}
 		});
 	}
 	return props; 
