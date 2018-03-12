@@ -35,7 +35,7 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
-PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem){
+PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector){
 
 	var xpi = new XPathInterpreter(),
 		labeledXpaths = {}, 
@@ -82,7 +82,7 @@ PageSelector.prototype.loadListeners = function(){
 		browser.runtime.sendMessage({ 
 			"call": me.onElementSelectionMessage,
 			"args": {
-				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem), 
+				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector), 
 				"previewSource": me.generatePreview(me.selectedElem),
 				"scoped": me.scoped,
 				"exampleValue": me.selectedElem.textContent

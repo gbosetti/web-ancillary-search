@@ -223,12 +223,3 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
     me.presentResults(response.results); //TODO: remove this
   });*/
 }
-/*SearchTool.prototype.presentResults = function(results) {
-	console.log(results);
-	this.presentationParams.results = results;
-
-	browser.tabs.sendMessage(this.presentationParams.tabId, {
-		call: "showResults", 
-		args: this.presentationParams
-	});
-};*/

@@ -7,8 +7,8 @@ function XPathInterpreter() {
     arguments.callee.instance = this;
     this.currentElement;
     this.xPaths;
-    this.engine = [new BasicIdEngine(), new IdTreeXPathEngine(), new ControlTypeBasedEngine(), 
-    new FullXPathEngine(), new ClassXPathEngine() ];
+    this.engine = [new IdTreeXPathEngine(), new ControlTypeBasedEngine(), 
+    new FullXPathEngine(), new ClassXPathEngine() ]; //new BasicIdEngine(), 
     //, new CssPathEngine()
 
 }
@@ -52,10 +52,18 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
 
                 for (var j = 0; j < path.length; j++) {
                     
-                    if(removeBase && path[j] != null && path[j].indexOf('.//')>-1)
-                        path[j] = path[j].slice(3,path[j].length);
+                    console.log("removeBase", removeBase);
+                    if(removeBase){ //TODO: make a special message for retrieving without IDs & relatives
 
-                    xPathArray.push(path[j]);
+
+                        if(path[j].indexOf('@id')==-1){ //si NO hay id, sigue
+                            if(path[j] != null && path[j].indexOf('.//')>-1){
+                                path[j] = path[j].slice(3,path[j].length);
+                                xPathArray.push(path[j]);
+                            }
+                        }
+                    } 
+                    else xPathArray.push(path[j]);
                     /*if(!removeBase)
                         xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));*/
                 } 
@@ -73,12 +81,6 @@ XPathInterpreter.prototype.getPath = function(element, parent) {
     // return xPathArray;    
 };
 
-// obtiene el mejor Path
-XPathInterpreter.prototype.getBetterPath = function(element) {
-    var xPaths = this.getMultipleXPaths(element); 
-    //console.info(xPaths);
-    return xPaths[0];        
-};
 XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
     //WARNING: I THINK THIS IS NOT PROPERLY WORKING. USE -> getSingleElementByXpath
     var doc = node.ownerDocument;
@@ -87,6 +89,7 @@ XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
 }
 XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
 
+    //console.log("evaluating", xpath, " on ", node);
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
     var results = doc.evaluate(xpath, node, null, XPathResult.ANY_TYPE, null); 
     return results.iterateNext(); 

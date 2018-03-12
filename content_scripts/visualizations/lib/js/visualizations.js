@@ -66,7 +66,7 @@ ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url res
 	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
 	    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);	
 
-	    console.log("\n\n\n PROPERTIES ", data.service.results);
+	    //console.log("\n\nconceptDomElems ", conceptDomElems);
 		var results = me.extractConcepts(conceptDomElems, data.service.results.properties);
 
 	    data.results = results;
@@ -82,14 +82,12 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
 	var concepts = [], me= this;
 	var keys = Object.keys(propSpecs);
-	//console.log("keys", keys);
 	
 	if(keys.length > 0){
 		keys.forEach(function(key){
 
 			var propElems = me.getMultiplePropsFromElements(
 				propSpecs[key].relativeSelector, domElements);
-			console.log("propElems", propElems);
 
 			for (i = 0; i < propElems.length; i++) { 
 				if (propElems[i] != null){
@@ -109,7 +107,12 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 							concepts[i][key] = propElems[i].src;
 						}
 					}
-				}
+				} 
+
+				console.log();
+
+				if(concepts[i][key] == undefined || concepts[i][key] == null) 
+					concepts[i][key] = " ";
 			}
 		});
 	} else alert("There are no properties defined. Results can not be extracted.");
@@ -141,8 +144,7 @@ ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSele
 			//console.log("prop", prop);
 			if(prop) {
 				props.push(prop);
-				console.log("added");
-			}
+			} else props.push(" ");
 		});
 	}
 	return props; 
@@ -434,6 +436,9 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
 	}
 	var properties = Object.keys(concepts[0]);
 
+	console.log("***concepts***", concepts);
+
+
 	doc.defaultView["$"](doc).ready(function(){
 	var tableC =doc.defaultView["$"](table).DataTable({
         "paging": false,
@@ -446,7 +451,7 @@ Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts
                 "className":      'details-control',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": ''
+                "defaultContent": ' '
             },
 
             //Add this from concept
