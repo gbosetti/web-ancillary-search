@@ -10,7 +10,6 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
 
     $scope.loadDataModel = function() {
       ServiceService.getService().then(function(service) {
-        console.log(service);
         $scope.service.input = service.input;
       }); 
     };
@@ -25,6 +24,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
     };
     $scope.onElementSelection = function(data){
 
+      console.log("onElementSelection", data);
   		this.showPreview(data.previewSource);
       $scope.showAllHiddenElements();
 

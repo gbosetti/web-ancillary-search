@@ -49,6 +49,7 @@ BackgroundPageSelector.prototype.loadRequiredFiles = function(tab, callback) {
   	], tab);
 
 	BackgroundResourcesLoader.syncLoadScripts([
+		new BackgroundResource("/content_scripts/browsers-standarization.js"),
   		new BackgroundResource("/content_scripts/XPathInterpreter.js"),
   		new BackgroundResource("/content_scripts/vendor/popper/index.js"),
   		new BackgroundResource("/content_scripts/page-actions/PageSelector.js")
