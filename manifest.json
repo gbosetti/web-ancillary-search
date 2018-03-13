@@ -4,14 +4,6 @@
   "version": "1.0",
   "description": "...",
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
-
-  // COMMENT "GECKO" SO IT CAN BE INTERPRETED BY GOOGLE CHROME
-  "applications": {
-    "gecko": {
-      "strict_min_version": "55.0a1"
-    }
-  },
-
   "default_locale": "en",
 
   "browser_action": { //Note that your extension can have only one browser action
@@ -25,7 +17,7 @@
 
   "background": {
     "scripts": [
-      "background/browsers-standarization.js", 
+      "content_scripts/browsers-standarization.js", 
       "background/StorageManagement.js",
       "background/BrowserUiManager.js", 
       "background/BackgroundResourcesLoader.js",
