@@ -248,6 +248,7 @@ PageSelector.prototype.hasAugmentedAction = function(target){
 PageSelector.prototype.executeAugmentedActions = function(evt){
 
 	var actions = this.getAugmentedActions(evt.target);
+	cosnole.log("actions", actions);
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(evt.type.toUpperCase() == actions[i].event.toUpperCase())
 			this[actions[i].listener](evt);

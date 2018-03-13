@@ -4,17 +4,19 @@ if(window.chrome){
 
   browser = window.chrome;
 
-  browser.contextMenus.oldremoveAll = browser.contextMenus.removeAll;
-  browser.contextMenus.removeAll = function(){
+  if(browser.contextMenus != undefined && browser.contextMenus.removeAll){ //no es la misma para los dos tipos de scripts
+    browser.contextMenus.oldremoveAll = browser.contextMenus.removeAll;
+    browser.contextMenus.removeAll = function(){
 
-    const prom = new Promise((resolve, reject) => {
-      
-      browser.contextMenus.oldremoveAll(function(val){
-        resolve(val); 
+      const prom = new Promise((resolve, reject) => {
+        
+        browser.contextMenus.oldremoveAll(function(val){
+          resolve(val); 
+        });
       });
-    });
 
-    return prom; 
+      return prom; 
+    };
   };
   browser.storage.local.oldget = browser.storage.local.get;
   browser.storage.local.get = function(key){
