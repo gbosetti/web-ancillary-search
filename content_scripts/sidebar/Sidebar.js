@@ -228,7 +228,7 @@ var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
 	if(sidebar[request.call]) {
-		console.log(request.call + " from Sidebar.js");
+		console.log(request.call + " from Sidebar.js |||||||||||||||||||||||");
 		sidebar[request.call](request.args);
 	}
 });

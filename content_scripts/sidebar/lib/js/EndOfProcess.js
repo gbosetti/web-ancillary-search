@@ -8,7 +8,7 @@ serviceCreator.controller('EndOfProcess', function($scope, $state, ServiceServic
     };
     $scope.finishServiceDefinition = function(){
     	
-    	return browser.runtime.sendMessage({ "call": "toggleSidebar" });
+    	return browser.runtime.sendMessage({ "call": "closeSidebar" });
     };
 
     $scope.initialize();

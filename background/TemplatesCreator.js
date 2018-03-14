@@ -9,20 +9,17 @@ function TemplatesCreator(){
   this.backPageSelector = new BackgroundPageSelector();
   
 }
-TemplatesCreator.prototype.onSidebarStatusChange = function(sidebarStatus, tab) {
+TemplatesCreator.prototype.onSidebarStatusChange = function( tab) {
 
-  /*if(sidebarStatus.isOpen()){ //sidebarStatus es del SidebarManager
-    console.log("preventing since sidebar is open");
-    this.backPageSelector.preventDomElementsBehaviour(tab);
-  }
-  else {
-    this.backPageSelector.restoreDomElementsBehaviour(tab);
-  }*/
   this.backPageSelector.toggleDomElementsBehaviour(tab);
 }
 TemplatesCreator.prototype.toggleSidebar = function() {
 
 	this.sidebarManager.toggleSidebar();
+}
+TemplatesCreator.prototype.closeSidebar = function() {
+
+  this.sidebarManager.close();
 }
 TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
 
@@ -47,7 +44,7 @@ TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() {
 TemplatesCreator.prototype.onSidebarClosed = function(tab, sendResponse) { 
 
   this.sidebarManager.onSidebarClosed();
-  this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
+  //this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 

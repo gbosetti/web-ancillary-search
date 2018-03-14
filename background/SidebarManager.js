@@ -27,19 +27,18 @@ SidebarManager.prototype.notifyListeners = function() {
 	var me = this;
 	this.getCurrentTab(function(tab){
 		for (var i = me.listeners.length - 1; i >= 0; i--) {
-			me.listeners[i].onSidebarStatusChange(me.status[tab.id], tab);
+			me.listeners[i].onSidebarStatusChange(tab);
 		}
 	});
 }
 SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
-	//this.open();  salta a onSidebarStatusChange
+	//salta a onSidebarStatusChange
 	this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
 	this.notifyListeners();
 }
 SidebarManager.prototype.onSidebarClosed = function() { 
 
-	this.close();
 	this.notifyListeners();
 }
 SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBLIC
@@ -87,7 +86,6 @@ SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 
 	var me = this;
 	this.getCurrentTab(function(tab){
-		//console.log("got current tab", tab);
 		me.getStatusForTab(tab).toggleSidebar(tab, callback);
 	});
 };
@@ -136,21 +134,9 @@ SidebarManager.prototype.close = function() {
 
 //El estado sirve para diferenciar cuando se ha cargado los scripts necesarios en el contexto de la página y cuándo no. Hayq ue prevenir cargarlos dos veces.
 function SidebarManagerStatus(context){
-	this.open = function(tab){
-		this.sendOpenMessage(tab);
-	};
-	this.close = function(tab){	};
-	this.sendOpenMessage = function(tab){
-		browser.tabs.sendMessage(tab.id, {call: "open"});
-	};
-	this.isOpen = function(){
-		return false;
-	};
-	this.isLoaded = function(){
-		return false;
-	};
-	this.toggleSidebar = function(tab, callback){};
-	this.log = function(){};
+	this.open = function(tab){ console.log("---SC > open"); };
+	this.close = function(tab){	console.log("---SC > close"); };
+	this.toggleSidebar = function(tab, callback){ console.log("---SC > toggle"); };
 }
 
 
@@ -160,33 +146,17 @@ function LoadedSidebar(context){ // SUPERCLASS
 	SidebarManagerStatus.call(this, context);
 	this.toggleSidebar = function(tab, callback){
 
-		this.log(); 
+		console.log("---LoadedSidebar > toggle");
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
 	};
-	this.isLoaded = function(){
-		return true;
+	this.open = function(tab){
+		console.log("---LoadedSidebar > open");
+		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 	};
-}
-function LoadedClosedSidebar(context){
-	LoadedSidebar.call(this, context);
-	this.isOpen = function(){
-		return false;
-	};
-	this.log = function(){
-		console.log("LoadedCLOSED-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
-	}
-}
-function LoadedOpenSidebar(context){
-	LoadedSidebar.call(this, context);
-	this.isOpen = function(){
-		return true;
-	};
-	this.log = function(){
-		console.log("LoadedOPEN-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
-	}
 	this.close = function(tab){
-		context.status[tab.id] = new LoadedClosedSidebar(context);
+		console.log("---LoadedSidebar > close");
+		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 	}
 }
 
@@ -198,18 +168,15 @@ function NoLoadedSidebar(context){
 
 	var status = this;
 	this.toggleSidebar = function(tab, callback){
-		console.log("instantiating CS_SIDEBAR and sending the open message");
-		this.open(tab);
-		if(callback) callback(tab);
-	};
-	this.open = function(tab){
+		console.log("---NoLoadedSidebar > toggle");
 
+		context.status[tab.id] = new LoadedSidebar(context);
 		BackgroundResourcesLoader.syncLoadScripts([
 	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
 	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
 	  	], tab, function () {
-	        context.status[tab.id] = new LoadedOpenSidebar(context);
-	        status.sendOpenMessage(tab);
+	        browser.tabs.sendMessage(tab.id, {call: "toggle"});
 	    });
+		if(callback) callback(tab);
 	};
 }

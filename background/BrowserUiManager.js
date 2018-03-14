@@ -87,6 +87,10 @@ BrowserUiManager.prototype.toggleSidebar = function() {
 
   this.templatesCreator.toggleSidebar();
 };
+BrowserUiManager.prototype.closeSidebar = function() {
+
+  this.templatesCreator.closeSidebar();
+};
 BrowserUiManager.prototype.loadInputControlSelection = function(data) {
 
   this.templatesCreator.loadInputControlSelection(data);
