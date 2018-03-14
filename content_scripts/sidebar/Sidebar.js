@@ -227,8 +227,8 @@ function ClosedSidebar(context){
 var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
-	console.log(request.call + " from Sidebar.js");
 	if(sidebar[request.call]) {
+		console.log(request.call + " from Sidebar.js");
 		sidebar[request.call](request.args);
 	}
 });

@@ -75,9 +75,10 @@ PageSelector.prototype.loadListeners = function(){
 	this.selectionListener = function(evt){
 
 		//Tiene que quitarlos en todas para la correcta generación de los xpaths
-		var matchingHighlighted = me.removeClassFromMatchingElements("andes-highlighted-on-hover");
 		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
 		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
+		me.removeClassFromMatchingElements(this.clearBackgroundClass);
+		
 		var text = me.selectedElem.textContent;
 
 		me.generatePreview(me.selectedElem).then(function(preview){
@@ -99,7 +100,6 @@ PageSelector.prototype.loadListeners = function(){
 			browser.runtime.sendMessage(msgParams);
 
 			if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
-				me.addClassToMatchingElements(matchingHighlighted, "andes-highlighted-on-hover");
 				me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
 				me.addClassToMatchingElements(matchingSelection, this.selectionClass);
 			}	
@@ -121,7 +121,7 @@ PageSelector.prototype.loadListeners = function(){
 		
 		evt.preventDefault(); //evt.stopImmediatePropagation();
 		me.selectedElem = this; //evt.target;
-		console.log("click", this);
+		console.log("prevent");
 		
 		if(me.selectedElem ) {
 			if(me.hasAugmentedAction(me.selectedElem)){
@@ -163,6 +163,7 @@ PageSelector.prototype.selectMatchingElements = function(data){
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
 	var me=this;
+	console.log("******** CALLING preventDomElementsBehaviour *********");
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 		
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
@@ -182,18 +183,16 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 };
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
 
-	var me=this, elements = this.getAllVisibleDomElements(); ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
-	elements.forEach(function(elem){
-		
-		me.undarkify(elem);
-		me.removeSelectableElemStyle(elem);
-		me.removeClearBackground(elem);
-		me.removeAugmentedActions(elem); 
-		me.removeStyleClass(elem, "andes-highlighted-on-hover");
-		me.removeHighlightingOnHover(elem);
+	this.removeAllAugmentedActions();
+
+	var me=this; ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
+	console.log("removing listeners");
+	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
-			elem.removeEventListener(eventToPrevent, me.preventActionsListener);
+			//console.log("preventing ", eventToPrevent);
+			elem.removeEventListener(eventToPrevent, me.preventActionsListener, false);
+			me.removeHighlightingOnHover(elem);
 		});
 	});
 };
@@ -201,9 +200,13 @@ PageSelector.prototype.removeAugmentedActions = function(elem){
 	
 	elem.removeAttribute("andes-actions");
 };
+PageSelector.prototype.removeAllAugmentedActions = function(elem){
+	
+	document.querySelectorAll("*[andes-actions]").forEach(e => e.removeAttribute("andes-actions"));
+};
 PageSelector.prototype.getEventsNamesToPrevent = function(){
 	
-	return ["click", "keydown", "keyup", "keypress", "mouseup", "mousedown"];
+	return ["click", "mouseup", "mousedown"]; //, "keydown", "keyup", "keypress",
 };
 PageSelector.prototype.getTargetElements = function(selector){
 	
@@ -235,7 +238,7 @@ PageSelector.prototype.disableElementSelection = function(data){
 	this.undarkifyAllDomElements();
 	this.removeElemsHighlightingClass(data.selector);
 	this.removeHighlightingOnHoverFrom(data.selector);
-    this.removeAugmentedActionsFrom(data.selector, "click"); //TODO: do not just remove. add a default action (prevent)
+    this.removeAllAugmentedActions(); //TODO: do not just remove. add a default action (prevent)
 };
 PageSelector.prototype.darkifyAllDomElements = function(){
 
@@ -319,13 +322,6 @@ PageSelector.prototype.addSelectionListener = function(elements, onElementSelect
 		});
     });	
 }
-PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
-
-	var me = this;
-	(this.lastUsedExtractor.getElements(selector)).forEach(function(elem) { 
-		me.removeAugmentedActions(elem);	
-    });	
-}
 PageSelector.prototype.generatePreview = function(element){
 
 	const prom = new Promise((resolve, reject) => {
@@ -353,7 +349,7 @@ PageSelector.prototype.addHighlightingOnHover = function(elem){
 }
 PageSelector.prototype.removeHighlightingOnHover = function(elem){
 
-	elem.removeEventListener("mouseenter", this.mouseEnterSelection, false);
+	elem.removeEventListener("mouseover", this.mouseEnterSelection, false);
 	elem.removeEventListener("mouseleave", this.mouseLeaveSelection, false);
 }
 PageSelector.prototype.addSelectableElemStyle = function(elem){
@@ -375,6 +371,8 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 	this.removeClassFromMatchingElements(this.selectionClass);
+	this.restoreDomElementsBehaviour();
+
 
 	return Promise.resolve();
 }
@@ -394,9 +392,7 @@ PageSelector.prototype.removeEventBlockers = function(){
 PageSelector.prototype.removeClassFromMatchingElements = function(className){
 
 	var hElems = document.querySelectorAll("." + className);
-	for (var i = 0; i < hElems.length; i++) {
-		hElems[i].classList.remove(className);
-	}
+		hElems.forEach(e => e.classList.remove(className));
 	return hElems;
 }
 PageSelector.prototype.addClassToMatchingElements = function(elems, className){
@@ -454,9 +450,8 @@ PageSelector.prototype.removeClearBackground = function(elem){
 var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
-	console.log(request.call + " from PageSelector");
 	if(pageManager[request.call]){
-		//Se lo llama con: browser.tabs.sendMessage
+		console.log(request.call + " from PageSelector");
 		pageManager[request.call](request.args);
 	}
 });

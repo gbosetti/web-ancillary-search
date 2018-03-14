@@ -44,6 +44,7 @@ BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab, sendRe
 }
 BackgroundPageSelector.prototype.loadRequiredFiles = function(tab, callback) {
 
+	console.log("loadRequiredFiles");
 	BackgroundResourcesLoader.syncLoadStyles([
   		new BackgroundResource("/content_scripts/page-actions/andes-highlighting.css")
   	], tab);
@@ -123,6 +124,7 @@ function UnloadedPageSelector(context){
 		
 		//console.log("PREVENT FROM UNLOADED [NOSENSE]");
 		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		console.log("4loadRequiredFiles from UnloadedPageSelector");
 		context.loadRequiredFiles(tab, function(){
 			context.sendPreventDomElementsBehaviour(tab);
 		});
@@ -133,6 +135,7 @@ function UnloadedPageSelector(context){
 		//context.sendRestoreDomElementsBehaviour(tab);
 
 		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		console.log("3loadRequiredFiles from UnloadedPageSelector");
 		context.loadRequiredFiles(tab, function(){
 			context.sendRestoreDomElementsBehaviour(tab);
 		});
@@ -140,6 +143,7 @@ function UnloadedPageSelector(context){
 	this.enableElementSelection = function(tab, data){
 
 		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		console.log("2loadRequiredFiles from UnloadedPageSelector");
 		context.loadRequiredFiles(tab, function(){
 			context.sendEnableSelectionMessage(tab, data);
 		});
@@ -147,6 +151,7 @@ function UnloadedPageSelector(context){
 	this.disableElementSelection = function(tab, selector){
 
 		context.loadingStatus[tab.id] = new LoadedPageSelector(context);
+		console.log("1loadRequiredFiles from UnloadedPageSelector");
 		context.loadRequiredFiles(tab, function(){
 			context.sendDisableSelectionMessage(tab, selector);
 		});

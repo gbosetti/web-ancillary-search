@@ -73,6 +73,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
   	$scope.service.results.preview = data.previewSource;
 	  $scope.loadPreview("#result-preview-image", data.previewSource);
 
+    //console.log("selectors:", data.selectors);
 		$scope.fillOccurrencesSelector(data.selectors);
 		document.querySelector("#result-selector").onchange();
 	}
@@ -95,16 +96,17 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 
 			$scope.service.results.selector = { label: this.options[this.selectedIndex].getAttribute("andes-occurrences"), value: this.value};
 
-      browser.runtime.sendMessage({ 
+      console.log("sdfsdddfs");
+      /*browser.runtime.sendMessage({ 
         "call": "removeFullSelectionStyle"
-      })
-      .then(function(message) {
+      }, function(message) {
+
+        console.log("dasdasdasdasd", message);*/
         browser.runtime.sendMessage({ 
           "call": "selectMatchingElements",
           "args": { "selector": select.value }
         });
-      });
-
+      //});
 		}
 	};
     $scope.initialize();

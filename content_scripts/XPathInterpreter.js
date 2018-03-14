@@ -54,14 +54,15 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
                     
                     if(removeBase){ //TODO: make a special message for retrieving without IDs & relatives
 
-                            if(path[j] != null && path[j].indexOf('.//')>-1){
-                                path[j] = path[j].slice(3,path[j].length);
-                                xPathArray.push(path[j]);
-                            }
+                        if(path[j] != null && path[j].indexOf('.//')>-1){
+                            path[j] = path[j].slice(3,path[j].length);
+                        }
                     } 
-                    else xPathArray.push(path[j]);
-                    /*if(!removeBase)
-                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));*/
+                    else{
+                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
+                    }
+                    
+                    xPathArray.push(path[j]);                        
                 } 
             }
         }catch(err){ 

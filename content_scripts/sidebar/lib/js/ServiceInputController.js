@@ -18,6 +18,7 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
     };
     $scope.undoActionsOnDom = function(aState) {
       $scope.disableDomElementSelection("input");
+      $scope.removeFullSelectionStyle();
     };
     $scope.loadSubformBehaviour = function() { 
       $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
