@@ -60,8 +60,10 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
 
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
+    console.log(request.call + " from index.js (sidebar)");
   if(request.args){
     var controller = angular.element(document.querySelector(request.args.scoped)).scope();
+ 
     if(controller != undefined && controller[request.call]){
       controller[request.call](request.args);
     }

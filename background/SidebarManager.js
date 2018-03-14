@@ -100,7 +100,9 @@ SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 };
 SidebarManager.prototype.getCurrentUrl = function(tab, data, sendResponse) {
 
-	sendResponse(tab.url);
+	console.log(tab.url);
+	console.log(sendResponse);
+	sendResponse("tab.url");
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {
 

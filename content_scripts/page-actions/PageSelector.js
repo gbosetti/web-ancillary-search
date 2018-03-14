@@ -32,6 +32,7 @@ function PageSelector(){
 	this.selectionClass = "andes-selected";
 	this.clearBackgroundClass = "andes-clear-background";
 	this.obfuscatedClass = "andes-blurred";
+	this.onElementSelectionMessage;
 	this.loadListeners();
 	this.selectedElem;
 };
@@ -69,7 +70,6 @@ PageSelector.prototype.createNewLabeledXpath = function(ocurrences, xpath, label
 PageSelector.prototype.loadListeners = function(){
 	
 	var me = this;
-	this.onElementSelectionMessage; 
 	this.scoped;
 
 	this.selectionListener = function(evt){
@@ -78,38 +78,54 @@ PageSelector.prototype.loadListeners = function(){
 		var matchingHighlighted = me.removeClassFromMatchingElements("andes-highlighted-on-hover");
 		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
 		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
+		var text = me.selectedElem.textContent;
 
-		browser.runtime.sendMessage({ 
-			"call": me.onElementSelectionMessage,
-			"args": {
-				"selectors": me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector), 
-				"previewSource": me.generatePreview(me.selectedElem),
-				"scoped": me.scoped,
-				"exampleValue": me.selectedElem.textContent
-			}
-		});
+		me.generatePreview(me.selectedElem).then(function(preview){
 
-		if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
-			me.addClassToMatchingElements(matchingHighlighted, "andes-highlighted-on-hover");
-			me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
-			me.addClassToMatchingElements(matchingSelection, this.selectionClass);
-		}		
+			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
+			
+			var msgParams = { 
+				"call": evt.params.onElementSelection,
+				"args": {
+					"selectors": selectors, 
+					"previewSource": preview,
+					"scoped": evt.params.scoped,
+					"exampleValue": text
+				}
+			};
+
+			console.log(msgParams);
+
+			browser.runtime.sendMessage(msgParams);
+
+			if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
+				me.addClassToMatchingElements(matchingHighlighted, "andes-highlighted-on-hover");
+				me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
+				me.addClassToMatchingElements(matchingSelection, this.selectionClass);
+			}	
+		})	
 	};
 	this.mouseEnterSelection = function(evt) {  
-		me.removeStyleClass(me.selectedElem, "andes-highlighted-on-hover");
-		me.selectedElem = this; 
-		me.addStyleClass(me.selectedElem, "andes-highlighted-on-hover");
+
+		evt.preventDefault(); evt.stopImmediatePropagation();
+		//me.selectedElem = evt.target;
+		//console.log(me.selectedElem);
+		me.addStyleClass(this, "andes-highlighted-on-hover");
+	};
+	this.mouseLeaveSelection = function(evt) {  
+
+		me.removeStyleClass(this, "andes-highlighted-on-hover");
 		evt.preventDefault(); evt.stopImmediatePropagation();
 	};
 	this.preventActionsListener = function(evt){
 		
-		evt.preventDefault();
-
-		var target = me.selectedElem; //evt.target;
-		if(target) {
-			me.executeAugmentedActions({"target": target, "type": evt.type});
-
-			if(me.hasAugmentedAction(target)){ //so it continues until a container with behaviour may be found
+		evt.preventDefault(); //evt.stopImmediatePropagation();
+		me.selectedElem = this; //evt.target;
+		console.log("click", this);
+		
+		if(me.selectedElem ) {
+			if(me.hasAugmentedAction(me.selectedElem)){
+				me.executeAugmentedActions({"target": me.selectedElem, "type": evt.type});
 				evt.stopImmediatePropagation();
 			}
 		} 
@@ -158,6 +174,7 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 	document.querySelectorAll("form").forEach(function(form){ 
 		if(form.addEventListener){
 			form.onsubmit = function(evt){ 
+				console.log("ONSUBMIT!")
         		return false;
     		}; 
     	};
@@ -198,9 +215,8 @@ PageSelector.prototype.enableElementSelection = function(data){
 
 	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
-	console.log("REF ELEM SELECTOR", data.refElemSelector);
-	
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
+	this.onElementSelectionMessage = data.onElementSelection;
 
     this.addSelectionListener(
     	elements, 
@@ -208,7 +224,8 @@ PageSelector.prototype.enableElementSelection = function(data){
     	"click", 
     	data.scoped,
     	data.removeStyleOnSelection,
-    	data.generateRelativeSelector
+    	data.generateRelativeSelector,
+    	data /*este solo es laposta*/
     );
     this.undarkifySidebarElements();
     this.darkify(document.body); 
@@ -248,10 +265,12 @@ PageSelector.prototype.hasAugmentedAction = function(target){
 PageSelector.prototype.executeAugmentedActions = function(evt){
 
 	var actions = this.getAugmentedActions(evt.target);
-	cosnole.log("actions", actions);
+	//console.log("actions", actions);
 	for (var i = actions.length - 1; i >= 0; i--) {
-		if(evt.type.toUpperCase() == actions[i].event.toUpperCase())
-			this[actions[i].listener](evt);
+		if(evt.type.toUpperCase() == actions[i].event.toUpperCase()){
+			evt.params = actions[i].params;
+			this[actions[i].listener](evt); //e.g. 
+		}
 	}
 }
 PageSelector.prototype.getAugmentedActions = function(elem){
@@ -272,27 +291,32 @@ PageSelector.prototype.isActionIncluded = function(existingAction, actions){
 	}
 	return false;
 }
-PageSelector.prototype.addAugmentedAction = function(elem, action){
+PageSelector.prototype.addAugmentedAction = function(elem, action, params){
 
 	var actions = this.getAugmentedActions(elem);
 	if(!this.isActionIncluded(action, actions)) {
 		actions.push(action);
-		elem.setAttribute("andes-actions", JSON.stringify(actions))
+		elem.setAttribute("andes-actions", JSON.stringify(actions));
 	}
 }
-PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped, removeStyleOnSelection, generateRelativeSelector){
+PageSelector.prototype.addSelectionListener = function(elements, onElementSelection, onEvent, scoped, 
+	removeStyleOnSelection, generateRelativeSelector, data){
 
 	var me = this;
-		me.onElementSelectionMessage = onElementSelection; //callback
-		me.removeStyleOnSelection = removeStyleOnSelection;
-		me.scoped = scoped;
-		me.generateRelativeSelector = generateRelativeSelector;
+
+		this.removeStyleOnSelection = removeStyleOnSelection;
+		this.scoped = scoped;
+		this.generateRelativeSelector = generateRelativeSelector;
 
 	elements.forEach(function(elem) { 
 		me.undarkify(elem);	
 		me.addHighlightingOnHover(elem);
 		me.addSelectableElemStyle(elem);
-		me.addAugmentedAction(elem, {"listener": "selectionListener", "event": onEvent});
+		me.addAugmentedAction(elem, {
+			"listener": "selectionListener", 
+			"event": onEvent, 
+			"params": data
+		});
     });	
 }
 PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
@@ -304,35 +328,33 @@ PageSelector.prototype.removeAugmentedActionsFrom = function(selector, onEvent){
 }
 PageSelector.prototype.generatePreview = function(element){
 
-	try{
-		this.removeSelectableElemStyle(element);
-		this.addClearBackground(element);
+	const prom = new Promise((resolve, reject) => {
+        
+    this.removeSelectableElemStyle(element);
+	this.addClearBackground(element);
+	var ps = this;
 
-	    var canvas = document.createElement("canvas");
-		    canvas.width = element.offsetWidth;
-		    canvas.height = element.offsetHeight;
-	    var ctx = canvas.getContext("2d");
-	    var box = element.getBoundingClientRect();
-	    ctx.drawWindow(document.defaultView, parseInt(box.left)+
-	    	document.defaultView.scrollX,parseInt(box.top)+
-	    	document.defaultView.scrollY, element.offsetWidth,element.offsetHeight, "rgb(0,0,0)");
+    domtoimage.toPng(element).then(dataUrl => {
+	    resolve(dataUrl);
 
-	    this.removeClearBackground(element);
-	    this.addSelectableElemStyle(element);
+	    ps.removeClearBackground(element);
+	    ps.addSelectableElemStyle(element);
+	  })
+	  .catch(error =>
+	    resolve('oops, something went wrong!')
+	  );
+    });
 
-	    return canvas.toDataURL();
-	}catch(err){
-		console.log(err.message);
-		return;
-	}
+    return prom; 
 }
 PageSelector.prototype.addHighlightingOnHover = function(elem){
-
-	elem.addEventListener("mouseenter", this.mouseEnterSelection, false);
+	elem.addEventListener("mouseover", this.mouseEnterSelection, false);
+	elem.addEventListener("mouseleave", this.mouseLeaveSelection, false);
 }
 PageSelector.prototype.removeHighlightingOnHover = function(elem){
 
 	elem.removeEventListener("mouseenter", this.mouseEnterSelection, false);
+	elem.removeEventListener("mouseleave", this.mouseLeaveSelection, false);
 }
 PageSelector.prototype.addSelectableElemStyle = function(elem){
 
@@ -432,8 +454,8 @@ PageSelector.prototype.removeClearBackground = function(elem){
 var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
 
+	console.log(request.call + " from PageSelector");
 	if(pageManager[request.call]){
-		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");
 		//Se lo llama con: browser.tabs.sendMessage
 		pageManager[request.call](request.args);
 	}

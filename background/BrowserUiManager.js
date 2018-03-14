@@ -98,6 +98,9 @@ BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
+    //console.log("TAB", tab);
+    console.log("DATA", data);
+    //console.log("TAB", sendResponse);
     me.templatesCreator.getCurrentUrl(tab, data, sendResponse);
   });
 };

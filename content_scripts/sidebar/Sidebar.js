@@ -23,11 +23,11 @@ Sidebar.prototype.getIframe = function() {
 Sidebar.prototype.loadUrl = function(data) {
 
 	this.getIframe().src = data.url;
-	var me = this;
+	/*var me = this;
 	this.getIframe().onload = function(){
 		me.localize(this.contentWindow.document);
 		me.loadContentScripts(data.filePaths, this.contentWindow.document);
-	};
+	};*/
 };
 Sidebar.prototype.loadContentScripts = function(filePaths, doc) {
 	
@@ -227,8 +227,8 @@ function ClosedSidebar(context){
 var sidebar = new Sidebar();
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
 
+	console.log(request.call + " from Sidebar.js");
 	if(sidebar[request.call]) {
-		//console.log("calling " + request.call + " (.../sidebar.js)");
 		sidebar[request.call](request.args);
 	}
 });

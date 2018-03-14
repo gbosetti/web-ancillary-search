@@ -52,16 +52,12 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeB
 
                 for (var j = 0; j < path.length; j++) {
                     
-                    console.log("removeBase", removeBase);
                     if(removeBase){ //TODO: make a special message for retrieving without IDs & relatives
 
-
-                        if(path[j].indexOf('@id')==-1){ //si NO hay id, sigue
                             if(path[j] != null && path[j].indexOf('.//')>-1){
                                 path[j] = path[j].slice(3,path[j].length);
                                 xPathArray.push(path[j]);
                             }
-                        }
                     } 
                     else xPathArray.push(path[j]);
                     /*if(!removeBase)
@@ -402,4 +398,4 @@ CssPathEngine.prototype.getElement = function(aNode, aExpr) {
 };
 
 window.XPathInterpreter = XPathInterpreter;
-console.log(window.XPathInterpreter); //"do not remove this line"
+//console.log(window.XPathInterpreter); //"do not remove this line"
