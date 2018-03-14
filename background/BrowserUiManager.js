@@ -39,6 +39,10 @@ BrowserUiManager.prototype.onTriggerSelection = function(data) {
 
   this.templatesCreator.onTriggerSelection(data);
 };
+/*BrowserUiManager.prototype.onPropsSelection = function(data) { 
+
+  this.templatesCreator.onPropsSelection(data);
+};*/
 BrowserUiManager.prototype.onResultsContainerSelection = function(data) { 
 
   this.templatesCreator.onResultsContainerSelection(data);

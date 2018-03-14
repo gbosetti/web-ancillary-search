@@ -102,6 +102,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
     };
     $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
       
+      console.log("$scope.onElementSelection");
+
       var prop = {
         "name": "",
         "exampleValue": data.exampleValue.length > 35? data.exampleValue.substring(0, 35) + "..." : data.exampleValue,
@@ -111,7 +113,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       var propControl = this.addPropertyToSidebar(prop);
       propControl.querySelector("input").focus();
 
-      this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
+      //this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
       this.removeFormElementById("no_props_error");
     };
     $scope.saveDataModel = function() {

@@ -56,6 +56,8 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 };
 SidebarManager.prototype.onElementSelection = function(data) { 
 
+	console.log("***SidebarManager.prototype.onElementSelection");
+	console.log(data);
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "onElementSelection", 

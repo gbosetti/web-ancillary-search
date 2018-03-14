@@ -95,18 +95,10 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 		select.onchange = function(){
 
 			$scope.service.results.selector = { label: this.options[this.selectedIndex].getAttribute("andes-occurrences"), value: this.value};
-
-      console.log("sdfsdddfs");
-      /*browser.runtime.sendMessage({ 
-        "call": "removeFullSelectionStyle"
-      }, function(message) {
-
-        console.log("dasdasdasdasd", message);*/
         browser.runtime.sendMessage({ 
           "call": "selectMatchingElements",
           "args": { "selector": select.value }
         });
-      //});
 		}
 	};
     $scope.initialize();

@@ -77,32 +77,29 @@ PageSelector.prototype.loadListeners = function(){
 		//Tiene que quitarlos en todas para la correcta generación de los xpaths
 		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
 		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
-		me.removeClassFromMatchingElements(this.clearBackgroundClass);
+		var matchingBack = me.removeClassFromMatchingElements(this.clearBackgroundClass);
 		var text = me.selectedElem.textContent;
-
-		console.log("his.selectionListener");
 
 		me.generatePreview(me.selectedElem).then(function(preview){
 
 			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
 			
-			var msgParams = { 
-				"call": evt.params.onElementSelection,
+			console.log("!!!!!!! onElementSelection: ", evt.params.onElementSelection);
+			browser.runtime.sendMessage({ 
+				"call": evt.params.onElementSelection, /*onElementSelection*/
 				"args": {
 					"selectors": selectors, 
 					"previewSource": preview,
 					"scoped": evt.params.scoped,
-					"exampleValue": text
+					"exampleValue": text,
+					"call": evt.params.onElementSelection
 				}
-			};
-
-			console.log(msgParams);
-
-			browser.runtime.sendMessage(msgParams);
+			});
 
 			if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
 				me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
 				me.addClassToMatchingElements(matchingSelection, this.selectionClass);
+				me.addClassToMatchingElements(matchingBack, this.clearBackgroundClass);
 			}	
 		})	
 	};
@@ -128,17 +125,15 @@ PageSelector.prototype.loadListeners = function(){
 		
 		evt.preventDefault(); evt.stopImmediatePropagation();
 		me.selectedElem = this; //evt.target;
-		console.log("preventActionsListener");
 		
 		if(me.selectedElem ) {
 			if(me.hasAugmentedAction(me.selectedElem)){
+				console.log("preventActionsListener");
 				me.executeAugmentedActions({"target": me.selectedElem, "type": evt.type});
-				evt.stopImmediatePropagation();
 			}
 		} 
-		else {evt.stopImmediatePropagation();}
 
-		return false; //This is for preventing anchors
+		return false; 
 	};
 };
 PageSelector.prototype.getAllVisibleDomElements = function(){
@@ -170,7 +165,6 @@ PageSelector.prototype.selectMatchingElements = function(data){
 PageSelector.prototype.preventDomElementsBehaviour = function(){
 
 	var me=this;
-	console.log("******** CALLING preventDomElementsBehaviour *********");
 	this.preventFormsOnSubmit();
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 		
@@ -199,10 +193,10 @@ PageSelector.prototype.restoreDomElementsBehaviour = function(){
 	var me=this; ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 
+		elem.removeEventListener("click", me.preventActionsListener, false);
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 			elem.removeEventListener(eventToPrevent, me.preventAnyAction, false);
-		});
-		elem.removeEventListener("click", me.preventActionsListener, false);
+		});		
 		me.removeHighlightingOnHover(elem);
 	});
 };
@@ -279,10 +273,11 @@ PageSelector.prototype.hasAugmentedAction = function(target){
 PageSelector.prototype.executeAugmentedActions = function(evt){
 
 	var actions = this.getAugmentedActions(evt.target);
-	//console.log("actions", actions);
+	
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(evt.type.toUpperCase() == actions[i].event.toUpperCase()){
 			evt.params = actions[i].params;
+			console.log("actions", actions[i].listener);
 			this[actions[i].listener](evt); //e.g. 
 		}
 	}

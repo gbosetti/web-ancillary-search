@@ -60,13 +60,16 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
 
 browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
 
-    
+
   if(request.args){
     var controller = angular.element(document.querySelector(request.args.scoped)).scope();
  
     if(controller != undefined && controller[request.call]){
-        console.log(request.call + " from index.js (sidebar)");
-        controller[request.call](request.args);
+        
+        if(sender.url != undefined){ //tHIS IS TRICKY BUT THE BROWSER IS SENDING THE MESSAGE TWICE, THE SAME CALL BUT WITH NO URL
+            console.log("\n\n\n" + request.call + " from index.js (sidebar)", sender);
+            controller[request.call](request.args);
+        }
     }
   }
 });
