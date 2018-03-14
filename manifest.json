@@ -31,7 +31,14 @@
   "content_scripts": [{
     "matches": ["*://*/*"],
     "js": [
-      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js"
+      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js",
+      "content_scripts/vendor/dom-to-image/index.js", 
+      "content_scripts/XPathInterpreter.js", 
+      "content_scripts/vendor/popper/index.js", 
+      "content_scripts/page-actions/PageSelector.js"
+    ],
+    "css": [
+      "content_scripts/page-actions/andes-highlighting.css"
     ]
   }],
 

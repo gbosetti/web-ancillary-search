@@ -104,12 +104,10 @@ SidebarManager.prototype.getCurrentUrl = function(tab, data, sendResponse) {
 };
 SidebarManager.prototype.getStatusForTab = function(tab) {
 
-	console.log("CURR TAB STATUS (" + tab.id + ")", this.status[tab.id]);
-	if (this.status[tab.id] == undefined){
-
+	//console.log("getting current tab's status", this.status[tab.id]);
+	if (this.status[tab.id] == undefined)
 		this.initializeStateForTab(tab.id);
-		console.log("undefined > new status");
-	}
+	
 	return this.status[tab.id];
 };
 SidebarManager.prototype.open = function() {
@@ -138,9 +136,8 @@ SidebarManager.prototype.close = function() {
 function SidebarManagerStatus(context){
 	this.open = function(tab){
 		this.sendOpenMessage(tab);
-		console.log("---SidebarManagerStatus > open"); 
 	};
-	this.close = function(tab){	console.log("---SidebarManagerStatus > close");  };
+	this.close = function(tab){	};
 	this.sendOpenMessage = function(tab){
 		browser.tabs.sendMessage(tab.id, {call: "open"});
 	};
@@ -150,7 +147,7 @@ function SidebarManagerStatus(context){
 	this.isLoaded = function(){
 		return false;
 	};
-	this.toggleSidebar = function(tab, callback){ console.log("---SidebarManagerStatus > toggle");  };
+	this.toggleSidebar = function(tab, callback){};
 	this.log = function(){};
 }
 
@@ -161,7 +158,7 @@ function LoadedSidebar(context){ // SUPERCLASS
 	SidebarManagerStatus.call(this, context);
 	this.toggleSidebar = function(tab, callback){
 
-		console.log("---LoadedSidebar > toggle"); 
+		this.log(); 
 		browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
 	};
@@ -175,7 +172,7 @@ function LoadedClosedSidebar(context){
 		return false;
 	};
 	this.log = function(){
-		//console.log("LoadedCLOSED-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
+		console.log("LoadedCLOSED-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
 	}
 }
 function LoadedOpenSidebar(context){
@@ -187,7 +184,6 @@ function LoadedOpenSidebar(context){
 		console.log("LoadedOPEN-Sidebar- files already loaded. Just send toggle message to the CS_SIDEBAR");
 	}
 	this.close = function(tab){
-		console.log("---LoadedOpenSidebar > close");
 		context.status[tab.id] = new LoadedClosedSidebar(context);
 	}
 }
@@ -200,14 +196,13 @@ function NoLoadedSidebar(context){
 
 	var status = this;
 	this.toggleSidebar = function(tab, callback){
-		console.log("---NoLoadedSidebar > toggle");
+		console.log("instantiating CS_SIDEBAR and sending the open message");
 		this.open(tab);
 		if(callback) callback(tab);
 	};
 	this.open = function(tab){
 
 		BackgroundResourcesLoader.syncLoadScripts([
-			/*new BackgroundResource("/content_scripts/content_scripts/vendor/browser-polyfill/src/browser-polyfill.js"),*/
 	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
 	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
 	  	], tab, function () {

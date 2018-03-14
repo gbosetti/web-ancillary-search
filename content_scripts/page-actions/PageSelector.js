@@ -78,8 +78,9 @@ PageSelector.prototype.loadListeners = function(){
 		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
 		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
 		me.removeClassFromMatchingElements(this.clearBackgroundClass);
-		
 		var text = me.selectedElem.textContent;
+
+		console.log("his.selectionListener");
 
 		me.generatePreview(me.selectedElem).then(function(preview){
 
@@ -117,11 +118,17 @@ PageSelector.prototype.loadListeners = function(){
 		me.removeStyleClass(this, "andes-highlighted-on-hover");
 		evt.preventDefault(); evt.stopImmediatePropagation();
 	};
+	this.preventAnyAction = function(evt){
+		
+		console.log("preventAnyAction");
+		evt.preventDefault(); evt.stopImmediatePropagation();
+		return false; //This is for preventing anchors
+	};
 	this.preventActionsListener = function(evt){
 		
-		evt.preventDefault(); //evt.stopImmediatePropagation();
+		evt.preventDefault(); evt.stopImmediatePropagation();
 		me.selectedElem = this; //evt.target;
-		console.log("prevent");
+		console.log("preventActionsListener");
 		
 		if(me.selectedElem ) {
 			if(me.hasAugmentedAction(me.selectedElem)){
@@ -164,36 +171,39 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 
 	var me=this;
 	console.log("******** CALLING preventDomElementsBehaviour *********");
+	this.preventFormsOnSubmit();
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 		
+		elem.addEventListener("click", me.preventActionsListener, false);
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
-			elem.addEventListener(eventToPrevent, me.preventActionsListener, false);
+			elem.addEventListener(eventToPrevent, me.preventAnyAction, false);
 		});
 	});
+};
+PageSelector.prototype.preventFormsOnSubmit = function(){
+
+	console.log("////////////////// preventFormsOnSubmit");
 
 	//TODO: it is not working with "addEventListener". This is a problem because maybe we can not resore the original behaviour after this
 	document.querySelectorAll("form").forEach(function(form){ 
-		if(form.addEventListener){
-			form.onsubmit = function(evt){ 
-				console.log("ONSUBMIT!")
-        		return false;
-    		}; 
-    	};
+		form.onsubmit = function(evt){ 
+			console.log("ONSUBMIT!");
+    		return false;
+		}; 
     });
-};
+}
 PageSelector.prototype.restoreDomElementsBehaviour = function(){
 
 	this.removeAllAugmentedActions();
 
 	var me=this; ///////THIS MAY BE A PROBLEM FOR THE SIDEBAR IF THIS METHOD IS CALLED IN THE MIDDLE OF THE PROCESS
-	console.log("removing listeners");
 	this.getAllVisibleDomElementsButBody().forEach(function(elem){
 
 		me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
-			//console.log("preventing ", eventToPrevent);
-			elem.removeEventListener(eventToPrevent, me.preventActionsListener, false);
-			me.removeHighlightingOnHover(elem);
+			elem.removeEventListener(eventToPrevent, me.preventAnyAction, false);
 		});
+		elem.removeEventListener("click", me.preventActionsListener, false);
+		me.removeHighlightingOnHover(elem);
 	});
 };
 PageSelector.prototype.removeAugmentedActions = function(elem){
@@ -215,6 +225,7 @@ PageSelector.prototype.getTargetElements = function(selector){
 PageSelector.prototype.enableElementSelection = function(data){
 
 	this.darkifyAllDomElements();
+	this.preventFormsOnSubmit();
 
 	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
@@ -371,8 +382,7 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 	this.removeClassFromMatchingElements(this.selectionClass);
-	this.restoreDomElementsBehaviour();
-
+	//this.restoreDomElementsBehaviour();
 
 	return Promise.resolve();
 }
