@@ -1,7 +1,8 @@
 //GLOBALS for making it compatible btw firefox and chrome
 //We can decorate it but we should adapt it properly and maybe change the name of "browser"
-var browser;
-var BrowserStandarizer = function () {
+//browser = (window.chrome)? window.chrome : browser;
+
+/*var BrowserStandarizer = function () {
     if (BrowserStandarizer._instance) {
         return BrowserStandarizer._instance;
     }
@@ -129,4 +130,4 @@ BrowserStandarizer.prototype.standarize = function () {
     }
 }
 
-BrowserStandarizer.getInstance().standarize();
+BrowserStandarizer.getInstance().standarize();*/

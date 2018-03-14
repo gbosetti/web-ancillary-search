@@ -207,7 +207,7 @@ function NoLoadedSidebar(context){
 	this.open = function(tab){
 
 		BackgroundResourcesLoader.syncLoadScripts([
-			new BackgroundResource("/content_scripts/browsers-standarization.js"),
+			/*new BackgroundResource("/content_scripts/content_scripts/vendor/browser-polyfill/src/browser-polyfill.js"),*/
 	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
 	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
 	  	], tab, function () {

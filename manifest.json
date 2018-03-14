@@ -17,7 +17,7 @@
 
   "background": {
     "scripts": [
-      "content_scripts/browsers-standarization.js", 
+      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js", 
       "background/StorageManagement.js",
       "background/BrowserUiManager.js", 
       "background/BackgroundResourcesLoader.js",
@@ -27,6 +27,13 @@
       "background/TemplatesCreator.js",
       "background/main.js"]
   },
+
+  "content_scripts": [{
+    "matches": ["*://*/*"],
+    "js": [
+      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js"
+    ]
+  }],
 
   "permissions": [
     "activeTab",
