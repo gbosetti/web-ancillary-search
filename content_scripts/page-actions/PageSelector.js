@@ -453,7 +453,7 @@ PageSelector.prototype.removeClearBackground = function(elem){
 };
 
 var pageManager = new PageSelector();
-browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callPageSideActions(request, sender) {
 
 	if(pageManager[request.call]){
 		console.log(request.call + " from PageSelector");

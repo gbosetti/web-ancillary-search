@@ -21,7 +21,7 @@ ExternalContentManipulator.prototype.extractFromUrl = function(data) {
 };
 
 var extContentMan = new ExternalContentManipulator();
-browser.runtime.onMessage.addListener(function callPageSideActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callPageSideActions(request, sender) {
 
 	if(extContentMan[request.call]){
 		//console.log("calling " + request.call + " (content_scripts/page-actions/PageSelector.js)");

@@ -21,13 +21,16 @@ BackgroundPageSelector.prototype.toggleDomElementsBehaviour = function(tab) {
 
 	this.getPageBehaviourStatusByTab(tab).toggleDomElementsBehaviour(tab);
 };
-BackgroundPageSelector.prototype.enableElementSelection = function(tab, data, sendResponse) {
+BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
 
-	browser.tabs.sendMessage(tab.id, {
-    	"call": "enableElementSelection",
-    	"args":data
-    });
-	sendResponse("almost done!");
+	return new Promise((resolve, reject) => {
+
+    	browser.tabs.sendMessage(tab.id, {
+	    	"call": "enableElementSelection",
+	    	"args":data
+	    });
+      	resolve(); 
+  	});
 };
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	browser.tabs.sendMessage(tab.id, {
@@ -37,11 +40,13 @@ BackgroundPageSelector.prototype.disableElementSelection = function(tab, selecto
     	}
     });
 };
-BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
+BackgroundPageSelector.prototype.removeFullSelectionStyle = function(tab) {
 
-	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" }).then(function(){
-		sendResponse("done!");
-	});
+	return new Promise((resolve, reject) => {
+    	browser.tabs.sendMessage(tab.id, { "call": "removeFullSelectionStyle" }).then(function(){
+			resolve(); 
+		});	
+  	});	
 }
 
 

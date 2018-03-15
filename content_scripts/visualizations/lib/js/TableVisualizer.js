@@ -103,7 +103,7 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 console.log("Table visualizer has been loaded");
 
 var tableVis = new TableVisualizer();
-browser.runtime.onMessage.addListener(function callTableVisActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callTableVisActions(request, sender) {
 
 	if(tableVis[request.call]){
 		//console.log("calling " + request.call + " at TableVisualizer");

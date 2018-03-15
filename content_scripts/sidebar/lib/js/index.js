@@ -58,7 +58,7 @@ serviceCreator.config(function ($stateProvider, $urlRouterProvider, $compileProv
         );
 });
 
-browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callServiceNameActions(request, sender) {
 
 
   if(request.args){

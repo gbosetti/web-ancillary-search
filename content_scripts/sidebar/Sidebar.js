@@ -226,7 +226,7 @@ function ClosedSidebar(context){
 
 /////////////////////////////////////////////
 var sidebar = new Sidebar();
-browser.runtime.onMessage.addListener(function callSidebarActions(request, sender, sendResponse) {
+browser.runtime.onMessage.addListener(function callSidebarActions(request, sender) {
 
 	if(sidebar[request.call]) {
 		console.log(request.call + " from Sidebar.js |||||||||||||||||||||||");

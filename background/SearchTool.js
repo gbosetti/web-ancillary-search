@@ -17,11 +17,11 @@ SearchTool.prototype.createContextMenus = function() {
     me.populateApisMenu();    
   }); 
 }
-SearchTool.prototype.onVisualizationLoaded = function(args, sendResponse, tab) {     
+SearchTool.prototype.onVisualizationLoaded = function(args, tab) {     
 
   browser.tabs.sendMessage(tab.id, { call: "onVisualizationLoaded" }); 
 }
-SearchTool.prototype.presentDataInVisualization = function(args, sendResponse, tab) {     
+SearchTool.prototype.presentDataInVisualization = function(args, tab) {     
 
   browser.tabs.sendMessage(tab.id, { call: "presentData" }); 
 }

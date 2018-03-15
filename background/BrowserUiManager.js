@@ -9,18 +9,18 @@ BrowserUiManager.prototype.initialize = function() {
   this.searchTool = new SearchTool();
   this.listenForTabChanges();
 };
-BrowserUiManager.prototype.onVisualizationLoaded = function(args, sendResponse) {
+BrowserUiManager.prototype.onVisualizationLoaded = function(args) {
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.searchTool.onVisualizationLoaded(args, sendResponse, tab);
+    me.searchTool.onVisualizationLoaded(args, tab);
   });
 };
-BrowserUiManager.prototype.presentDataInVisualization = function(args, sendResponse) {
+BrowserUiManager.prototype.presentDataInVisualization = function(args) {
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.searchTool.presentDataInVisualization(args, sendResponse, tab);
+    me.searchTool.presentDataInVisualization(args, tab);
   });
 };
 BrowserUiManager.prototype.listenForTabChanges = function() { 
@@ -72,22 +72,22 @@ BrowserUiManager.prototype.selectMatchingElements = function(data) {
     me.templatesCreator.selectMatchingElements(tab, data);
   });
 };
-BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendResponse) { 
+BrowserUiManager.prototype.removeFullSelectionStyle = function(data) { 
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.removeFullSelectionStyle(tab, sendResponse);
+    me.templatesCreator.removeFullSelectionStyle(tab);
   });
 }
 BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
 
   this.templatesCreator.onFrameReadyForLoadingUrl();
 }
-BrowserUiManager.prototype.onSidebarClosed = function(data, sendResponse) { 
+BrowserUiManager.prototype.onSidebarClosed = function(data) { 
 
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.onSidebarClosed(tab, sendResponse);
+    me.templatesCreator.onSidebarClosed(tab);
   });
 }
 BrowserUiManager.prototype.toggleSidebar = function() {
@@ -109,7 +109,7 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
     me.templatesCreator.adaptPlaceholder(tab, data);
   });
 };
-BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
+BrowserUiManager.prototype.getCurrentUrl = function(data) {
 
   //sendResponse({"url": tab.url});
   var me = this;
@@ -138,11 +138,10 @@ BrowserUiManager.prototype.presentResultsFromQueriedUrl = function(data, tabId){
     });
   });
 };
-BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
+BrowserUiManager.prototype.getExternalContent = function(data) {
   //TODO: move this behaviour to the searchTool class
   /*var me = this;
   this.currentQuerySpec = data;
-  this.sendResponse = sendResponse;
 
   var creating = browser.tabs.create({
     url: data.service.url,
@@ -194,11 +193,11 @@ BrowserUiManager.prototype.disableBrowserAction = function(tab) {
 
   this.templatesCreator.disableHarvesting(tab);
 };
-BrowserUiManager.prototype.enableElementSelection = function(data, sendResponse) {
+BrowserUiManager.prototype.enableElementSelection = function(data) {
   
   var me = this;
   this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enableElementSelection(tab, data, sendResponse);
+    me.templatesCreator.enableElementSelection(tab, data);
   });
 };
 BrowserUiManager.prototype.disableElementSelection = function(data) {

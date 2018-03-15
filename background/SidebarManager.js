@@ -55,8 +55,6 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 };
 SidebarManager.prototype.onElementSelection = function(data) { 
 
-	console.log("***SidebarManager.prototype.onElementSelection");
-	console.log(data);
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
 			call: "onElementSelection", 
@@ -86,7 +84,8 @@ SidebarManager.prototype.toggleSidebar = function(callback) { //PUBLIC
 
 	var me = this;
 	this.getCurrentTab(function(tab){
-		me.getStatusForTab(tab).toggleSidebar(tab, callback);
+		browser.tabs.sendMessage(tab.id, {call: "toggle"});
+		if(callback) callback(tab);
 	});
 };
 SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
@@ -110,7 +109,7 @@ SidebarManager.prototype.open = function() {
 
 	var me = this;
 	this.getCurrentTab(function(tab){
-		me.getStatusForTab(tab).open(tab);
+		browser.tabs.sendMessage(tab.id, {call: "open"});
 	});
 };
 SidebarManager.prototype.getCurrentTab = function(callback) {
@@ -124,51 +123,6 @@ SidebarManager.prototype.getCurrentTab = function(callback) {
 SidebarManager.prototype.close = function() {
 	var me = this;
 	this.getCurrentTab(function(tab){
-		me.getStatusForTab(tab).close(tab);
+		browser.tabs.sendMessage(tab.id, {call: "close"});
 	});
 };
-
-//El estado sirve para diferenciar cuando se ha cargado los scripts necesarios en el contexto de la página y cuándo no. Hayq ue prevenir cargarlos dos veces.
-function SidebarManagerStatus(context){
-	this.open = function(tab){ console.log("---SC > open"); };
-	this.close = function(tab){	console.log("---SC > close"); };
-	this.toggleSidebar = function(tab, callback){ console.log("---SC > toggle"); };
-}
-
-
-
-
-function LoadedSidebar(context){ // SUPERCLASS
-	SidebarManagerStatus.call(this, context);
-	this.toggleSidebar = function(tab, callback){
-
-		console.log("---LoadedSidebar > toggle");
-		browser.tabs.sendMessage(tab.id, {call: "toggle"});
-		if(callback) callback(tab);
-	};
-	this.open = function(tab){
-		console.log("---LoadedSidebar > open");
-		browser.tabs.sendMessage(tab.id, {call: "toggle"});
-	};
-	this.close = function(tab){
-		console.log("---LoadedSidebar > close");
-		browser.tabs.sendMessage(tab.id, {call: "close"});
-	}
-}
-
-
-
-
-function NoLoadedSidebar(context){
-	SidebarManagerStatus.call(this, context);
-
-	var status = this;
-	this.toggleSidebar = function(tab, callback){
-		console.log("---NoLoadedSidebar > toggle");
-
-		context.status[tab.id] = new LoadedSidebar(context);
-
-	    browser.tabs.sendMessage(tab.id, {call: "toggle"});
-		if(callback) callback(tab);
-	};
-}

@@ -5,7 +5,6 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
     $scope.loadSubformBehaviour = function() {
 
       browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(url => {
-        console.log(url);
         $scope.onUrlNotification(url);
       });
     };

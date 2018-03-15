@@ -21,9 +21,9 @@ TemplatesCreator.prototype.closeSidebar = function() {
 
   this.sidebarManager.close();
 }
-TemplatesCreator.prototype.removeFullSelectionStyle = function(tab, sendResponse) {
+TemplatesCreator.prototype.removeFullSelectionStyle = function(tab) {
 
-  this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
+  this.backPageSelector.removeFullSelectionStyle(tab);
 }
 TemplatesCreator.prototype.onElementSelection = function(data) { 
 
@@ -41,10 +41,10 @@ TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() {
 
   this.sidebarManager.onFrameReadyForLoadingUrl();
 }
-TemplatesCreator.prototype.onSidebarClosed = function(tab, sendResponse) { 
+TemplatesCreator.prototype.onSidebarClosed = function(tab) { 
 
   this.sidebarManager.onSidebarClosed();
-  //this.backPageSelector.removeFullSelectionStyle(tab, sendResponse);
+  //this.backPageSelector.removeFullSelectionStyle(tab);
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
@@ -77,9 +77,9 @@ TemplatesCreator.prototype.disableDomSelection = function(tab) {
   browser.tabs.sendMessage(tab.id, {call: "disableHighlight"});
   browser.tabs.sendMessage(tab.id, {call: "disableContextElementSelection"});
 }
-TemplatesCreator.prototype.enableElementSelection = function(tab, data, sendResponse) {
+TemplatesCreator.prototype.enableElementSelection = function(tab, data) {
 
-	this.backPageSelector.enableElementSelection(tab, data, sendResponse);
+	this.backPageSelector.enableElementSelection(tab, data);
 }
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
 
