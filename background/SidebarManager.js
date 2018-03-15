@@ -98,10 +98,6 @@ SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 		args: data
 	});
 };
-SidebarManager.prototype.getCurrentUrl = function(tab, data, sendResponse) {
-
-	sendResponse("tab.url");
-};
 SidebarManager.prototype.getStatusForTab = function(tab) {
 
 	//console.log("getting current tab's status", this.status[tab.id]);
@@ -156,7 +152,7 @@ function LoadedSidebar(context){ // SUPERCLASS
 	};
 	this.close = function(tab){
 		console.log("---LoadedSidebar > close");
-		browser.tabs.sendMessage(tab.id, {call: "toggle"});
+		browser.tabs.sendMessage(tab.id, {call: "close"});
 	}
 }
 

@@ -4,7 +4,8 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
 
     $scope.loadSubformBehaviour = function() {
 
-      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(function(url){
+      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(url => {
+        console.log(url);
         $scope.onUrlNotification(url);
       });
     };
@@ -19,7 +20,6 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
         if(Object.keys(services).length > 0){
           $scope.loadExistingServicesInstructions();
           $scope.loadExistingServices(services);
-          console.log(services);
         }
         else {
           $scope.loadNoServicesFoundInstructions();

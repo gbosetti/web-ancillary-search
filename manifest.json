@@ -35,7 +35,11 @@
       "content_scripts/vendor/dom-to-image/index.js", 
       "content_scripts/XPathInterpreter.js", 
       "content_scripts/vendor/popper/index.js", 
-      "content_scripts/page-actions/PageSelector.js"
+      "content_scripts/page-actions/PageSelector.js",
+      "content_scripts/vendor/jquery/dist/jquery.min.js", 
+      "content_scripts/vendor/jquery-ui/jquery-ui.min.js", 
+      "content_scripts/ContentResourcesLoader.js", 
+      "content_scripts/visualizations/lib/js/visualizations.js" 
     ],
     "css": [
       "content_scripts/page-actions/andes-highlighting.css"

@@ -66,11 +66,6 @@ TemplatesCreator.prototype.adaptPlaceholder = function(tab, data) {
 
   this.sidebarManager.adaptPlaceholder(tab, data);
 };
-TemplatesCreator.prototype.getCurrentUrl = function(tab, data, sendResponse) {
-
-  //data viene vacío
-  this.sidebarManager.getCurrentUrl(tab, data, sendResponse);
-};
 TemplatesCreator.prototype.extractInput = function(inputSel, doc){
 
   console.log(doc)

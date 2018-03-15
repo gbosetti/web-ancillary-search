@@ -1,84 +1,54 @@
-/*TODO: hay que buscar mejores nombres para los mensajes de esta clase. showResults no est'a cargando los results; lo termina haciendo onExtraDependenciesLoaded. */
-
-function ResultsVisualizer(){
-	this.visualizer; //= visualizer || new Datatables(); //strategy
-	this.presentationState = new WaitingForRequest(this);
+function VisualizationsManager(){
+	this.data;
 }
 
-ResultsVisualizer.prototype.showWidget = function(data) {
-	this.panel = this.buildPanel(data);
-};
-ResultsVisualizer.prototype.showResults = function(data) {
+VisualizationsManager.prototype.showWidget = function(data) {
+	this.panel = this.createResultsBox(document.defaultView, 
+		"«"+data.resultsName+"» from «" + data.seearchEngineName + "» matching «" + data.selectedText + "»");
 
-	this.results = data.results;
-	//window[data.visualizer]());  
-	//TODO: Definir un patron para que el usuario elija el tipo de visualización
-	/*if (data.seearchEngineName.includes("Image")){
-		this.setVisualizer(new ViewImage(this)); 
-	} else {*/
-		this.setVisualizer(new Datatables(this)); 
-	//}
-	
-	this.loadExtraDependencies();
+	document.body.appendChild(this.panel);
+	this.makePanelDraggable(this.panel);
 };
-ResultsVisualizer.prototype.onExtraDependenciesLoaded = function(){
+VisualizationsManager.prototype.onVisualizationLoaded = function(){
 
-	this.presentData(this.results, this.panel.childNodes[1].children[0]);
-}
-ResultsVisualizer.prototype.loadExtraDependencies = function(){
-  	browser.runtime.sendMessage({
-		call: "loadVisalizerDependencies",
-		args: {
-			"dependencies": this.getDependencies(),
-			"callbackMessage": "onExtraDependenciesLoaded"
-		}
+	var me = this;
+	browser.runtime.sendMessage({ "call": "getExternalContent", "args": me.data }).then(function(extractedData){
+		
+	    /*const req = new window.XMLHttpRequest();
+        req.open('GET', url, false);
+        req.send(null);
+
+	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
+	    var conceptDomElems = me.evaluateSelector(me.data.service.results.selector.value, parsedDoc);	
+
+	    console.log("conceptDomElems!!!!", conceptDomElems);
+		var results = me.extractConcepts(conceptDomElems, me.data.service.results.properties);
+	    me.data.results = results;*/
+	    console.log("extractedData");
+	    console.log(extractedData);
+	    browser.runtime.sendMessage({ "call": "presentDataInVisualization", "args": extractedData });
 	});
 }
 
-ResultsVisualizer.prototype.presentData = function(results, targetPanel){
-
-	this.visualizer.presentData(results, targetPanel);
-}
-
-ResultsVisualizer.prototype.createVisualizationFrame = function(unwrappedWindow){
+VisualizationsManager.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	var iframe = unwrappedWindow.document.createElement('iframe');
 		iframe.id = "andes-results-frame-" + Date.now();
 		iframe.style.width = "99%";
 		iframe.style.height = "340px";
 		iframe.style.background = "white";
-		//iframe.onload = function(){ /* TODO: change PresentationState */ }
 		iframe.src = browser.extension.getURL("/content_scripts/visualizations/index.html");
 	
 	return iframe;
 }
 
-ResultsVisualizer.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
+VisualizationsManager.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
 
-	var me = this;
-	me.showWidget(data);
-	browser.runtime.sendMessage({ "call": "getExternalContent", "args": data }).then(function(url){
-		
-	    const req = new window.XMLHttpRequest();
-        req.open('GET', url, false);
-        req.send(null);
-
-	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
-	    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);	
-
-	    //console.log("\n\nconceptDomElems ", conceptDomElems);
-		var results = me.extractConcepts(conceptDomElems, data.service.results.properties);
-
-	    data.results = results;
-	    me.showResults(data);
-		/*return Promise.resolve({
-			"response": "Hi from content script",
-			"results": results
-		});*/
-	});
+	this.data = data;
+	this.showWidget(data);
 };
 
-ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
+VisualizationsManager.prototype.extractConcepts = function(domElements, propSpecs){
 	//TODO: Modularizar codigo
 	var concepts = [], me= this;
 	var keys = Object.keys(propSpecs);
@@ -109,8 +79,6 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 					}
 				} 
 
-				console.log();
-
 				if(concepts[i][key] == undefined || concepts[i][key] == null) 
 					concepts[i][key] = " ";
 			}
@@ -118,30 +86,21 @@ ResultsVisualizer.prototype.extractConcepts = function(domElements, propSpecs){
 	} else alert("There are no properties defined. Results can not be extracted.");
 	return concepts;
 }
-ResultsVisualizer.prototype.getParsedDocument = function(responseText){
+VisualizationsManager.prototype.getParsedDocument = function(responseText){
 
-    var doc = new window.DOMParser().parseFromString(responseText, "text/html");
-    return doc;
+    return new window.DOMParser().parseFromString(responseText, "text/html");
 };
-ResultsVisualizer.prototype.evaluateSelector = function(selector, doc){
+VisualizationsManager.prototype.evaluateSelector = function(selector, doc){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
 	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
-    //return doc.querySelector(selector).textContent;
 };
-ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
+VisualizationsManager.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
 	var props = [], indexesOfInfoItems = Object.keys(relativeDomElems);
 
-	//console.log("1. indexesOfInfoItems", indexesOfInfoItems);
-	//console.log("2. relativeDomElems", relativeDomElems);
-
 	if(indexesOfInfoItems.length > 0){
 		indexesOfInfoItems.forEach(function(index){
-			//console.log("3. info-item[index]", relativeDomElems[index]); // relativeDomElems[index] devuelve el info-item
-			//console.log("3. xpath of prop", relativeSelector); //devuelve el info-item
 			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[index]);
-				
-			//console.log("prop", prop);
 			if(prop) {
 				props.push(prop);
 			} else props.push(" ");
@@ -149,30 +108,15 @@ ResultsVisualizer.prototype.getMultiplePropsFromElements = function(relativeSele
 	}
 	return props; 
 }
-ResultsVisualizer.prototype.getSingleElement = function(selector, node){
+VisualizationsManager.prototype.getSingleElement = function(selector, node){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
 	return (new XPathInterpreter()).getElementByXPath(selector, node); 
 
 };
-ResultsVisualizer.prototype.getDependencies = function(visualizer) {
-	return this.visualizer.getDependencies();
-};
-ResultsVisualizer.prototype.setVisualizer = function(visualizer) {
-	this.visualizer = visualizer;
-};
-ResultsVisualizer.prototype.makePanelDraggable = function(panel) {
+VisualizationsManager.prototype.makePanelDraggable = function(panel) {
 	document.defaultView["$"](panel).draggable();
 };
-ResultsVisualizer.prototype.buildPanel = function(data) {
-	var resultsPanel = this.createResultsBox(document.defaultView, 
-		"«"+data.resultsName+"» from «" + data.seearchEngineName + "» matching «" + data.selectedText + "»");
-
-	document.body.appendChild(resultsPanel);
-	this.makePanelDraggable(resultsPanel);
-
-	return resultsPanel;
-};
-ResultsVisualizer.prototype.createResultsBox = function(unwrappedWindow, title){
+VisualizationsManager.prototype.createResultsBox = function(unwrappedWindow, title){
 
 	//CONTAINER
 	var resultsBox = unwrappedWindow.document.createElement("div");
@@ -203,7 +147,7 @@ ResultsVisualizer.prototype.createResultsBox = function(unwrappedWindow, title){
 		resultsBox.appendChild(this.createResultsBoxBody(unwrappedWindow));
 	return resultsBox;
 }
-ResultsVisualizer.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
+VisualizationsManager.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
 
 	//TODO: refactoring > createHeader(title): HtmlDivElement
 	var resultsHeader = unwrappedWindow.document.createElement("div");
@@ -244,7 +188,7 @@ ResultsVisualizer.prototype.createResultsBoxHeader = function(unwrappedWindow, t
 		
 	return resultsHeader;
 }
-ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
+VisualizationsManager.prototype.createResultsBoxBody = function(unwrappedWindow){
 	var resultsBody = unwrappedWindow.document.createElement("div");
 		resultsBody.style["background-color"] = "#337ab7";
 		resultsBody.style["width"] = "100%"; 
@@ -255,237 +199,9 @@ ResultsVisualizer.prototype.createResultsBoxBody = function(unwrappedWindow){
 	return resultsBody;
 }
 
-ResultsVisualizer.prototype.hideLoadingMessage = function(iframe){
-	iframe.contentWindow.document.getElementById("loading").remove();
-}
-
-
-ResultsVisualizer.prototype.showLoadingMessage = function(msg, iframe){
-	iframe.contentWindow.document.getElementById("loading-message").innerHTML = msg;
-}
-
-
-// STATE PATTERN!!!
-//TODO: implementar con estados, cada cual chequea lo que corresponde 
-function PresentationStatus(context){
-	this.context = context;
-	//...
-}
-
-function WaitingForRequest(context){
-	PresentationStatus.call(this, context);
-	//...
-}
-
-function WaitingForIframe(){
-	PresentationStatus.call(this);
-	//...
-}
-
-function WaitingForResults(){
-	PresentationStatus.call(this);
-	var me = this;
-	//...
-}
-
-
-////////////// Visualization strategies
-
-function Visualization(){}
-
-
-
-function Multimedia(visualizer){
-	
-	Visualization.call(this);
-	this.visualizer = visualizer;
-
-}
-
-function ViewImage(visualizer){
-	Multimedia.call(this);
-	this.visualizer = visualizer
-}
-
-ViewImage.prototype.presentData = function(concepts, iframe){
-
-	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
-
-	var me = this;
-	var v = this.visualizer;
-	var checkForIframe = setInterval(function(){ 
-		var divImage = iframe.contentWindow.document.querySelector("#my_carousel");		
-		if(divImage){
-			clearInterval(checkForIframe);
-			//TODO: cambiar esto para que recupere resultados posta
-			me.initialize(document, divImage, concepts, iframe);
-			me.visualizer.hideLoadingMessage(iframe);
-			var link = iframe.contentWindow.document.querySelector("#change-visualization");
-			link.onclick = function(){
-				divImage.remove();
-				v.setVisualizer(new Datatables(v));
-				v.loadExtraDependencies();
-			};
-
-		}
-	}, 3000);
-
-}
-
-ViewImage.prototype.getDependencies = function(visualizer){
-
-	return {
-		"js": [
-			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-	  	]
-
-	};
-}
-
-//TODO: Cambiar codigo despues de la expo
-ViewImage.prototype.initialize = function(doc, div, concepts,iframe){
-	var inner = iframe.contentWindow.document.querySelector("#inner");
-	var indicators = iframe.contentWindow.document.querySelector("#indicators");
-	// Generate first image
-	doc.defaultView["$"](inner).append("<div class='item active'><img src="+concepts[0].Image+" alt='Image' class='img-responsive' style='height:330px;'> </div>");
-	doc.defaultView["$"](indicators).append("<li data-target = '#my_carousel' data-slide-to = "+0+" class='active'></li>");
-	var i = 1;
-	concepts.forEach(function(image){
-		doc.defaultView["$"](inner).append("<div class='item'><img src="+image.Image+" alt='Image' class='img-responsive' style='height:330px;'> </div>");
-		doc.defaultView["$"](indicators).append("<li data-target = '#my_carousel' data-slide-to = "+i+"></li>");
-		i = i+1;
-
-	});
- 	doc.defaultView["$"](div).ready(function(){
-    	div.carousel({
-    		interval: 2000
-    	}  )
-  	});    
-}
-
-function Datatables(visualizer){
-
-	Visualization.call(this);
-	this.visualizer = visualizer;
-}
-
-
-
-Datatables.prototype.getDependencies = function(visualizer) {
-	
-	return {
-		
-		"js": [
-			"/content_scripts/vendor/datatables/media/js/jquery.dataTables.min.js", 
-			"/content_scripts/vendor/datatables-responsive/js/dataTables.responsive.js",
-	  		"/content_scripts/vendor/jquery-ui/jquery-ui.min.js"
-	  	]
-
-	};
-};
-Datatables.prototype.presentData = function(concepts, iframe) {
-
-	//TODO: APPLY STATE PATTERN (CAMBIAR CODIGO DESPUES DE LA EXPO)
-
-	var me = this;
-	var v = this.visualizer;
-	var checkForIframe = setInterval(function(){ 
-		var table = iframe.contentWindow.document.querySelector("#results");
-		if(table){
-			clearInterval(checkForIframe);
-			//TODO: cambiar esto para que recupere resultados posta
-			me.visualizer.showLoadingMessage("Extracting Results...",iframe);
-			me.initializeDatatable(document, table, iframe, concepts);
-			me.visualizer.hideLoadingMessage(iframe);
-		/*Add event onclick too link visualizations */
-			var link = iframe.contentWindow.document.querySelector("#change-visualization");
-			link.onclick = function(){
-				table.remove();
-				v.setVisualizer(new ViewImage(v));
-				v.loadExtraDependencies();
-			};
-		}
-	}, 3000);
-};
-
-Datatables.prototype.initializeDatatable = function(doc, table, iframe, concepts) {
-	function format (d) {
-    // `d` is the original data object for the row
-    	if (d.Image){
-			return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		        '<tr>'+
-		            "<td> <img src="+d.Image+" alt='Image'</td>"+
-		        '</tr>'+
-		 '</table>';
-    	} else {
-    	return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-	        '<tr>'+
-	            '<td>Stock:</td>'+
-	            '<td> Disponible </td>'+
-	        '</tr>'+
-	        '<tr>'+
-	      	   '<td>Editorial:</td>'+
-         	   '<td>'+d.Editorial+'</td>'+
-	        '</tr>'+
-	    '</table>'}
-	}
-	if (concepts[0] == undefined){
-		console.log(concepts);
-		alert("ERROR: no concepts found (visualizations.js)");
-		return;
-	}
-	var properties = Object.keys(concepts[0]);
-
-	console.log("***concepts***", concepts);
-
-
-	doc.defaultView["$"](doc).ready(function(){
-	var tableC =doc.defaultView["$"](table).DataTable({
-        "paging": false,
-        "bFilter": false,
-        "ordering": true,
-        "searching": false,
-        "data": concepts,
-        "columns": [
-            {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ' '
-            },
-
-            //Add this from concept
-            { "title":properties[0], "data": properties[0]},
-            { "title":properties[1], "data": properties[1],  "defaultContent": "<i>Not set</i>"}
-        ],
-        "order": [[1, 'asc']]
-	});
-
-
-
-	var tbody = iframe.contentWindow.document.querySelector("#results > tbody");
-	doc.defaultView["$"](tbody).on('click', 'td.details-control', function () {
-		var tr = doc.defaultView["$"](this).closest('tr');
-      	var row = tableC.row( tr );
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
-        }
-	 });
-});
-
-}
-
-
 
 /////////////////////////////////////////////
-var presenter = new ResultsVisualizer();
+var presenter = new VisualizationsManager();
 browser.runtime.onMessage.addListener(request => {
   
 	if(presenter[request.call]) {

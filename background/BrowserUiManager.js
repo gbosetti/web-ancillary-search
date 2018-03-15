@@ -9,6 +9,20 @@ BrowserUiManager.prototype.initialize = function() {
   this.searchTool = new SearchTool();
   this.listenForTabChanges();
 };
+BrowserUiManager.prototype.onVisualizationLoaded = function(args, sendResponse) {
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.searchTool.onVisualizationLoaded(args, sendResponse, tab);
+  });
+};
+BrowserUiManager.prototype.presentDataInVisualization = function(args, sendResponse) {
+
+  var me = this;
+  this.executeOnCurrentTab(function(tab){
+    me.searchTool.presentDataInVisualization(args, sendResponse, tab);
+  });
+};
 BrowserUiManager.prototype.listenForTabChanges = function() { 
 
   var me = this;
@@ -27,7 +41,7 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
 
       //This is required for the templates templatesCreator
       me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
-      me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
+      //me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
     } 
   });
 }
@@ -58,13 +72,6 @@ BrowserUiManager.prototype.selectMatchingElements = function(data) {
     me.templatesCreator.selectMatchingElements(tab, data);
   });
 };
-BrowserUiManager.prototype.loadVisalizerDependencies = function(data) { 
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.searchTool.loadVisalizerDependencies(tab, data.dependencies, data.callbackMessage);
-  });
-}
 BrowserUiManager.prototype.removeFullSelectionStyle = function(data, sendResponse) { 
 
   var me = this;
@@ -104,12 +111,12 @@ BrowserUiManager.prototype.adaptPlaceholder = function(data) {
 };
 BrowserUiManager.prototype.getCurrentUrl = function(data, sendResponse) {
 
+  //sendResponse({"url": tab.url});
   var me = this;
-  this.executeOnCurrentTab(function(tab){
-    //console.log("TAB", tab);
-    console.log("DATA", data);
-    //console.log("TAB", sendResponse);
-    me.templatesCreator.getCurrentUrl(tab, data, sendResponse);
+  return new Promise((resolve, reject) => {
+    me.executeOnCurrentTab(function(tab){
+      resolve(tab.url); 
+    });
   });
 };
 BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
@@ -124,13 +131,16 @@ BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
 BrowserUiManager.prototype.presentResultsFromQueriedUrl = function(data, tabId){
   //TODO: move this behaviour to the searchTool class
 
-  this.sendResponse(data);
-  browser.tabs.remove(tabId)
+  browser.tabs.remove(tabId);
+  return new Promise((resolve, reject) => {
+    me.executeOnCurrentTab(function(tab){
+      resolve(data); 
+    });
+  });
 };
 BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
   //TODO: move this behaviour to the searchTool class
-
-  var me = this;
+  /*var me = this;
   this.currentQuerySpec = data;
   this.sendResponse = sendResponse;
 
@@ -145,6 +155,20 @@ BrowserUiManager.prototype.getExternalContent = function(data, sendResponse) {
       new BackgroundResource("/content_scripts/XPathInterpreter.js"),
       new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
     ], tab, function(){},"document_start");
+  });*/
+
+  return new Promise((resolve, reject) => {
+
+    const req = new window.XMLHttpRequest();
+        req.open('GET', data.url, false);
+        req.send(null);
+
+    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
+    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);  
+
+    data.results = me.extractConcepts(conceptDomElems, data.service.results.properties);
+
+      resolve(data); 
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {

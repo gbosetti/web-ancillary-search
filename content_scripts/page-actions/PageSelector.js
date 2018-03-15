@@ -84,7 +84,7 @@ PageSelector.prototype.loadListeners = function(){
 
 			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
 			
-			console.log("!!!!!!! onElementSelection: ", evt.params.onElementSelection);
+			//console.log("!!!!!!! onElementSelection: ", evt.params.onElementSelection);
 			browser.runtime.sendMessage({ 
 				"call": evt.params.onElementSelection, /*onElementSelection*/
 				"args": {

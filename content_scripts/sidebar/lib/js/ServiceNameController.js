@@ -13,7 +13,8 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
         }
       });
 
-      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(function(url){
+      browser.runtime.sendMessage({ call: "getCurrentUrl" }).then(url => {
+        console.log(url);
         $scope.service.url = url;
       });
     };
