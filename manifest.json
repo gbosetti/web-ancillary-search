@@ -39,6 +39,7 @@
       "content_scripts/vendor/jquery/dist/jquery.min.js", 
       "content_scripts/vendor/jquery-ui/jquery-ui.min.js", 
       "content_scripts/ContentResourcesLoader.js", 
+      "content_scripts/sidebar/Sidebar.js",
       "content_scripts/visualizations/lib/js/visualizations.js" 
     ],
     "css": [

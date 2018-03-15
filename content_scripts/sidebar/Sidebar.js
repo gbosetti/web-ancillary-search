@@ -83,6 +83,7 @@ Sidebar.prototype.createContainer = function() {
 		container.style.boxShadow = "3px 3px 20px rgba(0, 0, 0, 0.3)";
 		container.style.width = "300px";
 		container.style.margin = "1px solid gray";
+		container.style.display = "none";
 	return container;
 };
 Sidebar.prototype.toolAcronym = function() {

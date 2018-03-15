@@ -167,12 +167,8 @@ function NoLoadedSidebar(context){
 		console.log("---NoLoadedSidebar > toggle");
 
 		context.status[tab.id] = new LoadedSidebar(context);
-		BackgroundResourcesLoader.syncLoadScripts([
-	  		new BackgroundResource("/content_scripts/ContentResourcesLoader.js"),
-	  		new BackgroundResource("/content_scripts/sidebar/Sidebar.js")
-	  	], tab, function () {
-	        browser.tabs.sendMessage(tab.id, {call: "toggle"});
-	    });
+
+	    browser.tabs.sendMessage(tab.id, {call: "toggle"});
 		if(callback) callback(tab);
 	};
 }
