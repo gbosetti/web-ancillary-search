@@ -9,18 +9,15 @@ BrowserUiManager.prototype.initialize = function() {
   this.searchTool = new SearchTool();
   this.listenForTabChanges();
 };
-BrowserUiManager.prototype.onVisualizationLoaded = function(args) {
+BrowserUiManager.prototype.onVisualizationLoaded = function() {
 
   var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.searchTool.onVisualizationLoaded(args, tab);
-  });
-};
-BrowserUiManager.prototype.presentDataInVisualization = function(args) {
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.searchTool.presentDataInVisualization(args, tab);
+  return new Promise((resolve, reject) => {
+    me.executeOnCurrentTab(function(tab){
+      me.searchTool.onVisualizationLoaded(tab).then(data => {
+        resolve(data);
+      });
+    });
   });
 };
 BrowserUiManager.prototype.listenForTabChanges = function() { 
@@ -38,10 +35,6 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
         me.listenForExternalRetrieval = undefined;
         me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
       }
-
-      //This is required for the templates templatesCreator
-      me.templatesCreator.sidebarManager.initializeStateForTab(tabId);
-      //me.templatesCreator.backPageSelector.initializeStateForTab(tabId);
     } 
   });
 }
@@ -136,38 +129,6 @@ BrowserUiManager.prototype.presentResultsFromQueriedUrl = function(data, tabId){
     me.executeOnCurrentTab(function(tab){
       resolve(data); 
     });
-  });
-};
-BrowserUiManager.prototype.getExternalContent = function(data) {
-  //TODO: move this behaviour to the searchTool class
-  /*var me = this;
-  this.currentQuerySpec = data;
-
-  var creating = browser.tabs.create({
-    url: data.service.url,
-    active: false
-  })
-  .then(function(tab) {
-
-    me.currentQuerySpec.tabId = tab.id;
-    BackgroundResourcesLoader.syncLoadScripts([
-      new BackgroundResource("/content_scripts/XPathInterpreter.js"),
-      new BackgroundResource("/content_scripts/visualizations/lib/js/form-manipulation.js")
-    ], tab, function(){},"document_start");
-  });*/
-
-  return new Promise((resolve, reject) => {
-
-    const req = new window.XMLHttpRequest();
-        req.open('GET', data.url, false);
-        req.send(null);
-
-    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
-    var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);  
-
-    data.results = me.extractConcepts(conceptDomElems, data.service.results.properties);
-
-      resolve(data); 
   });
 };
 BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {

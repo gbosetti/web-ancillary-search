@@ -1,36 +1,23 @@
-function VisualizationsManager(){
+function VisualizationWidget(){
 	this.data;
 }
+VisualizationWidget.prototype.initializeWidget = function(data) { //url resultSpec callback
 
-VisualizationsManager.prototype.showWidget = function(data) {
+	var me = this;
+	return new Promise((resolve, reject) => {
+		this.data = data;
+		this.showWidget(data);
+		resolve(data);
+	});
+};
+VisualizationWidget.prototype.showWidget = function(data) {
 	this.panel = this.createResultsBox(document.defaultView, 
 		"«"+data.resultsName+"» from «" + data.seearchEngineName + "» matching «" + data.selectedText + "»");
 
 	document.body.appendChild(this.panel);
 	this.makePanelDraggable(this.panel);
 };
-VisualizationsManager.prototype.onVisualizationLoaded = function(){
-
-	var me = this;
-	browser.runtime.sendMessage({ "call": "getExternalContent", "args": me.data }).then(function(extractedData){
-		
-	    /*const req = new window.XMLHttpRequest();
-        req.open('GET', url, false);
-        req.send(null);
-
-	    var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
-	    var conceptDomElems = me.evaluateSelector(me.data.service.results.selector.value, parsedDoc);	
-
-	    console.log("conceptDomElems!!!!", conceptDomElems);
-		var results = me.extractConcepts(conceptDomElems, me.data.service.results.properties);
-	    me.data.results = results;*/
-	    console.log("extractedData");
-	    console.log(extractedData);
-	    browser.runtime.sendMessage({ "call": "presentDataInVisualization", "args": extractedData });
-	});
-}
-
-VisualizationsManager.prototype.createVisualizationFrame = function(unwrappedWindow){
+VisualizationWidget.prototype.createVisualizationFrame = function(unwrappedWindow){
 
 	var iframe = unwrappedWindow.document.createElement('iframe');
 		iframe.id = "andes-results-frame-" + Date.now();
@@ -41,82 +28,15 @@ VisualizationsManager.prototype.createVisualizationFrame = function(unwrappedWin
 	
 	return iframe;
 }
-
-VisualizationsManager.prototype.retrieveExtenralResults = function(data) { //url resultSpec callback
-
-	this.data = data;
-	this.showWidget(data);
-};
-
-VisualizationsManager.prototype.extractConcepts = function(domElements, propSpecs){
-	//TODO: Modularizar codigo
-	var concepts = [], me= this;
-	var keys = Object.keys(propSpecs);
-	
-	if(keys.length > 0){
-		keys.forEach(function(key){
-
-			var propElems = me.getMultiplePropsFromElements(
-				propSpecs[key].relativeSelector, domElements);
-
-			for (i = 0; i < propElems.length; i++) { 
-				if (propElems[i] != null){
-
-					if (concepts[i]){ //si hay concepto, se agrega propiedad
-						if(propElems[i] && propElems[i].textContent){
-							concepts[i][key] = propElems[i].textContent;
-						}else {
-							concepts[i][key] = propElems[i].src;
-						}
-					} //si no hay concepto, se crea
-					else{
-						concepts[i] = {};
-						if(propElems[i] && propElems[i].textContent){
-							concepts[i][key] = propElems[i].textContent;
-						}else {
-							concepts[i][key] = propElems[i].src;
-						}
-					}
-				} 
-
-				if(concepts[i][key] == undefined || concepts[i][key] == null) 
-					concepts[i][key] = " ";
-			}
-		});
-	} else alert("There are no properties defined. Results can not be extracted.");
-	return concepts;
-}
-VisualizationsManager.prototype.getParsedDocument = function(responseText){
-
-    return new window.DOMParser().parseFromString(responseText, "text/html");
-};
-VisualizationsManager.prototype.evaluateSelector = function(selector, doc){
-	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-	return (new XPathInterpreter()).getElementsByXpath(selector, doc);
-};
-VisualizationsManager.prototype.getMultiplePropsFromElements = function(relativeSelector, relativeDomElems){
-	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
-	var props = [], indexesOfInfoItems = Object.keys(relativeDomElems);
-
-	if(indexesOfInfoItems.length > 0){
-		indexesOfInfoItems.forEach(function(index){
-			var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[index]);
-			if(prop) {
-				props.push(prop);
-			} else props.push(" ");
-		});
-	}
-	return props; 
-}
-VisualizationsManager.prototype.getSingleElement = function(selector, node){
+VisualizationWidget.prototype.getSingleElement = function(selector, node){
 	//TODO: acá se debería tener un strategy para laburar con diferentes tipos de selectores
 	return (new XPathInterpreter()).getElementByXPath(selector, node); 
 
 };
-VisualizationsManager.prototype.makePanelDraggable = function(panel) {
+VisualizationWidget.prototype.makePanelDraggable = function(panel) {
 	document.defaultView["$"](panel).draggable();
 };
-VisualizationsManager.prototype.createResultsBox = function(unwrappedWindow, title){
+VisualizationWidget.prototype.createResultsBox = function(unwrappedWindow, title){
 
 	//CONTAINER
 	var resultsBox = unwrappedWindow.document.createElement("div");
@@ -147,7 +67,7 @@ VisualizationsManager.prototype.createResultsBox = function(unwrappedWindow, tit
 		resultsBox.appendChild(this.createResultsBoxBody(unwrappedWindow));
 	return resultsBox;
 }
-VisualizationsManager.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
+VisualizationWidget.prototype.createResultsBoxHeader = function(unwrappedWindow, title){
 
 	//TODO: refactoring > createHeader(title): HtmlDivElement
 	var resultsHeader = unwrappedWindow.document.createElement("div");
@@ -188,7 +108,7 @@ VisualizationsManager.prototype.createResultsBoxHeader = function(unwrappedWindo
 		
 	return resultsHeader;
 }
-VisualizationsManager.prototype.createResultsBoxBody = function(unwrappedWindow){
+VisualizationWidget.prototype.createResultsBoxBody = function(unwrappedWindow){
 	var resultsBody = unwrappedWindow.document.createElement("div");
 		resultsBody.style["background-color"] = "#337ab7";
 		resultsBody.style["width"] = "100%"; 
@@ -201,7 +121,7 @@ VisualizationsManager.prototype.createResultsBoxBody = function(unwrappedWindow)
 
 
 /////////////////////////////////////////////
-var presenter = new VisualizationsManager();
+var presenter = new VisualizationWidget();
 browser.runtime.onMessage.addListener(request => {
   
 	if(presenter[request.call]) {

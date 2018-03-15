@@ -1,12 +1,14 @@
 function TableVisualizer(){
 	this.initialize();
 }
-TableVisualizer.prototype.initialize = function(first_argument) {
+TableVisualizer.prototype.initialize = function() {
 	
-	browser.runtime.sendMessage({ 
-		"call": "onVisualizationLoaded"
-	});
 	this.showLoadingMessage("Extracting Results...");
+	browser.runtime.sendMessage({ "call": "onVisualizationLoaded"}).then(data => {
+		console.log("BACK TO THE SIDEBAR", data);
+		this.presentData(data);
+		this.hideLoadingMessage();
+	});
 };
 TableVisualizer.prototype.showLoadingMessage = function(msg){
 	document.getElementById("loading-message").innerHTML = msg;
@@ -14,13 +16,8 @@ TableVisualizer.prototype.showLoadingMessage = function(msg){
 TableVisualizer.prototype.presentData = function(data){
 	
 	var table = document.querySelector("#results");
-	console.log(data);
-	this.initializeDatatable(document, table, data.results.concepts);
-	this.hideLoadingMessage(window);
-	/*document.querySelector("#change-visualization").onclick = function(){
-		table.remove();
-		v.setVisualizer(new ViewImage(v));
-	};*/
+	console.log("presentData: ", data);
+	this.initializeDatatable(document, table, data.results);
 }
 TableVisualizer.prototype.hideLoadingMessage = function(){
 	document.getElementById("loading").remove();
@@ -53,9 +50,6 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 			return;
 		}
 		var properties = Object.keys(concepts[0]);
-
-		console.log("***concepts***", concepts);
-
 
 		doc.defaultView["$"](doc).ready(function(){
 		var tableC =doc.defaultView["$"](table).DataTable({

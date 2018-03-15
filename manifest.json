@@ -18,6 +18,7 @@
   "background": {
     "scripts": [
       "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js", 
+      "content_scripts/XPathInterpreter.js", 
       "background/StorageManagement.js",
       "background/BrowserUiManager.js", 
       "background/BackgroundResourcesLoader.js",

@@ -4,7 +4,6 @@ function SidebarManager(defaultFile, defaultDependencies, listeners){
 
 	this.defaultFile = defaultFile;
 	this.defaultDependencies = defaultDependencies;
-	this.status = {};
 	this.listeners = [];
 	this.addListeners(listeners);
 }
@@ -13,10 +12,6 @@ SidebarManager.prototype.addListeners = function(listeners) {
 	for (var i = listeners.length - 1; i >= 0; i--) {
 		this.addListener(listeners[i]);
 	}
-}
-SidebarManager.prototype.initializeStateForTab = function(tabId) { 
-
-	this.status[tabId] = new NoLoadedSidebar(this); 
 }
 SidebarManager.prototype.addListener = function(listener) { 
 
@@ -96,14 +91,6 @@ SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 		call: data.callback, 
 		args: data
 	});
-};
-SidebarManager.prototype.getStatusForTab = function(tab) {
-
-	//console.log("getting current tab's status", this.status[tab.id]);
-	if (this.status[tab.id] == undefined)
-		this.initializeStateForTab(tab.id);
-	
-	return this.status[tab.id];
 };
 SidebarManager.prototype.open = function() {
 
