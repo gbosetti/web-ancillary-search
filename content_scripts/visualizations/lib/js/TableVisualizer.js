@@ -4,11 +4,29 @@ function TableVisualizer(){
 TableVisualizer.prototype.initialize = function() {
 	
 	this.showLoadingMessage("Extracting Results...");
+
 	browser.runtime.sendMessage({ "call": "onVisualizationLoaded"}).then(data => {
-		this.presentData(data);
-		this.hideLoadingMessage();
+
+		console.log("Loading ", data.url);
+		this.loadDemoUrl(data.url);
+		
+
+
+		//this.presentData(data);
+		//this.hideLoadingMessage();
 	});
 };
+TableVisualizer.prototype.loadDemoUrl = function(url){
+
+	browser.runtime.sendMessage({ "call": "startListeningForUrls"}).then(data => {
+
+		var frame = document.createElement("iframe");
+		frame.id = "andes-external-content2";
+		frame.style.display = "none";
+		document.body.appendChild(frame);
+		frame.src = url; //Acá se cargan 2. Primero una equivalente al about blank, después la que le llega.
+	});
+}
 TableVisualizer.prototype.showLoadingMessage = function(msg){
 	document.getElementById("loading-message").innerHTML = msg;
 }

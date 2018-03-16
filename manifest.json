@@ -41,11 +41,19 @@
       "content_scripts/vendor/jquery-ui/jquery-ui.min.js", 
       "content_scripts/ContentResourcesLoader.js", 
       "content_scripts/sidebar/Sidebar.js",
-      "content_scripts/visualizations/lib/js/visualizations.js" 
+      "content_scripts/visualizations/lib/js/visualizations.js"
     ],
     "css": [
       "content_scripts/page-actions/andes-highlighting.css"
     ]
+  },
+  {
+    "matches": ["*://*/*"],
+    "js": [
+      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js",
+      "content_scripts/visualizations/lib/js/dom-notification.js" 
+    ],
+    "all_frames": true
   }],
 
   "permissions": [

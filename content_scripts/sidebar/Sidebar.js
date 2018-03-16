@@ -23,11 +23,6 @@ Sidebar.prototype.getIframe = function() {
 Sidebar.prototype.loadUrl = function(data) {
 
 	this.getIframe().src = data.url;
-	/*var me = this;
-	this.getIframe().onload = function(){
-		me.localize(this.contentWindow.document);
-		me.loadContentScripts(data.filePaths, this.contentWindow.document);
-	};*/
 };
 Sidebar.prototype.loadContentScripts = function(filePaths, doc) {
 	

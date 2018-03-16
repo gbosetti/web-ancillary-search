@@ -6,6 +6,8 @@ function SearchTool(){
 
 	//Init
   	this.createContextMenus();
+
+  this.stopListeningForUrls();
 }
 SearchTool.prototype.createContextMenus = function() {     
 
@@ -104,6 +106,7 @@ SearchTool.prototype.getExternalContent = function(data) {
         req.open('GET', data.service.url, false);
         req.send(null);
 
+        console.log(data.service);
     var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
     var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);  
     data.service.results = me.extractConcepts(conceptDomElems, data.service.results.properties);
@@ -124,7 +127,6 @@ SearchTool.prototype.extractConcepts = function(domElements, propSpecs){
     keys.forEach(function(key){
 
       var propElems = me.getMultiplePropsFromElements(propSpecs[key].relativeSelector, domElements);
-      console.log(propElems);
 
       for (i = 0; i < propElems.length; i++) { 
         if (propElems[i] != null){ //If the object has the property, then
@@ -158,7 +160,6 @@ SearchTool.prototype.getMultiplePropsFromElements = function(relativeSelector, r
     indexesOfInfoItems.forEach(function(index){
       var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[index]);
       
-      console.log(index, relativeSelector, relativeDomElems[index]);
       if(prop) {
         props.push(prop);
       } else props.push(" ");
@@ -166,3 +167,22 @@ SearchTool.prototype.getMultiplePropsFromElements = function(relativeSelector, r
   }
   return props; 
 };
+SearchTool.prototype.newDocumentWasLoaded = function(data) {
+
+  var me = this;
+  return new Promise((resolve, reject) => {
+    resolve({proceed: this.listenForUrls});
+  });
+};
+SearchTool.prototype.startListeningForUrls = function(){
+
+  var me = this;
+  return new Promise((resolve, reject) => {
+    me.listenForUrls=true;
+    resolve();
+  });
+}
+SearchTool.prototype.stopListeningForUrls = function(){
+
+  this.listenForUrls=false;
+}

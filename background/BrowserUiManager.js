@@ -230,3 +230,16 @@ BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
     console.log(err);
   }
 }
+//Mover todo lo que sigue a la SearchTool
+BrowserUiManager.prototype.newDocumentWasLoaded = function(data) {
+
+  return this.searchTool.newDocumentWasLoaded(data);
+};
+BrowserUiManager.prototype.startListeningForUrls = function(){
+
+  return this.searchTool.startListeningForUrls();
+}
+BrowserUiManager.prototype.stopListeningForUrls = function(){
+
+  return this.searchTool.stopListeningForUrls();
+}
