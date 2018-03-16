@@ -51,6 +51,7 @@
     "matches": ["*://*/*"],
     "js": [
       "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js",
+      "content_scripts/XPathInterpreter.js", 
       "content_scripts/visualizations/lib/js/dom-notification.js" 
     ],
     "all_frames": true

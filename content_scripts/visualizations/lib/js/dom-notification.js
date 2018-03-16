@@ -1,5 +1,7 @@
-function SearchStrategy(){}
-SearchStrategy.prototype.notifyVisitedPageUrl = function() {
+function Searcher(){
+	this.searchStrategy = new UrlQueryBasedSearch(new StoppedSearch());
+}
+Searcher.prototype.notifyVisitedPageUrl = function() {
 	var me = this;
 	browser.runtime.sendMessage({ 
 		"call": "newDocumentWasLoaded",
@@ -7,22 +9,81 @@ SearchStrategy.prototype.notifyVisitedPageUrl = function() {
 			"url": window.location.href
 		}
 	}).then(response =>{
-		if(response.proceed)
-			me.executeAutomaticSearch(response);
-		else console.log("Doing nothing with the doc.");
+
+		console.log("Setting status: " + response.status);
+		me.searchStrategy = new UrlQueryBasedSearch(new window[response.status]()); //TODO: extend UrlQueryBasedSearch
+		me.searchStrategy.analyseDom(response.data);
 	})
 };
 
-function UrlQueryBasedSearch(){
-	SearchStrategy.call(this);
+
+//********************STRATEGIES
+
+
+
+function SearchStrategy(status){
+	this.status = status;
+	this.analyseDom = function(data) {}
 }
-SearchStrategy.prototype.executeAutomaticSearch = function(data) {
-	
-	console.log("executeAutomaticSearch");
+
+
+function NoSearchStrategy(status){
+	SearchStrategy.call(this, status);
+}
+
+
+function UrlQueryBasedSearch(status){
+	SearchStrategy.call(this, status);
+	//this.status = status;
+	this.analyseDom = function(data) {
+
+		this.status.analyseDom(data);
+	};
 };
 
 
-var searher = new SearchStrategy(); //TODO: here you need to add a manager, which will ask the extension which strategy should be set.
+//********************STATUS
+
+function SearchStatus(){
+
+	this.analyseDom = function(data){}
+}
+
+function StoppedSearch(){
+  SearchStatus.call(this);
+  this.analyseDom = function(data){}
+}
+
+function ReadyToTrigger(){
+  SearchStatus.call(this);
+  this.analyseDom = function(data){
+
+	  var xpi = new XPathInterpreter();
+
+		var input = xpi.getSingleElementByXpath(data.service.input.selector, document);
+			input.value = data.keywords;
+
+		var trigger = xpi.getSingleElementByXpath(data.service.trigger.strategy.selector, document);
+
+		var me = this;
+		browser.runtime.sendMessage({ 
+			"call": "setSearchListeningStatus",
+			"args": {"status": "ReadyToExtractResults"}
+		}).then(response =>{
+			trigger.click();
+		})
+	}
+}
+
+function ReadyToExtractResults(){
+	SearchStatus.call(this);
+	this.analyseDom = function(data){
+
+	  	console.log("READY TO EXTRACT!!!!");
+	}
+}
+
+var searher = new Searcher();
 	searher.notifyVisitedPageUrl();
 
 browser.runtime.onMessage.addListener(function callAndesAutomaticSearchers(request, sender) {

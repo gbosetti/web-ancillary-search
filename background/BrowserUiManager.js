@@ -239,7 +239,7 @@ BrowserUiManager.prototype.startListeningForUrls = function(){
 
   return this.searchTool.startListeningForUrls();
 }
-BrowserUiManager.prototype.stopListeningForUrls = function(){
+BrowserUiManager.prototype.setSearchListeningStatus = function(data){
 
-  return this.searchTool.stopListeningForUrls();
+  return this.searchTool.setSearchListeningStatus(data.status);
 }

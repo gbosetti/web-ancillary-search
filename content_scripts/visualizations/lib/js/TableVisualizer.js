@@ -7,24 +7,23 @@ TableVisualizer.prototype.initialize = function() {
 
 	browser.runtime.sendMessage({ "call": "onVisualizationLoaded"}).then(data => {
 
-		console.log("Loading ", data.url);
-		this.loadDemoUrl(data.url);
-		
-
-
+		this.loadDemoPage(data);
 		//this.presentData(data);
 		//this.hideLoadingMessage();
 	});
 };
-TableVisualizer.prototype.loadDemoUrl = function(url){
+TableVisualizer.prototype.loadDemoPage = function(searchData){
 
-	browser.runtime.sendMessage({ "call": "startListeningForUrls"}).then(data => {
+	browser.runtime.sendMessage({ 
+		"call": "startListeningForUrls", 
+		"args": searchData
+	}).then(nothing => {
 
 		var frame = document.createElement("iframe");
-		frame.id = "andes-external-content2";
-		frame.style.display = "none";
+			frame.id = "andes-external-content2";
+			frame.style.display = "none";
 		document.body.appendChild(frame);
-		frame.src = url; //Acá se cargan 2. Primero una equivalente al about blank, después la que le llega.
+		frame.src = searchData.url; //Acá se cargan 2. Primero una equivalente al about blank, después la que le llega.
 	});
 }
 TableVisualizer.prototype.showLoadingMessage = function(msg){

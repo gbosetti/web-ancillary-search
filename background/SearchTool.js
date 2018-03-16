@@ -3,11 +3,10 @@ function SearchTool(){
 	//PROPS
 	this.selectedText;
 	this.loadedScriptsByTabs = {};
+  this.searchStrategy = new UrlQueryBasedSearch();
 
 	//Init
-  	this.createContextMenus();
-
-  this.stopListeningForUrls();
+  this.createContextMenus();
 }
 SearchTool.prototype.createContextMenus = function() {     
 
@@ -106,7 +105,6 @@ SearchTool.prototype.getExternalContent = function(data) {
         req.open('GET', data.service.url, false);
         req.send(null);
 
-        console.log(data.service);
     var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
     var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);  
     data.service.results = me.extractConcepts(conceptDomElems, data.service.results.properties);
@@ -171,18 +169,73 @@ SearchTool.prototype.newDocumentWasLoaded = function(data) {
 
   var me = this;
   return new Promise((resolve, reject) => {
-    resolve({proceed: this.listenForUrls});
+    resolve({
+      "status": me.searchStrategy.statusName(), //this.listenForUrls, 
+      "data": me.currentExecutionData 
+    });
   });
 };
 SearchTool.prototype.startListeningForUrls = function(){
 
   var me = this;
   return new Promise((resolve, reject) => {
-    me.listenForUrls=true;
+    me.searchStrategy.status = new ReadyToTrigger();
     resolve();
   });
 }
-SearchTool.prototype.stopListeningForUrls = function(){
+SearchTool.prototype.setSearchListeningStatus = function(status){
 
-  this.listenForUrls=false;
+  var me = this;
+  return new Promise((resolve, reject) => {
+    me.searchStrategy.status=new window[status](); //e.g. ReadyToAnalyse
+    resolve();
+  });
+}
+
+//SearchStrategy ----status---> searchStatus
+function SearchStrategy(status){
+  this.status = status;
+}
+
+function UrlQueryBasedSearch(status){
+  SearchStrategy.call(this, status || new StoppedSearch());
+}
+UrlQueryBasedSearch.prototype.statusName = function() {
+  return this.status.constructor.name
+};
+
+
+
+
+
+
+function SearchStatus(){}
+SearchStatus.prototype.analyseDom = function(status){}
+
+function StoppedSearch(){
+  SearchStatus.call(this);
+}
+
+function ReadyToTrigger(){
+  SearchStatus.call(this);
+}
+ReadyToTrigger.prototype.analyseDom = function(status){
+
+  var me = this;
+  return new Promise((resolve, reject) => {
+    me.searchStatus=new window[status]();
+    resolve();
+  });
+}
+
+function ReadyToExtractResults(){
+  SearchStatus.call(this);
+}
+ReadyToExtractResults.prototype.analyseDom = function(status){
+
+  var me = this;
+  return new Promise((resolve, reject) => {
+    me.searchStatus=new window[status]();
+    resolve();
+  });
 }
