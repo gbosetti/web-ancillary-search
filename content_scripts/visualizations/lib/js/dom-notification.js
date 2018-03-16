@@ -121,25 +121,26 @@ function ReadyToExtractResults(){
 	  	
 	  	conceptDomElems.forEach(conceptDom => {
 
-	  		console.log(conceptDom);
+	  		var incompleteConcept = false;
 	  		var concept = {};
 	  		propSpecKeys.forEach(propIndex => {
 	  			
-	  			console.log(propSpecs[propIndex]);
-
-	  			console.log("Getting the " + propSpecs[propIndex].name + ": " + propSpecs[propIndex].relativeSelector);
 				var propDom = (new XPathInterpreter()).getSingleElementByXpath(
 					propSpecs[propIndex].relativeSelector, 
 					conceptDom
 				);
-				console.log(propDom);
-
-				if(propDom) {
+				if(propDom != null) { //asi solo se agregan los que tienen algo
 					concept[propIndex] = propDom.textContent.replace(/\n/g, ' ').trim();
-				} 
+				} else incompleteConcept = true;
 	  		});
+
+	  		//Completar los null con otro valor
+	  		/*propSpecKeys.forEach(propIndex => {
+	  			concept[propIndex] = (concept[propIndex] == null) "";
+	  		});*/
+
 	  		
-	  		if(Object.keys(concept).length > 0)
+	  		if(Object.keys(concept).length > 0 && !incompleteConcept)
 	  			concepts.push(concept);
 	  	});
 	  }
