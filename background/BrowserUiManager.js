@@ -22,7 +22,7 @@ BrowserUiManager.prototype.onVisualizationLoaded = function() {
 };
 BrowserUiManager.prototype.listenForTabChanges = function() { 
 
-  var me = this;
+  /*var me = this;
   this.listenForExternalRetrieval = false;
 
   browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
@@ -35,7 +35,7 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
         me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
       }
     } 
-  });
+  });*/
 }
 BrowserUiManager.prototype.onElementSelection = function(data) { 
 

@@ -9,8 +9,6 @@ Searcher.prototype.notifyVisitedPageUrl = function() {
 			"url": window.location.href
 		}
 	}).then(response =>{
-
-		console.log("Setting status: " + response.status);
 		me.searchStrategy = new UrlQueryBasedSearch(new window[response.status]()); //TODO: extend UrlQueryBasedSearch
 		me.searchStrategy.analyseDom(response.data);
 	})
@@ -61,35 +59,37 @@ function ReadyToTrigger(){
 	  var xpi = new XPathInterpreter();
 
 		var input = xpi.getSingleElementByXpath(data.service.input.selector, document);
-			input.value = data.keywords;
-
 		var trigger = xpi.getSingleElementByXpath(data.service.trigger.strategy.selector, document);
 
-		var me = this;
-		browser.runtime.sendMessage({ 
-			"call": "setSearchListeningStatus",
-			"args": {"status": "ReadyToExtractResults"}
-		}).then(response =>{
-			trigger.click();
-		})
+		if(input && trigger){
+			var me = this;
+			browser.runtime.sendMessage({ 
+				"call": "setSearchListeningStatus",
+				"args": {"status": "ReadyToExtractResults"}
+			}).then(response =>{
+				input.value = data.keywords;
+				trigger.click();
+			})
+		}
 	}
 }
 
 function ReadyToExtractResults(){
 	SearchStatus.call(this);
-	this.analyseDom = function(data, caller){
+	this.analyseDom = function(data){
 
-	  	console.log("READY TO EXTRACT!!!!");
 	  	var conceptDomElems = this.evaluateSelector(data.service.results.selector.value, document);  
-    	console.log(conceptDomElems);
-
     	data.service.results = this.extractConcepts(conceptDomElems, data.service.results.properties);
-    	console.log(data.service.results);
 
     	var me = this;
-		browser.runtime.sendMessage({ 
-			"call": "presentData",
-			"args": data
+    	browser.runtime.sendMessage({ 
+			"call": "setSearchListeningStatus",
+			"args": {"status": "StoppedSearch"}
+		}).then(response =>{
+			browser.runtime.sendMessage({ 
+				"call": "presentData",
+				"args": data.service
+			})
 		})
 	};
 	this.evaluateSelector = function(selector, doc){
@@ -111,39 +111,70 @@ function ReadyToExtractResults(){
 	  }
 	  return props; 
 	};
-	this.extractConcepts = function(domElements, propSpecs){
-	  //TODO: Modularizar codigo
-	  var concepts = [], me= this;
-	  var keys = Object.keys(propSpecs);
-	  var me = this;
+	this.extractConcepts = function(conceptDomElems, propSpecs){
 	  
-	  if(keys.length > 0){
+	  var concepts = [], me= this;
+	  var propSpecKeys = Object.keys(propSpecs); 
+	  var me = this;
+
+	  if(propSpecKeys.length > 0){
+	  	
+	  	conceptDomElems.forEach(conceptDom => {
+
+	  		console.log(conceptDom);
+	  		var concept = {};
+	  		propSpecKeys.forEach(propIndex => {
+	  			
+	  			console.log(propSpecs[propIndex]);
+
+	  			console.log("Getting the " + propSpecs[propIndex].name + ": " + propSpecs[propIndex].relativeSelector);
+				var propDom = (new XPathInterpreter()).getSingleElementByXpath(
+					propSpecs[propIndex].relativeSelector, 
+					conceptDom
+				);
+				console.log(propDom);
+
+				if(propDom) {
+					concept[propIndex] = propDom.textContent.replace(/\n/g, ' ').trim();
+				} 
+	  		});
+	  		
+	  		if(Object.keys(concept).length > 0)
+	  			concepts.push(concept);
+	  	});
+	  }
+	  
+	  /*if(keys.length > 0){
 	    keys.forEach(function(key){
 
-	      var propElems = me.getMultiplePropsFromElements(propSpecs[key].relativeSelector, domElements);
+	    	//Agrego de a una propiedad al elemento
+	      var propElems = me.getMultiplePropsFromElements(propSpecs[key].relativeSelector, conceptDomElems);
+	      console.log("propElems", propElems);
+
 
 	      for (i = 0; i < propElems.length; i++) { 
 	        if (propElems[i] != null){ //If the object has the property, then
 
-	          //console.log(propElems[i]);
 	          if (concepts[i]){ //si hay concepto, se agrega propiedad
 	            if(propElems[i] && propElems[i].textContent){
-	              concepts[i][key] = propElems[i].textContent;
+	              concepts[i][key] = propElems[i].textContent.replace(/\n/g, ' ').trim();
 	            }else concepts[i][key] = propElems[i].src;
 	          } //si no hay concepto, se crea
 	          else{
 	            concepts[i] = {};
 	            if(propElems[i] && propElems[i].textContent){
-	              concepts[i][key] = propElems[i].textContent;
+	              concepts[i][key] = propElems[i].textContent.replace(/\n/g, ' ').trim();
 	            }else concepts[i][key] = propElems[i].src;
 	          }
 	        } 
 
-	        if(concepts[i][key] == undefined || concepts[i][key] == null) 
-	          concepts[i][key] = " ";
+	        //if(concepts[i][key] == undefined || concepts[i][key] == null) 
+	        //  concepts[i][key] = " ";
 	      }
 	    });
-	  } else alert("There are no properties defined. Results can not be extracted.");
+	  } else alert("There are no properties defined. Results can not be extracted.");*/
+		console.log("************concepts**************");
+	  console.log(concepts);
 	  return concepts;
 	};
 }

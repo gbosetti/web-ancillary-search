@@ -9,21 +9,19 @@ TableVisualizer.prototype.initialize = function() {
 
 		this.loadDemoPage(data);
 		//this.presentData(data);
-		//this.hideLoadingMessage();
 	});
 };
 TableVisualizer.prototype.loadDemoPage = function(searchData){
 
+	var frame = document.createElement("iframe");
+		frame.id = "andes-external-content2";
+		frame.style.display = "none";
+	document.body.appendChild(frame);
+	frame.src = searchData.url; //Acá se cargan 2. Primero una equivalente al about blank, después la que le llega.
+	
 	browser.runtime.sendMessage({ 
 		"call": "startListeningForUrls", 
 		"args": searchData
-	}).then(nothing => {
-
-		var frame = document.createElement("iframe");
-			frame.id = "andes-external-content2";
-			frame.style.display = "none";
-		document.body.appendChild(frame);
-		frame.src = searchData.url; //Acá se cargan 2. Primero una equivalente al about blank, después la que le llega.
 	});
 }
 TableVisualizer.prototype.showLoadingMessage = function(msg){
@@ -32,8 +30,8 @@ TableVisualizer.prototype.showLoadingMessage = function(msg){
 TableVisualizer.prototype.presentData = function(data){
 	
 	var table = document.querySelector("#results");
-	console.log("presentData: ", data);
 	this.initializeDatatable(document, table, data.results);
+	this.hideLoadingMessage();
 }
 TableVisualizer.prototype.hideLoadingMessage = function(){
 	document.getElementById("loading").remove();
@@ -61,7 +59,8 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 	         	   '<td>'+d.Editorial+'</td>'+
 		        '</tr>'+
 		    '</table>'}
-		}*/
+	}*/
+
 		if (concepts[0] == undefined){
 			alert("ERROR: no concepts found");
 			return;
