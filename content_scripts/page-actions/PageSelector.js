@@ -29,6 +29,7 @@ var scrappers = { // Because we can not use window instead
 function PageSelector(){
 	//this.createEventListeners();
 	this.selectableElemClass = "andes-selectable";
+	this.onHoverHighlightClass = "andes-highlighted-on-hover";
 	this.selectionClass = "andes-selected";
 	this.clearBackgroundClass = "andes-clear-background";
 	this.obfuscatedClass = "andes-blurred";
@@ -74,33 +75,33 @@ PageSelector.prototype.loadListeners = function(){
 
 	this.selectionListener = function(evt){
 
-		//Tiene que quitarlos en todas para la correcta generación de los xpaths
-		var matchingSelectable = me.removeClassFromMatchingElements(this.selectableElemClass);
-		var matchingSelection = me.removeClassFromMatchingElements(this.selectionClass);
-		var matchingBack = me.removeClassFromMatchingElements(this.clearBackgroundClass);
-		var text = me.selectedElem.textContent;
+		var matchingElements = me.withParentElements(me.selectedElem);
+
+		me.removeHighlightingOnHover(me.selectedElem); 
+		matchingElements.forEach(targetElem => {
+			me.removeStyleClass(targetElem, me.selectionClass);
+			me.removeStyleClass(targetElem, me.clearBackgroundClass);
+		});
 
 		me.generatePreview(me.selectedElem).then(function(preview){
 
+			me.removeStyleClass(me.selectedElem, me.selectableElemClass);
+
 			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
 			
-			//console.log("!!!!!!! onElementSelection: ", evt.params.onElementSelection);
+			me.addStyleClass(me.selectedElem, me.selectableElemClass);
+			me.addHighlightingOnHover(me.selectedElem);
+
 			browser.runtime.sendMessage({ 
 				"call": evt.params.onElementSelection, /*onElementSelection*/
 				"args": {
 					"selectors": selectors, 
 					"previewSource": preview,
 					"scoped": evt.params.scoped,
-					"exampleValue": text,
+					"exampleValue": (me.selectedElem.textContent)? me.selectedElem.textContent.trim() : "",
 					"call": evt.params.onElementSelection
 				}
 			});
-
-			if(!me.removeStyleOnSelection){ //Después vuelve a ponerlos, if required
-				me.addClassToMatchingElements(matchingSelectable, this.selectableElemClass);
-				me.addClassToMatchingElements(matchingSelection, this.selectionClass);
-				me.addClassToMatchingElements(matchingBack, this.clearBackgroundClass);
-			}	
 		})	
 	};
 	this.mouseEnterSelection = function(evt) {  
@@ -108,16 +109,25 @@ PageSelector.prototype.loadListeners = function(){
 		evt.preventDefault(); evt.stopImmediatePropagation();
 		//me.selectedElem = evt.target;
 		//console.log(me.selectedElem);
-		me.addStyleClass(this, "andes-highlighted-on-hover");
+		me.addStyleClass(this, me.onHoverHighlightClass);
+	};
+	this.withParentElements = function(element){
+
+		var nodes = [];
+		nodes.push(element);
+		while(element.parentNode) {
+		    nodes.unshift(element.parentNode);
+		    element = element.parentNode;
+		}
+		return nodes;
 	};
 	this.mouseLeaveSelection = function(evt) {  
 
-		me.removeStyleClass(this, "andes-highlighted-on-hover");
+		me.removeStyleClass(this, me.onHoverHighlightClass);
 		evt.preventDefault(); evt.stopImmediatePropagation();
 	};
 	this.preventAnyAction = function(evt){
 		
-		console.log("preventAnyAction");
 		evt.preventDefault(); evt.stopImmediatePropagation();
 		return false; //This is for preventing anchors
 	};
@@ -175,8 +185,6 @@ PageSelector.prototype.preventDomElementsBehaviour = function(){
 	});
 };
 PageSelector.prototype.preventFormsOnSubmit = function(){
-
-	console.log("////////////////// preventFormsOnSubmit");
 
 	//TODO: it is not working with "addEventListener". This is a problem because maybe we can not resore the original behaviour after this
 	document.querySelectorAll("form").forEach(function(form){ 
@@ -277,7 +285,6 @@ PageSelector.prototype.executeAugmentedActions = function(evt){
 	for (var i = actions.length - 1; i >= 0; i--) {
 		if(evt.type.toUpperCase() == actions[i].event.toUpperCase()){
 			evt.params = actions[i].params;
-			console.log("actions", actions[i].listener);
 			this[actions[i].listener](evt); //e.g. 
 		}
 	}
@@ -357,6 +364,7 @@ PageSelector.prototype.removeHighlightingOnHover = function(elem){
 
 	elem.removeEventListener("mouseover", this.mouseEnterSelection, false);
 	elem.removeEventListener("mouseleave", this.mouseLeaveSelection, false);
+	this.removeStyleClass(elem, this.onHoverHighlightClass);
 }
 PageSelector.prototype.addSelectableElemStyle = function(elem){
 
@@ -374,7 +382,7 @@ PageSelector.prototype.removeFullSelectionStyle = function(){
 
 	this.removeClassFromMatchingElements(this.obfuscatedClass);
 	this.removeClassFromMatchingElements(this.selectableElemClass);
-	this.removeClassFromMatchingElements("andes-highlighted-on-hover");
+	this.removeClassFromMatchingElements(this.onHoverHighlightClass);
 	this.removeClassFromMatchingElements(this.clearBackgroundClass);
 	this.removeClassFromMatchingElements(this.selectionClass);
 	//this.restoreDomElementsBehaviour();
@@ -429,7 +437,7 @@ PageSelector.prototype.addClearBackground = function(elem){
 };
 PageSelector.prototype.addStyleClass = function(elem, className){
 
-	if(!elem.classList.contains(className)){
+	if(elem.classList && !elem.classList.contains(className)){
 		elem.classList.add(className);
 	}
 };

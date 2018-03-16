@@ -30,7 +30,6 @@ BrowserUiManager.prototype.listenForTabChanges = function() {
     if(tabInfo.status == "complete"){
 
       if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
-        //console.log("************ UPDATING", tabInfo.url);
         me.currentQuerySpec = undefined;
         me.listenForExternalRetrieval = undefined;
         me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);

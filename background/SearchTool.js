@@ -77,7 +77,7 @@ SearchTool.prototype.sendExtenralResults = function(tab, info, spec) {
 		args: me.currentExecutionData
 	}).then(data => {
     //WAIT FOR THE CONCRETE VISUALIZATION TO LOAD ON THE WIDGET
-    console.log("Waiting visualizaton to be loaded:", data);
+    //console.log("Waiting visualizaton to be loaded:", data);
     //NEXT STEP IS EXECUTED BY "onVisualizationLoaded"
     //But we need to keep the data (currentExecutionData)
   }); 
@@ -87,9 +87,6 @@ SearchTool.prototype.onVisualizationLoaded = function(tab){
   var me = this;
   return new Promise((resolve, reject) => {
       me.getExternalContent(me.currentExecutionData).then(function(data){
-
-        console.log("data from double promise");
-        console.log(data);
         resolve(data.service);
       });
   });
@@ -109,7 +106,6 @@ SearchTool.prototype.getExternalContent = function(data) {
 
     var parsedDoc = me.getParsedDocument(req.responseText); //with def results. we need to trigger
     var conceptDomElems = me.evaluateSelector(data.service.results.selector.value, parsedDoc);  
-
     data.service.results = me.extractConcepts(conceptDomElems, data.service.results.properties);
 
       resolve(data); 
@@ -127,26 +123,23 @@ SearchTool.prototype.extractConcepts = function(domElements, propSpecs){
   if(keys.length > 0){
     keys.forEach(function(key){
 
-      var propElems = me.getMultiplePropsFromElements(
-        propSpecs[key].relativeSelector, domElements);
+      var propElems = me.getMultiplePropsFromElements(propSpecs[key].relativeSelector, domElements);
+      console.log(propElems);
 
       for (i = 0; i < propElems.length; i++) { 
-        if (propElems[i] != null){
+        if (propElems[i] != null){ //If the object has the property, then
 
+          //console.log(propElems[i]);
           if (concepts[i]){ //si hay concepto, se agrega propiedad
             if(propElems[i] && propElems[i].textContent){
               concepts[i][key] = propElems[i].textContent;
-            }else {
-              concepts[i][key] = propElems[i].src;
-            }
+            }else concepts[i][key] = propElems[i].src;
           } //si no hay concepto, se crea
           else{
             concepts[i] = {};
             if(propElems[i] && propElems[i].textContent){
               concepts[i][key] = propElems[i].textContent;
-            }else {
-              concepts[i][key] = propElems[i].src;
-            }
+            }else concepts[i][key] = propElems[i].src;
           }
         } 
 
@@ -164,6 +157,8 @@ SearchTool.prototype.getMultiplePropsFromElements = function(relativeSelector, r
   if(indexesOfInfoItems.length > 0){
     indexesOfInfoItems.forEach(function(index){
       var prop = (new XPathInterpreter()).getSingleElementByXpath(relativeSelector, relativeDomElems[index]);
+      
+      console.log(index, relativeSelector, relativeDomElems[index]);
       if(prop) {
         props.push(prop);
       } else props.push(" ");

@@ -5,7 +5,6 @@ TableVisualizer.prototype.initialize = function() {
 	
 	this.showLoadingMessage("Extracting Results...");
 	browser.runtime.sendMessage({ "call": "onVisualizationLoaded"}).then(data => {
-		console.log("BACK TO THE SIDEBAR", data);
 		this.presentData(data);
 		this.hideLoadingMessage();
 	});
@@ -25,6 +24,7 @@ TableVisualizer.prototype.hideLoadingMessage = function(){
 TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 
 	//TODO: refactor this method
+	/* TODO: guys, we should not have a method inside a method! And you should not use that "if". And you should refactor this long method.
 	function format (d) {
 	    // `d` is the original data object for the row
 	    	if (d.Image){
@@ -44,7 +44,7 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 	         	   '<td>'+d.Editorial+'</td>'+
 		        '</tr>'+
 		    '</table>'}
-		}
+		}*/
 		if (concepts[0] == undefined){
 			alert("ERROR: no concepts found");
 			return;
@@ -86,15 +86,13 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 	        }
 	        else {
 	            // Open this row
-	            row.child( format(row.data()) ).show();
+	            //row.child( format(row.data()) ).show();
 	            tr.addClass('shown');
 	        }
 		});
 	});
 
 }
-
-console.log("Table visualizer has been loaded");
 
 var tableVis = new TableVisualizer();
 browser.runtime.onMessage.addListener(function callTableVisActions(request, sender) {
