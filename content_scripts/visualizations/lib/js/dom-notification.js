@@ -134,48 +134,10 @@ function ReadyToExtractResults(){
 				} else incompleteConcept = true;
 	  		});
 
-	  		//Completar los null con otro valor
-	  		/*propSpecKeys.forEach(propIndex => {
-	  			concept[propIndex] = (concept[propIndex] == null) "";
-	  		});*/
-
-	  		
 	  		if(Object.keys(concept).length > 0 && !incompleteConcept)
 	  			concepts.push(concept);
 	  	});
 	  }
-	  
-	  /*if(keys.length > 0){
-	    keys.forEach(function(key){
-
-	    	//Agrego de a una propiedad al elemento
-	      var propElems = me.getMultiplePropsFromElements(propSpecs[key].relativeSelector, conceptDomElems);
-	      console.log("propElems", propElems);
-
-
-	      for (i = 0; i < propElems.length; i++) { 
-	        if (propElems[i] != null){ //If the object has the property, then
-
-	          if (concepts[i]){ //si hay concepto, se agrega propiedad
-	            if(propElems[i] && propElems[i].textContent){
-	              concepts[i][key] = propElems[i].textContent.replace(/\n/g, ' ').trim();
-	            }else concepts[i][key] = propElems[i].src;
-	          } //si no hay concepto, se crea
-	          else{
-	            concepts[i] = {};
-	            if(propElems[i] && propElems[i].textContent){
-	              concepts[i][key] = propElems[i].textContent.replace(/\n/g, ' ').trim();
-	            }else concepts[i][key] = propElems[i].src;
-	          }
-	        } 
-
-	        //if(concepts[i][key] == undefined || concepts[i][key] == null) 
-	        //  concepts[i][key] = " ";
-	      }
-	    });
-	  } else alert("There are no properties defined. Results can not be extracted.");*/
-		console.log("************concepts**************");
-	  console.log(concepts);
 	  return concepts;
 	};
 }
