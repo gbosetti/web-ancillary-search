@@ -9,13 +9,14 @@ BrowserUiManager.prototype.initialize = function() {
   this.searchTool = new SearchTool();
   this.listenForTabChanges();
 };
-BrowserUiManager.prototype.onVisualizationLoaded = function() {
+BrowserUiManager.prototype.onVisualizationLoaded = function(data) {
 
   var me = this;
   return new Promise((resolve, reject) => {
     me.executeOnCurrentTab(function(tab){
-      me.searchTool.onVisualizationLoaded(tab).then(data => {
-        resolve(data);
+      me.searchTool.onVisualizationLoaded(tab).then(retData => {
+        retData.domId = data.domId;
+        resolve(retData);
       });
     });
   });

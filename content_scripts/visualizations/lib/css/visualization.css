@@ -51,6 +51,17 @@ tr.shown td.details-control {
 
 /* Loading gif */
 
+.no-results {
+    text-align: center;
+    display:    block;
+    position:   fixed;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    line-height: 18em;
+}
+
 .loading {
     text-align: center;
     display:    block;

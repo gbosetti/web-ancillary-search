@@ -168,7 +168,9 @@
   "props_are_required": {
     "message": "Es necesario definir al menos una propiedad, ya que esta es la información que será recuperada cuando uses el servicio desde el menú contextual."
   },
-
+  "no_results_found": {
+    "message": "No se han encontrado resultados para la selección especificada"
+  },
 
 
   "next":{
