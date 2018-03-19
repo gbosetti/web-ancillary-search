@@ -56,7 +56,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
     $scope.saveDataModel = function() {
     	//Splitted because there are other properties of "Results" managed by other controllers
     	ServiceService.setResultsSelector($scope.service.results.selector);	
-		  ServiceService.setResultsPreview($scope.service.results.preview);	
+		  //ServiceService.setResultsPreview($scope.service.results.preview);	
       ServiceService.setResultsName($scope.service.results.name).then(function(){
         ServiceService.updateServices();
       });
@@ -70,10 +70,9 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
   	$scope.showAllHiddenElements();
     $scope.focusElement("#results_tag");
 
-  	$scope.service.results.preview = data.previewSource;
-	  $scope.loadPreview("#result-preview-image", data.previewSource);
+  	//$scope.service.results.preview = data.previewSource;
+	  //$scope.loadPreview("#result-preview-image", data.previewSource);
 
-    //console.log("selectors:", data.selectors);
 		$scope.fillOccurrencesSelector(data.selectors);
 		document.querySelector("#result-selector").onchange();
 	}

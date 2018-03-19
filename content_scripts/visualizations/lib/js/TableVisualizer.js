@@ -87,7 +87,7 @@ window.addEventListener('DOMContentLoaded', function(){
 	browser.runtime.onMessage.addListener(function callTableVisActions(request, sender) {
 
 		if(tableVis[request.call]){
-			console.log(request.call + " at TableVisualizer", request.args);
+			//console.log(request.call + " at TableVisualizer", request.args);
 			//Se lo llama con: browser.tabs.sendMessage
 			tableVis[request.call](request.args);
 		}

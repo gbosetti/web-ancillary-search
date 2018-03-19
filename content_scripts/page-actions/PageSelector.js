@@ -343,7 +343,7 @@ PageSelector.prototype.generatePreview = function(element){
 	this.addClearBackground(element);
 	var ps = this;
 
-    domtoimage.toPng(element).then(dataUrl => {
+    domtoimage.toJpeg(element).then(dataUrl => {
 	    resolve(dataUrl);
 
 	    ps.removeClearBackground(element);
