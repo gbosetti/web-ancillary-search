@@ -34,7 +34,9 @@ TableVisualizer.prototype.presentData = function(data){
 	this.hideLoadingMessage();
 }
 TableVisualizer.prototype.hideLoadingMessage = function(){
-	document.getElementById("loading").remove();
+	var loading = document.querySelector("#loading");
+	if(loading)
+		loading.remove();
 }
 TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 
@@ -68,6 +70,10 @@ TableVisualizer.prototype.initializeDatatable = function(doc, table, concepts) {
 		var properties = Object.keys(concepts[0]);
 
 		doc.defaultView["$"](doc).ready(function(){
+
+			/*console.log(table); 
+			console.log(doc.defaultView["$"]); 
+			console.log(doc.defaultView["$"](table)); */
 		var tableC =doc.defaultView["$"](table).DataTable({
 	        "paging": false,
 	        "bFilter": false,

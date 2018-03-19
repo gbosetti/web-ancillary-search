@@ -1,2 +1,1 @@
-sidebar/vendor/
-content_scripts/vendor/
+node_modules/

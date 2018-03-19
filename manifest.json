@@ -17,7 +17,7 @@
 
   "background": {
     "scripts": [
-      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js", 
+      "node_modules/webextension-polyfill/dist/browser-polyfill.js", 
       "content_scripts/XPathInterpreter.js", 
       "background/StorageManagement.js",
       "background/BrowserUiManager.js", 
@@ -32,13 +32,13 @@
   "content_scripts": [{
     "matches": ["*://*/*"],
     "js": [
-      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js",
-      "content_scripts/vendor/dom-to-image/index.js", 
+      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+      "node_modules/dom-to-image/dist/dom-to-image.min.js", 
       "content_scripts/XPathInterpreter.js", 
-      "content_scripts/vendor/popper/index.js", 
+      "node_modules/popper.js/dist/popper.js", 
       "content_scripts/page-actions/PageSelector.js",
-      "content_scripts/vendor/jquery/dist/jquery.min.js", 
-      "content_scripts/vendor/jquery-ui/jquery-ui.min.js", 
+      "node_modules/jquery/dist/jquery.min.js", 
+      "node_modules/jquery-ui-dist/jquery-ui.min.js", 
       "content_scripts/ContentResourcesLoader.js", 
       "content_scripts/sidebar/Sidebar.js",
       "content_scripts/visualizations/lib/js/visualizations.js"
@@ -50,7 +50,7 @@
   {
     "matches": ["*://*/*"],
     "js": [
-      "content_scripts/vendor/browser-polyfill/dist/browser-polyfill.js",
+      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
       "content_scripts/XPathInterpreter.js", 
       "content_scripts/visualizations/lib/js/dom-notification.js" 
     ],
