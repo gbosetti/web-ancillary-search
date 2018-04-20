@@ -12,3 +12,5 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
     	return browserUI[message.call](message.args); //in case you need to return a promise
     }
 });
+
+

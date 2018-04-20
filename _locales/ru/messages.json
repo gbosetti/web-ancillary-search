@@ -1,9 +1,9 @@
 {
   "default":{
-    "message": "par défaut"
+    "message": "по умолчанию"
   },
   "save":{
-    "message": "Enregistrer"
+    "message": "Сохранить"
   },
 
   "welcome":{

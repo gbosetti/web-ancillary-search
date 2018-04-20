@@ -1,4 +1,12 @@
 {
+  "default":{
+    "message": "by default"
+  },
+  "save":{
+    "message": "Save"
+  },
+
+
   "welcome":{
     "message": "Welcome"
   },

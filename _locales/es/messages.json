@@ -1,4 +1,11 @@
 {
+  "default":{
+    "message": "por defecto"
+  },
+  "save":{
+    "message": "Guardar"
+  },
+
   "welcome":{
     "message": "Inicio"
   },

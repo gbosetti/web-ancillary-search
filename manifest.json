@@ -69,5 +69,10 @@
 
   "web_accessible_resources": [
     "/content_scripts/*"
-  ]
+  ],
+
+  "options_ui": {
+    "page": "/content_scripts/options/options.html",
+    "open_in_tab": false
+  }
 }
