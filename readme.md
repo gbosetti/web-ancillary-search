@@ -5,7 +5,7 @@ Web Web Ancillary Search (searchApis in the base project) is a tool supporting t
 ## System Requirements ##
 
 * Firefox 57 or Chrome 64.0.3282.140 onwards
-* NPM 5.6.0 
+* NPM 5.6.0 (maybe other versions work)
 
 ## Building the extension ##
 
@@ -30,6 +30,13 @@ You can debug and see logs from the Webconsole and the Browser's console. It dep
 If you are trying to debug a "popup script", you should prevent the popups to be closed. To do so, click the "4 sqaures icon" in the right-top area of the browser's toolbox. 
 
 
-## Loading and debugging the extension in Chromium/Chrome ##
+## Using the tool ##
 
-Open "chrome://extensions/" in Chromium, chech the "developer mode" at the top-right of the document. Click "Load non-packaged extension" and select any file in your add-on's directory. 
+To define a new service, go to the results page of a search engine (execute a search). E.g.
+https://browse.nypl.org/iii/encore/search/C__Srayuela__Orightresult__U?searched_from=header_search&timestamp=1525352919240&lang=eng
+
+Then, click on the extension's toolbar button to define a new service. To do so, follow the steps presenten in the sidebar.
+
+To use an existing service, highlight some text in any Web page and right-click. Choose "Search with" and select some of the available services.
+
+You can see demo videos at https://www.youtube.com/watch?v=fqhG5uwMuNA&list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj
