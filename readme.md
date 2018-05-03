@@ -32,11 +32,10 @@ If you are trying to debug a "popup script", you should prevent the popups to be
 
 ## Using the tool ##
 
-To define a new service, go to the results page of a search engine (execute a search). E.g.
-https://browse.nypl.org/iii/encore/search/C__Srayuela__Orightresult__U?searched_from=header_search&timestamp=1525352919240&lang=eng
+To define a new service, go to the results page of a search engine (execute a search). E.g. [at the NYPL site](https://browse.nypl.org/iii/encore/search/C__Srayuela__Orightresult__U?searched_from=header_search&timestamp=1525352919240&lang=eng)
 
 Then, click on the extension's toolbar button to define a new service. To do so, follow the steps presenten in the sidebar.
 
 To use an existing service, highlight some text in any Web page and right-click. Choose "Search with" and select some of the available services.
 
-You can see demo videos at https://www.youtube.com/watch?v=fqhG5uwMuNA&list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj
+You can watch demo videos at [this YouTube playlist](https://www.youtube.com/watch?v=fqhG5uwMuNA&list=PLHuNJBFXxaLA1FfFMtzvOXojI0yg4WWxj)
