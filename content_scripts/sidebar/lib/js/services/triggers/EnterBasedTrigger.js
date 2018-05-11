@@ -4,7 +4,6 @@ function EnterBasedTrigger(client, data) {
   this.loadParamsConfigControls = function() {
     console.log(client);
     client.addParamsConfigurationControls(document.createTextNode("EnterBasedTrigger"));
-
   }
 
   this.getProperties = function() {
@@ -22,9 +21,7 @@ function EnterBasedTrigger(client, data) {
   };
 
   this.areRequirementsMet = function() {
-    return (this.selector)
-      ? true
-      : false;
+    return true;
   };
 
   this.onTriggerSelection = function(data) {
