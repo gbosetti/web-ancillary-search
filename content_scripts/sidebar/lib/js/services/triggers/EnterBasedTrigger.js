@@ -4,10 +4,13 @@ function EnterBasedTrigger(client, data) {
   this.loadParamsConfigControls = function() {
     console.log(client);
     client.addParamsConfigurationControls(document.createTextNode("EnterBasedTrigger"));
+
   }
 
   this.getProperties = function() {
-    return {"className": this.constructor.name};
+    return {
+      className: this.constructor.name
+    };
   };
 
   this.loadSubformBehaviour = function() {

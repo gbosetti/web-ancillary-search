@@ -5,7 +5,11 @@ function ClickBasedTrigger(client, props) {
   TriggerMechanism.call(this, client, props);
 
   this.getProperties = function() {
-    return {"className": this.constructor.name, "selector": this.selector, "preview": this.preview};
+    return {
+      className: this.constructor.name,
+      selector: this.selector,
+      preview: this.preview
+    };
   };
 
   this.loadParamsConfigControls = function() {
