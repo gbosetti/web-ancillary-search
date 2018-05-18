@@ -61,26 +61,28 @@ function ReadyToTrigger() {
     var xpi = new XPathInterpreter();
     var inputElement = xpi.getSingleElementByXpath(input.selector, document);
 
-    if (input) {
-      console.log("Input is here!");
-
-      const self = this;
-
-      browser.runtime.sendMessage({
-        "call": "setSearchListeningStatus",
-        "args": {
-          "status": "ReadyToExtractResults"
-        }
-      }).then(response => {
-        console.log(data.service);
-        const { strategy } = data.service.trigger;
-        const { className } = strategy;
-        const methodName = className.charAt(0).toLowerCase() + className.slice(1);
-
-        inputElement.value = data.keywords;
-        self[methodName].call(self, {strategy, inputElement});
-      });
+    if (!input) {
+      return;
     }
+
+    console.log("Input is here!");
+
+    const self = this;
+
+    browser.runtime.sendMessage({
+      "call": "setSearchListeningStatus",
+      "args": {
+        "status": "ReadyToExtractResults"
+      }
+    }).then(response => {
+      const { strategy } = data.service.trigger;
+      const { className } = strategy;
+      const methodName = className.charAt(0).toLowerCase() + className.slice(1);
+
+      inputElement.value = data.keywords;
+      console.log(`calling ${methodName} strategy`);
+      self[methodName].call(self, {strategy, inputElement});
+    });
   };
 
   this.clickBasedTrigger = function({strategy}) {
@@ -88,6 +90,12 @@ function ReadyToTrigger() {
     const xpi = new XPathInterpreter();
     var triggerElement = xpi.getSingleElementByXpath(strategy.selector, document);
     triggerElement.click();
+  };
+
+  this.enterBasedStrategy = function({ inputElement }) {
+    var e = jQuery.Event("keypress");
+    e.which = 13;
+    $(inputElement).trigger(e)
   };
 }
 
