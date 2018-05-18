@@ -95,7 +95,7 @@ function ReadyToTrigger() {
   this.enterBasedStrategy = function({ inputElement }) {
     var e = jQuery.Event("keypress");
     e.which = 13;
-    $(inputElement).trigger(e)
+    $(inputElement).trigger(e);
   };
 }
 
