@@ -81,7 +81,9 @@ function ReadyToTrigger() {
 
       inputElement.value = data.keywords;
       console.log(`calling ${methodName} strategy`);
-      self[methodName].call(self, {strategy, inputElement});
+      console.log(self);
+      console.log(self[methodName]);
+      self[methodName].bind(self)({strategy, inputElement});
     });
   };
 
@@ -92,10 +94,14 @@ function ReadyToTrigger() {
     triggerElement.click();
   };
 
-  this.enterBasedStrategy = function({ inputElement }) {
+  this.enterBasedTrigger = function({ inputElement }) {
     var e = jQuery.Event("keypress");
     e.which = 13;
-    $(inputElement).trigger(e);
+    $(inputElement)
+      .keypress(event => {
+        event.target.form.submit();
+      })
+      .trigger(e);
   };
 }
 
