@@ -17,45 +17,49 @@
 
   "background": {
     "scripts": [
-      "node_modules/webextension-polyfill/dist/browser-polyfill.js", 
-      "content_scripts/XPathInterpreter.js", 
+      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+      "content_scripts/XPathInterpreter.js",
       "background/StorageManagement.js",
-      "background/BrowserUiManager.js", 
+      "background/BrowserUiManager.js",
       "background/BackgroundResourcesLoader.js",
-      "background/SearchTool.js", 
+      "background/SearchTool.js",
       "background/SidebarManager.js",
       "background/BackgroundPageSelector.js",
       "background/TemplatesCreator.js",
-      "background/main.js"]
+      "background/main.js"
+    ]
   },
 
   "content_scripts": [{
-    "matches": ["*://*/*"],
-    "js": [
-      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
-      "node_modules/dom-to-image/dist/dom-to-image.min.js", 
-      "content_scripts/XPathInterpreter.js", 
-      "node_modules/popper.js/dist/popper.js", 
-      "content_scripts/page-actions/PageSelector.js",
-      "node_modules/jquery/dist/jquery.min.js", 
-      "node_modules/jquery-ui-dist/jquery-ui.min.js", 
-      "content_scripts/ContentResourcesLoader.js", 
-      "content_scripts/sidebar/Sidebar.js",
-      "content_scripts/visualizations/lib/js/visualizations.js"
-    ],
-    "css": [
-      "content_scripts/page-actions/andes-highlighting.css"
-    ]
-  },
-  {
-    "matches": ["*://*/*"],
-    "js": [
-      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
-      "content_scripts/XPathInterpreter.js", 
-      "content_scripts/visualizations/lib/js/dom-notification.js" 
-    ],
-    "all_frames": true
-  }],
+      "matches": ["*://*/*"],
+      "js": [
+        "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+        "node_modules/dom-to-image/dist/dom-to-image.min.js",
+        "content_scripts/XPathInterpreter.js",
+        "node_modules/popper.js/dist/popper.js",
+        "content_scripts/page-actions/PageSelector.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/jquery-ui-dist/jquery-ui.min.js",
+        "content_scripts/ContentResourcesLoader.js",
+        "content_scripts/sidebar/Sidebar.js",
+        "content_scripts/visualizations/lib/js/visualizations.js"
+      ],
+      "css": [
+        "content_scripts/page-actions/andes-highlighting.css"
+      ]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": [
+        "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/jquery-ui-dist/jquery-ui.min.js",
+        "content_scripts/XPathInterpreter.js",
+        "content_scripts/visualizations/lib/js/dom-notification.js"
+      ],
+      "all_frames": true
+    }
+  ],
 
   "permissions": [
     "activeTab",
@@ -63,7 +67,7 @@
     "storage",
     "<all_urls>",
     "contextMenus",
-    "webRequest", 
+    "webRequest",
     "webRequestBlocking"
   ],
 
