@@ -1,5 +1,3 @@
-console.log("asdasd");
-
 function TriggerMechanism(client, props) {
   this.loadProperties = function(data) {
     if (data) {
