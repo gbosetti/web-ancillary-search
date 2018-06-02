@@ -45,7 +45,7 @@
   },
   "selected_input_control": {
     "message": "Selected input control"
-  } , 
+  } ,
 
 
 
@@ -73,9 +73,12 @@
   "type_and_wait_to_trigger": {
     "message": "Just type and wait"
   },
+  "type_and_enter_to_trigger": {
+    "message": "Just type and press enter"
+  },
   "selected_trigger_control": {
     "message": "Selected trigger"
-  }, 
+  },
   "default_missing_requirement": {
     "message": "Sorry, there are some requirements that are not met in this form"
   },
@@ -143,7 +146,7 @@
     "message": "In this page, you have to interact with multiple elements in order to retrieve more results."
   },
 
-  
+
 
 
   "more_results_on_click": {

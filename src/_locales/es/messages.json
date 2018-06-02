@@ -44,7 +44,7 @@
   },
   "selected_input_control": {
     "message": "Elemento seleccionado"
-  }, 
+  },
 
 
 
@@ -72,9 +72,12 @@
   "type_and_wait_to_trigger": {
     "message": "Tipear y esperar"
   },
+  "type_and_enter_to_trigger": {
+    "message": "Tipear y presionar enter"
+  },
   "selected_trigger_control": {
     "message": "Disparador de búsqueda seleccionado"
-  }, 
+  },
   "default_missing_requirement": {
     "message": "Sorry, there are some requirements that are not met in this form"
   },
@@ -197,7 +200,7 @@
   },
 
 
-  
+
   "sorters_title":{
     "message": "Definición de clasificadores"
   },
@@ -206,7 +209,7 @@
   },
   "none":{
     "message": "Ninguno"
-  }, 
+  },
   "no_sorters":{
     "message": "Elegir esta opción hará que sea impossible para el usuario de este servicio ordenar los resultados recuperados."
   },
