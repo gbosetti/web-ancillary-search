@@ -6,7 +6,7 @@
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
   "default_locale": "en",
 
-  "browser_action": { //Note that your extension can have only one browser action
+  "browser_action": {
     "default_icon": {
       "16": "icons/logo-disabled-16.png",
       "64": "icons/logo-disabled-64.png"
