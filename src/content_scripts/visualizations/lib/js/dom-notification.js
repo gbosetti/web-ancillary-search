@@ -90,18 +90,29 @@ function ReadyToTrigger() {
   this.clickBasedTrigger = function({strategy}) {
     console.log("clickBasedTrigger");
     const xpi = new XPathInterpreter();
-    var triggerElement = xpi.getSingleElementByXpath(strategy.selector, document);
+    const triggerElement = xpi.getSingleElementByXpath(strategy.selector, document);
     triggerElement.click();
   };
 
   this.enterBasedTrigger = function({ inputElement }) {
-    var e = jQuery.Event("keypress");
+    console.log("enterBasedTrigger");
+    const e = jQuery.Event("keypress");
     e.which = 13;
     $(inputElement)
       .keypress(event => {
         event.target.form.submit();
       })
       .trigger(e);
+  };
+
+  this.typeAndWaitBasedTrigger = function({ inputElement }) {
+    console.log("typeAndWaitBasedTrigger");
+    /* TODO how to trigger input change?! */
+  };
+
+  this.typeAndEnterBasedTrigger = function({ inputElement }) {
+    console.log("typeAndEnterBasedTrigger");
+    /* TODO how to trigger input change?! */
   };
 }
 
