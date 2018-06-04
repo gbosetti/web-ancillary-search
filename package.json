@@ -5,8 +5,8 @@
   "description": "ANDES",
   "scripts": {
     "web-ext-prepare": "pushd ./src && npm install && popd",
-    "start:chrome": "npm-run-all web-ext-prepare && chrome --temp-profile --password-store=basic --load-extension=$(pwd)/src",
-    "start:chromium": "npm-run-all web-ext-prepare && chromium --temp-profile --password-store=basic --load-extension=$(pwd)/src",
+    "start:chrome": "npm-run-all web-ext-prepare && chrome --load-extension=$(pwd)/src",
+    "start:chromium": "npm-run-all web-ext-prepare && chromium --load-extension=$(pwd)/src",
     "start:firefox": "web-ext run -s src",
     "start:nightly": "web-ext run -s src --firefox=nightly",
     "test": "echo \"Error: no test specified\" && exit 1"
