@@ -1,26 +1,24 @@
-function TypeAndWaitBasedTrigger(client, data) {
-  TriggerMechanism.call(this, client, data);
-
-  this.loadParamsConfigControls = function() {
-    client.addParamsConfigurationControls(document.createTextNode("TypeAndWaitBasedTrigger"));
+class TypeAndWaitBasedTrigger extends TriggerMechanism {
+  loadParamsConfigControls() {
+    this.client.addParamsConfigurationControls(document.createTextNode("TypeAndWaitBasedTrigger"));
   }
 
-  this.getProperties = function() {
+  getProperties() {
     return {
       className: this.constructor.name,
     };
-  };
+  }
 
-  this.loadSubformBehaviour = function() {
-    client.showAllHiddenElements();
-  };
+  loadSubformBehaviour() {
+    this.client.showAllHiddenElements();
+  }
 
-  this.areRequirementsMet = function() {
+  areRequirementsMet() {
     return true;
-  };
+  }
 
-  this.onTriggerSelection = function(data) {
-    client.showAllHiddenElements();
+  onTriggerSelection(data) {
+    this.client.showAllHiddenElements();
     this.removeErrorMessage();
-  };
+  }
 }
