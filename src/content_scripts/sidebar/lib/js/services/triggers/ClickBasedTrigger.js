@@ -36,9 +36,9 @@ function ClickBasedTrigger(client, props) {
   };
 
   this.areRequirementsMet = function() {
-    return (this.selector)
-      ? true
-      : false;
+    return (this.selector) ?
+      true :
+      false;
   };
 
   this.onTriggerSelection = function(data) {
