@@ -22,3 +22,5 @@ class EnterBasedTrigger extends TriggerMechanism {
     this.removeErrorMessage();
   }
 }
+
+window[EnterBasedTrigger.name] = EnterBasedTrigger;

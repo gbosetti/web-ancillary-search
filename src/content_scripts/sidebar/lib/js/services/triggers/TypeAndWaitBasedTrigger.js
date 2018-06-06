@@ -22,3 +22,5 @@ class TypeAndWaitBasedTrigger extends TriggerMechanism {
     this.removeErrorMessage();
   }
 }
+
+window[TypeAndWaitBasedTrigger.name] = TypeAndWaitBasedTrigger;

@@ -19,7 +19,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
   };
 
   $scope.loadValidationRules = function() {};
-  
+
   $scope.undoActionsOnDom = function() {
     $scope.service.trigger.strategy.undoActionsOnDom();
   };
@@ -44,6 +44,7 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     document.querySelector('#trigger_mechanism').onchange = function() {
       $scope.clearTriggeringStrategyParamsArea();
       $scope.service.trigger.strategy.undoActionsOnDom();
+      /* TODO window not contain class names */
       $scope.service.trigger.strategy = new window[this.value]($scope, strategy || {});
       $scope.service.trigger.strategy.loadParamsConfigControls();
       $scope.service.trigger.strategy.loadSubformBehaviour();

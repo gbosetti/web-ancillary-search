@@ -22,3 +22,5 @@ class TypeAndEnterBasedTrigger extends TriggerMechanism {
     this.removeErrorMessage();
   }
 }
+
+window[TypeAndEnterBasedTrigger.name] = TypeAndEnterBasedTrigger;
