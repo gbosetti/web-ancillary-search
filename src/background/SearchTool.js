@@ -94,6 +94,12 @@ SearchTool.prototype.newDocumentWasLoaded = function(data) {
 
   var me = this;
   return new Promise((resolve, reject) => {
+
+    console.log("resolving", {
+      "status": me.searchStrategy.statusName(), //this.listenForUrls, 
+      "data": me.currentExecutionData 
+    });
+    
     resolve({
       "status": me.searchStrategy.statusName(), //this.listenForUrls, 
       "data": me.currentExecutionData 

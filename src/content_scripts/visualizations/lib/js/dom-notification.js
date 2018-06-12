@@ -1,5 +1,5 @@
 function Searcher() {
-  this.searchStrategy = new UrlQueryBasedSearch(new StoppedSearch());
+  this.searchStrategy = new UrlQueryBasedSearch(new window["StoppedSearch"]());
 }
 
 Searcher.prototype.notifyVisitedPageUrl = function() {
@@ -10,6 +10,11 @@ Searcher.prototype.notifyVisitedPageUrl = function() {
       "url": window.location.href
     }
   }).then(response => {
+    console.log(window);
+    console.log(document);
+    console.log(window.defaultView);
+
+    console.log('response (check status): ', response.status);
     me.searchStrategy = new UrlQueryBasedSearch(new window[response.status]()); //TODO: extend UrlQueryBasedSearch
     me.searchStrategy.analyseDom(response.data);
   })
@@ -52,6 +57,7 @@ function StoppedSearch() {
   SearchStatus.call(this);
   this.analyseDom = function(data) {}
 }
+window.StoppedSearch = StoppedSearch;
 
 function ReadyToTrigger() {
   SearchStatus.call(this);
@@ -104,6 +110,8 @@ function ReadyToTrigger() {
       .trigger(e);
   };
 }
+window.ReadyToTrigger = ReadyToTrigger;
+
 
 function ReadyToExtractResults() {
   SearchStatus.call(this);
@@ -176,6 +184,7 @@ function ReadyToExtractResults() {
     return concepts;
   };
 }
+window.ReadyToExtractResults = ReadyToExtractResults;
 
 var searher = new Searcher();
 searher.notifyVisitedPageUrl();
