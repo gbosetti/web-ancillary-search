@@ -1,7 +1,8 @@
 var browserUI = new BrowserUiManager();
 
 browser.browserAction.onClicked.addListener(function updateIcon() {
-  browserUI.toggleSidebar();
+	console.log("cicking!")
+  	browserUI.toggleSidebar();
 });
 
 //From: sidebar to: addon, indicating it was sucessfully loaded 

@@ -6,6 +6,7 @@ function Sidebar(){
 	//this.open();
 }
 Sidebar.prototype.toggle = function() { 
+	console.log("toggling");
 	this.displayStatus.toggle();
 };
 Sidebar.prototype.open = function() {
@@ -52,6 +53,7 @@ Sidebar.prototype.moveRight = function() {
 };
 Sidebar.prototype.createUI = function(filePaths) {
 
+	console.log("creating the UI");
 	var fragment = document.createDocumentFragment(); //for performance
 	this.widget = this.createContainer();
 	this.widget.appendChild(this.createSidebarControls());
@@ -62,6 +64,8 @@ Sidebar.prototype.createUI = function(filePaths) {
 
 	fragment.appendChild(this.widget);
 	document.body.appendChild(fragment);
+
+	console.log(fragment);
 };
 Sidebar.prototype.createContainer = function() {
 	
@@ -221,6 +225,8 @@ function ClosedSidebar(context){
 
 /////////////////////////////////////////////
 var sidebar = new Sidebar();
+console.log("sidebar", sidebar);
+
 browser.runtime.onMessage.addListener(function callSidebarActions(request, sender) {
 
 	if(sidebar[request.call]) {
