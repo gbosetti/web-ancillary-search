@@ -58,5 +58,3 @@ class ClickBasedTrigger extends TriggerMechanism {
     this.removeErrorMessage();
   }
 }
-
-window[ClickBasedTrigger.name] = ClickBasedTrigger;

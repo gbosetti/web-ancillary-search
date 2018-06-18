@@ -30,7 +30,7 @@ function StorageFilesManager(){
     this.createFileWithData = function(data) {
 
     	this.currentFile = new StorageFile(data);
-		browser.storage.local.set(this.currentFile); //.then(function(){ callback(fileToSave); }); 
+		browser.storage.local.set(this.currentFile); //.then(function(){ callback(fileToSave); });
 		return this.currentFile;
     };
 };
