@@ -68,7 +68,7 @@ function RegularBehaviourDisabled(context){
 
 	this.toggleDomElementsBehaviour = function(tab){
 		//console.log("REGULAR DISABLED > restore");
-		context.getLoadingStatusByTab(tab).restoreDomElementsBehaviour(tab);
+		//context.getLoadingStatusByTab(tab).restoreDomElementsBehaviour(tab);
 		context.pageBehaviourStatus[tab.id] = new RegularBehaviourEnabled(context);
 	};
 }
