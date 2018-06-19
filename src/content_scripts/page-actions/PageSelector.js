@@ -207,6 +207,8 @@ PageSelector.prototype.restoreDomElementsBehaviour = function(){
 		});		
 		me.removeHighlightingOnHover(elem);
 	});
+
+	this.removeFullSelectionStyle();
 };
 PageSelector.prototype.removeAugmentedActions = function(elem){
 	

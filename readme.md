@@ -13,7 +13,7 @@ Clone this repo:
 git clone https://gabybosetti@bitbucket.org/gabybosetti/web-ancillary-search.git
 
 Download the dependencies:
-cd ./web-ancillary-search
+cd ./web-ancillary-search/src
 npm install
 
 ## Installing the extension in Chrome ##
@@ -28,6 +28,11 @@ npm install
 You can debug and see logs from the Webconsole and the Browser's console. It depends on which kind of script you need to log/debug (content/backgroun scripts). The browser's console can be accessed 
 
 If you are trying to debug a "popup script", you should prevent the popups to be closed. To do so, click the "4 sqaures icon" in the right-top area of the browser's toolbox. 
+
+
+## Testing the extension ##
+
+...
 
 
 ## Using the tool ##
