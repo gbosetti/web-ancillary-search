@@ -6,7 +6,7 @@
   "homepage_url": "https://sites.google.com/site/webancillarysearches/",
   "default_locale": "en",
 
-  "browser_action": { //Note that your extension can have only one browser action
+  "browser_action": {
     "default_icon": {
       "16": "icons/logo-disabled-16.png",
       "64": "icons/logo-disabled-64.png"
@@ -18,8 +18,11 @@
   "background": {
     "scripts": [
       "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+      "background/hot-reload.js",
       "content_scripts/XPathInterpreter.js",
-      "background/StorageManagement.js",
+      "background/storage/Storage.js",
+      "background/storage/LocalStorage.js",
+      "background/storage/StorageManager.js",
       "background/BrowserUiManager.js",
       "background/BackgroundResourcesLoader.js",
       "background/SearchTool.js",

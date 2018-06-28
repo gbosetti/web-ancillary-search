@@ -1,6 +1,6 @@
-class TypeAndWaitBasedTrigger extends TriggerMechanism {
+class TypeAndEnterBasedTrigger extends TriggerMechanism {
   loadParamsConfigControls() {
-    this.client.addParamsConfigurationControls(document.createTextNode("TypeAndWaitBasedTrigger"));
+    this.client.addParamsConfigurationControls(document.createTextNode("TypeAndEnterBasedTrigger"));
   }
 
   getProperties() {

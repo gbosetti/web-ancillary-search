@@ -1,3 +1,11 @@
+/* TODO find the way to instantiate a class from a string */
+const triggers = {
+  "ClickBasedTrigger": ClickBasedTrigger,
+  "EnterBasedTrigger": EnterBasedTrigger,
+  "TypeAndEnterBasedTrigger": TypeAndEnterBasedTrigger,
+  "TypeAndWaitBasedTrigger": TypeAndWaitBasedTrigger,
+};
+
 serviceCreator.controller('ServiceTriggerController', function($scope, $state, ServiceService) {
   AbstractController.call(this, $scope, $state, ServiceService);
 
@@ -15,11 +23,13 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
   };
 
   $scope.saveDataModel = function() {
-    ServiceService.setTrigger({"strategy": $scope.service.trigger.strategy.getProperties()});
+    ServiceService.setTrigger({
+      "strategy": $scope.service.trigger.strategy.getProperties()
+    });
   };
 
   $scope.loadValidationRules = function() {};
-  
+
   $scope.undoActionsOnDom = function() {
     $scope.service.trigger.strategy.undoActionsOnDom();
   };
@@ -44,7 +54,9 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
     document.querySelector('#trigger_mechanism').onchange = function() {
       $scope.clearTriggeringStrategyParamsArea();
       $scope.service.trigger.strategy.undoActionsOnDom();
-      $scope.service.trigger.strategy = new window[this.value]($scope, strategy || {});
+      /* FIXME window not contain class names */
+      /* $scope.service.trigger.strategy = new window[this.value]($scope, strategy || {}); */
+      $scope.service.trigger.strategy = new triggers[this.value]($scope, strategy || {});
       $scope.service.trigger.strategy.loadParamsConfigControls();
       $scope.service.trigger.strategy.loadSubformBehaviour();
     };
@@ -61,9 +73,9 @@ serviceCreator.controller('ServiceTriggerController', function($scope, $state, S
   };
 
   $scope.isElementSelected = function(elemType) {
-    return ($scope.service.userDefInputXpath)
-      ? true
-      : false;
+    return ($scope.service.userDefInputXpath) ?
+      true :
+      false;
   };
 
   $scope.initialize();

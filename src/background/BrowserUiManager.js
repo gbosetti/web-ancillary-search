@@ -1,246 +1,259 @@
-function BrowserUiManager(){
-  this.initialize();
-}
-BrowserUiManager.prototype.initialize = function() {
-
-  this.browserActionsClicks = {};
-  //this.mainMenu = this.createExtensionMainMenu(); No tiene sentido porque después te lo mueve como quiere
-  this.templatesCreator = new TemplatesCreator();
-  this.searchTool = new SearchTool();
-  this.listenForTabChanges();
-};
-BrowserUiManager.prototype.onVisualizationLoaded = function(data) {
-
-  var me = this;
-  return new Promise((resolve, reject) => {
-    me.executeOnCurrentTab(function(tab){
-      me.searchTool.onVisualizationLoaded(tab).then(retData => {
-        retData.domId = data.domId;
-        resolve(retData);
-      });
-    });
-  });
-};
-BrowserUiManager.prototype.listenForTabChanges = function() { 
-
-  /*var me = this;
-  this.listenForExternalRetrieval = false;
-
-  browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
-    
-    if(tabInfo.status == "complete"){
-
-      if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
-        me.currentQuerySpec = undefined;
-        me.listenForExternalRetrieval = undefined;
-        me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
-      }
-    } 
-  });*/
-}
-BrowserUiManager.prototype.onElementSelection = function(data) { 
-
-  this.templatesCreator.onElementSelection(data);
-};
-BrowserUiManager.prototype.onTriggerSelection = function(data) { 
-
-  this.templatesCreator.onTriggerSelection(data);
-};
-/*BrowserUiManager.prototype.onPropsSelection = function(data) { 
-
-  this.templatesCreator.onPropsSelection(data);
-};*/
-BrowserUiManager.prototype.onResultsContainerSelection = function(data) { 
-
-  this.templatesCreator.onResultsContainerSelection(data);
-};
-BrowserUiManager.prototype.populateApisMenu = function(data) { 
-
-  this.searchTool.createContextMenus();
-};
-BrowserUiManager.prototype.selectMatchingElements = function(data) { 
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.selectMatchingElements(tab, data);
-  });
-};
-BrowserUiManager.prototype.removeFullSelectionStyle = function(data) { 
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.removeFullSelectionStyle(tab);
-  });
-}
-BrowserUiManager.prototype.onFrameReadyForLoadingUrl = function() { 
-
-  this.templatesCreator.onFrameReadyForLoadingUrl();
-}
-BrowserUiManager.prototype.onSidebarClosed = function(data) { 
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.onSidebarClosed(tab);
-  });
-}
-BrowserUiManager.prototype.toggleSidebar = function() {
-
-  this.templatesCreator.toggleSidebar();
-};
-BrowserUiManager.prototype.closeSidebar = function() {
-
-  this.templatesCreator.closeSidebar();
-};
-BrowserUiManager.prototype.loadInputControlSelection = function(data) {
-
-  this.templatesCreator.loadInputControlSelection(data);
-};
-BrowserUiManager.prototype.adaptPlaceholder = function(data) {
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.adaptPlaceholder(tab, data);
-  });
-};
-BrowserUiManager.prototype.getCurrentUrl = function(data) {
-
-  //sendResponse({"url": tab.url});
-  var me = this;
-  return new Promise((resolve, reject) => {
-    me.executeOnCurrentTab(function(tab){
-      resolve(tab.url); 
-    });
-  });
-};
-BrowserUiManager.prototype.externalResourcesIframeIsLoaded = function(){
-  //TODO: move this behaviour to the searchTool class
-
-  this.listenForExternalRetrieval = true;
-  browser.tabs.sendMessage(this.currentQuerySpec.tabId, {
-    call: "extractFromUrl",
-    args: this.currentQuerySpec
-  });
-};
-BrowserUiManager.prototype.presentResultsFromQueriedUrl = function(data, tabId){
-  //TODO: move this behaviour to the searchTool class
-
-  browser.tabs.remove(tabId);
-  return new Promise((resolve, reject) => {
-    me.executeOnCurrentTab(function(tab){
-      resolve(data); 
-    });
-  });
-};
-BrowserUiManager.prototype.getBrowserActionClicksInTab = function(tabId) {
-  return this.browserActionsClicks[tabId]? this.browserActionsClicks[tabId] : 0;
-};
-BrowserUiManager.prototype.increaseBrowserActionClicksInTab = function(tabId) {
-
-  this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab(tabId) + 1;
-};
-BrowserUiManager.prototype.presentResults = function(args) {
-  return this.searchTool.presentResults(args.results);
-};
-BrowserUiManager.prototype.loadDocumentIntoResultsFrame = function(data) {
-
-  this.searchTool.loadDocumentIntoResultsFrame(data);
-};
-BrowserUiManager.prototype.disableBrowserAction = function(tab) {
-  this.changeBrowserActionIcon({
-      16: "icons/logo-disabled-16.png",
-      64: "icons/logo-disabled-64.png"
-    },
-    tab.id, "✗", "gray");
-
-  this.templatesCreator.disableHarvesting(tab);
-};
-BrowserUiManager.prototype.enableElementSelection = function(data) {
-  
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.enableElementSelection(tab, data);
-  });
-};
-BrowserUiManager.prototype.disableElementSelection = function(data) {
-  
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-    me.templatesCreator.disableElementSelection(tab, data.selector);
-  });
-};
-BrowserUiManager.prototype.enableBrowserAction = function(tab) {
-  this.changeBrowserActionIcon({
-      16: "icons/logo-disabled-16.png",
-      64: "icons/logo-disabled-64.png"
-    },
-    tab.id, "✓", "#60DA11");
-};
-BrowserUiManager.prototype.openSidebar = function() {
-
-
-}
-BrowserUiManager.prototype.changeBrowserActionIcon = function(icons, tabId, badgeText, badgeColor) {
-
-  browser.browserAction.setIcon({
-    path: icons,
-    tabId: tabId
-  });
-  browser.browserAction.setBadgeText({text: badgeText});
-  browser.browserAction.setBadgeBackgroundColor({color: badgeColor});
-
-  this.increaseBrowserActionClicksInTab(tabId);
-};
-BrowserUiManager.prototype.updateBrowserActionIconByClicks = function() {
-
-  var me = this;
-  this.executeOnCurrentTab(function(currentTab){
-
-    if(me.getBrowserActionClicksInTab(currentTab.id) % 2 == 0)
-      me.enableBrowserAction(currentTab);
-    else me.disableBrowserAction(currentTab);
-  });
-};
-BrowserUiManager.prototype.highlightInDom = function(data) {
-
-  var me = this;
-  this.executeOnCurrentTab(function(tab){
-
-    me.templatesCreator.highlightMatchingElements(tab, data);
-  });
-}
-BrowserUiManager.prototype.loadDataForConceptDefinition = function() {
-
-  //var me = this;
-  //this.executeOnCurrentTab(function(currentTab){
-
-  this.templatesCreator.loadDataForConceptDefinition();
-  //});
-};
-BrowserUiManager.prototype.setContextualizedElement = function(extractedData) {
-
-    this.templatesCreator.setContextualizedElement(extractedData); 
-};
-BrowserUiManager.prototype.executeOnCurrentTab = function(callback) {
-
-  try{
-      browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-
-          callback(tabs[0]);
-      });
-  }catch(err){
-    console.log(err);
+class BrowserUiManager {
+  constructor() {
+    this.browserActionsClicks = {};
+    //this.mainMenu = this.createExtensionMainMenu(); No tiene sentido porque después te lo mueve como quiere
+    this.templatesCreator = new TemplatesCreator();
+    this.searchTool = new SearchTool();
+    this.listenForTabChanges();
   }
-}
-//Mover todo lo que sigue a la SearchTool
-BrowserUiManager.prototype.newDocumentWasLoaded = function(data) {
 
-  return this.searchTool.newDocumentWasLoaded(data);
-};
-BrowserUiManager.prototype.startListeningForUrls = function(){
+  onVisualizationLoaded(data) {
+    const self = this;
 
-  return this.searchTool.startListeningForUrls();
-}
-BrowserUiManager.prototype.setSearchListeningStatus = function(data){
+    return new Promise((resolve, reject) => {
+      self.executeOnCurrentTab(tab => {
+        self.searchTool.onVisualizationLoaded(tab).then(retData => {
+          retData.domId = data.domId;
+          resolve(retData);
+        });
+      });
+    });
+  }
 
-  return this.searchTool.setSearchListeningStatus(data.status);
+  listenForTabChanges() {
+    // TODO, FIXME
+    /*var me = this;
+    this.listenForExternalRetrieval = false;
+
+    browser.tabs.onUpdated.addListener(function handleUpdated(tabId, changeInfo, tabInfo) {
+
+      if(tabInfo.status == "complete"){
+
+        if(me.currentQuerySpec && me.currentQuerySpec.tabId && me.listenForExternalRetrieval){
+          me.currentQuerySpec = undefined;
+          me.listenForExternalRetrieval = undefined;
+          me.presentResultsFromQueriedUrl(tabInfo.url, tabInfo.id);
+        }
+      }
+    });*/
+  }
+
+  onElementSelection(data) {
+    this.templatesCreator.onElementSelection(data);
+  }
+
+  onTriggerSelection(data) {
+    this.templatesCreator.onTriggerSelection(data);
+  }
+
+  /* onPropsSelection(data) {
+    this.templatesCreator.onPropsSelection(data);
+  } */
+
+  onResultsContainerSelection(data) {
+    this.templatesCreator.onResultsContainerSelection(data);
+  }
+
+  populateApisMenu(data) {
+    this.searchTool.createContextMenus();
+  }
+
+  selectMatchingElements(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.selectMatchingElements(tab, data);
+    });
+  }
+
+  removeFullSelectionStyle(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.removeFullSelectionStyle(tab);
+    });
+  }
+
+  onFrameReadyForLoadingUrl() {
+    this.templatesCreator.onFrameReadyForLoadingUrl();
+  }
+
+  onSidebarClosed(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.onSidebarClosed(tab);
+    });
+  }
+
+  toggleSidebar() {
+    this.templatesCreator.toggleSidebar();
+  }
+
+  closeSidebar() {
+    this.templatesCreator.closeSidebar();
+  }
+
+  loadInputControlSelection(data) {
+    this.templatesCreator.loadInputControlSelection(data);
+  }
+
+  adaptPlaceholder(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.adaptPlaceholder(tab, data);
+    });
+  }
+
+  getCurrentUrl(data) {
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      self.executeOnCurrentTab(tab => resolve(tab.url));
+    });
+  }
+
+  externalResourcesIframeIsLoaded() {
+    //TODO: move this behaviour to the searchTool class
+
+    this.listenForExternalRetrieval = true;
+    browser.tabs.sendMessage(this.currentQuerySpec.tabId, {
+      call: "extractFromUrl",
+      args: this.currentQuerySpec
+    });
+  }
+
+  presentResultsFromQueriedUrl(data, tabId) {
+    //TODO: move this behaviour to the searchTool class
+
+    browser.tabs.remove(tabId);
+    return new Promise((resolve, reject) => {
+      me.executeOnCurrentTab(function(tab) {
+        resolve(data);
+      });
+    });
+  }
+
+  getBrowserActionClicksInTab(tabId) {
+    return this.browserActionsClicks[tabId] ?
+      this.browserActionsClicks[tabId] :
+      0;
+  }
+
+  increaseBrowserActionClicksInTab(tabId) {
+    this.browserActionsClicks[tabId] = this.getBrowserActionClicksInTab(tabId) + 1;
+  }
+
+  presentResults(args) {
+    return this.searchTool.presentResults(args.results);
+  }
+
+  loadDocumentIntoResultsFrame(data) {
+    this.searchTool.loadDocumentIntoResultsFrame(data);
+  }
+
+  disableBrowserAction(tab) {
+    this.changeBrowserActionIcon({
+        16: "icons/logo-disabled-16.png",
+        64: "icons/logo-disabled-64.png"
+      },
+      tab.id, "✗", "gray");
+
+    this.templatesCreator.disableHarvesting(tab);
+  }
+
+  enableElementSelection(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.enableElementSelection(tab, data);
+    });
+  }
+
+  disableElementSelection(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.disableElementSelection(tab, data.selector);
+    });
+  }
+
+  enableBrowserAction(tab) {
+    this.changeBrowserActionIcon({
+        16: "icons/logo-disabled-16.png",
+        64: "icons/logo-disabled-64.png"
+      },
+      tab.id, "✓", "#60DA11");
+  }
+
+  openSidebar() {}
+
+  changeBrowserActionIcon(icons, tabId, badgeText, badgeColor) {
+    browser.browserAction.setIcon({
+      path: icons,
+      tabId: tabId
+    });
+
+    browser.browserAction.setBadgeText({
+      text: badgeText
+    });
+    browser.browserAction.setBadgeBackgroundColor({
+      color: badgeColor
+    });
+
+    this.increaseBrowserActionClicksInTab(tabId);
+  }
+
+  updateBrowserActionIconByClicks() {
+    const self = this;
+
+    this.executeOnCurrentTab(currentTab => {
+      if (self.getBrowserActionClicksInTab(tab.id) % 2 == 0) {
+        self.enableBrowserAction(tab);
+        return;
+      }
+
+      self.disableBrowserAction(tab);
+    })
+  }
+
+  highlightInDom(data) {
+    const self = this;
+
+    this.executeOnCurrentTab(tab => {
+      self.templatesCreator.highlightMatchingElements(tab, data);
+    })
+  }
+
+  loadDataForConceptDefinition() {
+    this.templatesCreator.loadDataForConceptDefinition();
+  }
+
+  setContextualizedElement(extractedData) {
+    this.templatesCreator.setContextualizedElement(extractedData);
+  }
+
+  executeOnCurrentTab(callback) {
+    try {
+      browser.tabs.query({
+        active: true,
+        currentWindow: true
+      }).then((tabs) => callback(tabs[0]));
+    } catch (e) {
+      console.log(err);
+    }
+  }
+
+  newDocumentWasLoaded(data) {
+    return this.searchTool.newDocumentWasLoaded(data);
+  }
+
+  startListeningForUrls() {
+    return this.searchTool.startListeningForUrls();
+  }
+
+  setSearchListeningStatus(data) {
+    return this.searchTool.setSearchListeningStatus(data.status);
+  }
 }

@@ -1,46 +1,55 @@
-function TriggerMechanism(client, props) {
-  this.loadProperties = function(data) {
-    if (data) {
-      var me = this;
-      Object.keys(data).forEach(function(key) {
-        me[key] = data[key];
-      });
+class TriggerMechanism {
+  constructor(client, props) {
+    this.client = client;
+    this.loadProperties(props);
+  }
+
+  loadProperties(data) {
+    if (!data) {
+      return;
+    }
+
+    const self = this;
+    Object.keys(data).forEach(key => {
+      self[key] = data[key]
+    });
+  }
+
+  loadParamsConfigControls() {}
+
+  loadSubformBehaviour() {}
+
+  getProperties() {
+    return {};
+  }
+
+  undoActionsOnDom() {}
+
+  areRequirementsMet() {
+    return false;
+  }
+
+  showMissingRequirementMessage() {
+    if (!this.client.hasErrorMessage("strategy-error")) { // Avoiding extras
+      this.client.showErrorMessage(
+        "strategy-error",
+        "#trigger_mechanism_params_area",
+        this.getMissingRequirementLocalizedId()
+      );
     }
   }
 
-  this.loadParamsConfigControls = function() {};
+  getMissingRequirementLocalizedId() {
+    return "default_missing_requirement";
+  }
 
-  this.loadSubformBehaviour = function() {};
-
-  this.getProperties = function() {
-    return {};
-  };
-
-  this.undoActionsOnDom = function() {};
-
-  this.areRequirementsMet = function() {
-    return false;
-  };
-
-  this.showMissingRequirementMessage = function() {
-    if (!client.hasErrorMessage("strategy-error")) { //Avoiding extras
-      client.showErrorMessage("strategy-error", "#trigger_mechanism_params_area", this.getMissingRequirementLocalizedId());
+  removeErrorMessage() {
+    if (this.client.hasErrorMessage("strategy-error")) {
+      this.client.removeErrorMessage("strategy-error");
     }
-  };
+  }
 
-  this.getMissingRequirementLocalizedId = function() {
-    return "default_missing_requirement"
-  };
-
-  this.removeErrorMessage = function() {
-    if (client.hasErrorMessage("strategy-error")) {
-      client.removeErrorMessage("strategy-error");
-    }
-  };
-
-  this.onTriggerSelection = function(data) {
+  onTriggerSelection(data) {
     console.log("default onTriggerSelection");
-  };
-
-  this.loadProperties(props);
+  }
 }

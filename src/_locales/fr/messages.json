@@ -35,7 +35,7 @@
   },
 
 
-  
+
   "the_input_control": {
     "message": "Contrôle d'entrée"
   },
@@ -44,7 +44,7 @@
   },
   "selected_input_control": {
     "message": "Contrôle d'entrée sélectionné"
-  }, 
+  },
 
 
 
@@ -72,9 +72,12 @@
   "type_and_wait_to_trigger": {
     "message": "Il suffit de taper et d'attendre"
   },
+  "type_and_enter_to_trigger": {
+    "message": ""
+  },
   "selected_trigger_control": {
     "message": "Déclencheur sélectionné"
-  }, 
+  },
   "default_missing_requirement": {
     "message": "Désolé, certaines exigences ne sont pas remplies dans ce form."
   },
