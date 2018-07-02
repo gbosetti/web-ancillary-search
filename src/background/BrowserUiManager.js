@@ -8,11 +8,9 @@ class BrowserUiManager {
   }
 
   onVisualizationLoaded(data) {
-    const self = this;
-
     return new Promise((resolve, reject) => {
-      self.executeOnCurrentTab(tab => {
-        self.searchTool.onVisualizationLoaded(tab).then(retData => {
+      this.executeOnCurrentTab(tab => {
+        this.searchTool.onVisualizationLoaded(tab).then(retData => {
           retData.domId = data.domId;
           resolve(retData);
         });
@@ -59,18 +57,14 @@ class BrowserUiManager {
   }
 
   selectMatchingElements(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.selectMatchingElements(tab, data);
+      this.templatesCreator.selectMatchingElements(tab, data);
     });
   }
 
   removeFullSelectionStyle(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.removeFullSelectionStyle(tab);
+      this.templatesCreator.removeFullSelectionStyle(tab);
     });
   }
 
@@ -79,10 +73,8 @@ class BrowserUiManager {
   }
 
   onSidebarClosed(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.onSidebarClosed(tab);
+      this.templatesCreator.onSidebarClosed(tab);
     });
   }
 
@@ -99,19 +91,23 @@ class BrowserUiManager {
   }
 
   adaptPlaceholder(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.adaptPlaceholder(tab, data);
+      this.templatesCreator.adaptPlaceholder(tab, data);
     });
   }
 
   getCurrentUrl(data) {
-    const self = this;
-
     return new Promise((resolve, reject) => {
-      self.executeOnCurrentTab(tab => resolve(tab.url));
+      this.executeOnCurrentTab(tab => resolve(tab.url));
     });
+  }
+
+  getServices(data) {
+    return this.templatesCreator.getServices();
+  }
+
+  setServices(data) {
+    return this.templatesCreator.setServices(data);
   }
 
   externalResourcesIframeIsLoaded() {
@@ -129,7 +125,7 @@ class BrowserUiManager {
 
     browser.tabs.remove(tabId);
     return new Promise((resolve, reject) => {
-      me.executeOnCurrentTab(function(tab) {
+      this.executeOnCurrentTab(function(tab) {
         resolve(data);
       });
     });
@@ -164,18 +160,14 @@ class BrowserUiManager {
   }
 
   enableElementSelection(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.enableElementSelection(tab, data);
+      this.templatesCreator.enableElementSelection(tab, data);
     });
   }
 
   disableElementSelection(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.disableElementSelection(tab, data.selector);
+      this.templatesCreator.disableElementSelection(tab, data.selector);
     });
   }
 
@@ -206,23 +198,19 @@ class BrowserUiManager {
   }
 
   updateBrowserActionIconByClicks() {
-    const self = this;
-
     this.executeOnCurrentTab(currentTab => {
-      if (self.getBrowserActionClicksInTab(tab.id) % 2 == 0) {
-        self.enableBrowserAction(tab);
+      if (this.getBrowserActionClicksInTab(tab.id) % 2 == 0) {
+        this.enableBrowserAction(tab);
         return;
       }
 
-      self.disableBrowserAction(tab);
+      this.disableBrowserAction(tab);
     })
   }
 
   highlightInDom(data) {
-    const self = this;
-
     this.executeOnCurrentTab(tab => {
-      self.templatesCreator.highlightMatchingElements(tab, data);
+      this.templatesCreator.highlightMatchingElements(tab, data);
     })
   }
 
