@@ -37,12 +37,8 @@ serviceCreator.service("ServiceService", [
     this.buildingStrategy;
 
     this.initialize = function() {
-      browser.storage.local.get("services").then((storedServices) => {
-        if (storedServices.services && Object.keys(storedServices.services).length > 0) {
-          $service.services = storedServices.services;
-        } else {
-          $service.services = {}; //check if this is necessary. I thunk this is the def value, but just in case
-        }
+      browser.runtime.sendMessage({call: "getServices"}).then(storedServices => {
+        $service.services = storedServices.services;
       });
     };
 
@@ -171,7 +167,12 @@ serviceCreator.service("ServiceService", [
     };
 
     this.updateServices = function() {
-      browser.storage.local.set({"services": $service.services});
+      browser.runtime.sendMessage({
+        call: "setServices",
+        args: {
+          services: $service.services,
+        },
+      });
     };
 
     this.setInput = function(input) {
