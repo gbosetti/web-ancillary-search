@@ -1,15 +1,24 @@
 function TemplatesCreator(){
   this.targetElement = undefined;
   this.sidebarManager = new SidebarManager(
-    "/content_scripts/sidebar/index.html", 
+    "/content_scripts/sidebar/index.html",
     [],
     [this] /* listeners that should implement onSidebarStatusChange */
-  ); 
+  );
   //this.storage = new StorageFilesManager();
   this.backPageSelector = new BackgroundPageSelector();
-  
+
 }
-TemplatesCreator.prototype.onSidebarStatusChange = function( tab) {
+
+TemplatesCreator.prototype.getServices = function() {
+  return this.sidebarManager.getServices();
+}
+
+TemplatesCreator.prototype.setServices = function(data) {
+  this.sidebarManager.setServices(data);
+}
+
+TemplatesCreator.prototype.onSidebarStatusChange = function(tab) {
 
   this.backPageSelector.toggleDomElementsBehaviour(tab);
 }
@@ -25,36 +34,36 @@ TemplatesCreator.prototype.removeFullSelectionStyle = function(tab) {
 
   this.backPageSelector.removeFullSelectionStyle(tab);
 }
-TemplatesCreator.prototype.onElementSelection = function(data) { 
+TemplatesCreator.prototype.onElementSelection = function(data) {
 
   this.sidebarManager.onElementSelection(data);
 }
-TemplatesCreator.prototype.onTriggerSelection = function(data) { 
+TemplatesCreator.prototype.onTriggerSelection = function(data) {
 
   this.sidebarManager.onTriggerSelection(data);
 };
-TemplatesCreator.prototype.onResultsContainerSelection = function(data) { 
+TemplatesCreator.prototype.onResultsContainerSelection = function(data) {
 
   this.sidebarManager.onResultsContainerSelection(data);
 };
-TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() { 
+TemplatesCreator.prototype.onFrameReadyForLoadingUrl = function() {
 
   this.sidebarManager.onFrameReadyForLoadingUrl();
 }
-TemplatesCreator.prototype.onSidebarClosed = function(tab) { 
+TemplatesCreator.prototype.onSidebarClosed = function(tab) {
 
   this.sidebarManager.onSidebarClosed();
   //this.backPageSelector.removeFullSelectionStyle(tab);
 }
 TemplatesCreator.prototype.setContextualizedElement = function(extractedData) {
 
-    this.targetElement = extractedData; 
+    this.targetElement = extractedData;
 };
 TemplatesCreator.prototype.highlightMatchingElements = function(tab, data) {
 
   browser.tabs.sendMessage(tab.id, {call: "highlightMatchingElements", args: data});
 }
-TemplatesCreator.prototype.selectMatchingElements = function(tab, data) { 
+TemplatesCreator.prototype.selectMatchingElements = function(tab, data) {
 
   browser.tabs.sendMessage(tab.id, {"call": "selectMatchingElements", "args": data });
 };
