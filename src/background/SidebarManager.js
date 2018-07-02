@@ -3,21 +3,31 @@ function SidebarManager(defaultFile, defaultDependencies, listeners){
 	console.log("**************\nINSTANCIATING THE SIDEBAR MANAGER\n**************");
 
 	this.defaultFile = defaultFile;
+	this.storage = new StorageManager();
 	this.defaultDependencies = defaultDependencies;
 	this.listeners = [];
 	this.addListeners(listeners);
 }
-SidebarManager.prototype.addListeners = function(listeners) { 
+
+SidebarManager.prototype.getServices = function() {
+	return this.storage.get();
+}
+
+SidebarManager.prototype.setServices = function({services}) {
+	return this.storage.set(services);
+}
+
+SidebarManager.prototype.addListeners = function(listeners) {
 
 	for (var i = listeners.length - 1; i >= 0; i--) {
 		this.addListener(listeners[i]);
 	}
 }
-SidebarManager.prototype.addListener = function(listener) { 
+SidebarManager.prototype.addListener = function(listener) {
 
 	this.listeners.push(listener);
 }
-SidebarManager.prototype.notifyListeners = function() { 
+SidebarManager.prototype.notifyListeners = function() {
 
 	var me = this;
 	this.getCurrentTab(function(tab){
@@ -26,13 +36,13 @@ SidebarManager.prototype.notifyListeners = function() {
 		}
 	});
 }
-SidebarManager.prototype.onFrameReadyForLoadingUrl = function() { 
+SidebarManager.prototype.onFrameReadyForLoadingUrl = function() {
 
 	//salta a onSidebarStatusChange
-	this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
+	this.loadChromeUrl(this.defaultFile, this.defaultDependencies);
 	this.notifyListeners();
 }
-SidebarManager.prototype.onSidebarClosed = function() { 
+SidebarManager.prototype.onSidebarClosed = function() {
 
 	this.notifyListeners();
 }
@@ -40,37 +50,37 @@ SidebarManager.prototype.loadChromeUrl = function(chromeUrl, filePaths) { //PUBL
 
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
-			call: "loadUrl", 
-			args: { 
+			call: "loadUrl",
+			args: {
 				"url": browser.extension.getURL(chromeUrl),
 				"filePaths": filePaths
 			}
 		});
 	});
 };
-SidebarManager.prototype.onElementSelection = function(data) { 
+SidebarManager.prototype.onElementSelection = function(data) {
 
 	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
-			call: "onElementSelection", 
+			call: "onElementSelection",
 			args: data
 		});
 	});
 }
-SidebarManager.prototype.onTriggerSelection = function(data) { 
+SidebarManager.prototype.onTriggerSelection = function(data) {
 
   	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
-			call: "onTriggerSelection", 
+			call: "onTriggerSelection",
 			args: data
 		});
 	});
 };
-SidebarManager.prototype.onResultsContainerSelection = function(data) { 
+SidebarManager.prototype.onResultsContainerSelection = function(data) {
 
   	this.getCurrentTab(function(tab){
 		browser.tabs.sendMessage(tab.id, {
-			call: "onResultsContainerSelection", 
+			call: "onResultsContainerSelection",
 			args: data
 		});
 	});
@@ -88,7 +98,7 @@ SidebarManager.prototype.adaptPlaceholder = function(tab, data) {
 	data.domainName = tab.url.split(".")[1];
 
 	browser.tabs.sendMessage(tab.id, {
-		call: data.callback, 
+		call: data.callback,
 		args: data
 	});
 };
@@ -105,7 +115,7 @@ SidebarManager.prototype.getCurrentTab = function(callback) {
 		browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
 			callback(tabs[0]);
 		});
-	}catch(err){ console.log(err); }	
+	}catch(err){ console.log(err); }
 };
 SidebarManager.prototype.close = function() {
 	var me = this;
