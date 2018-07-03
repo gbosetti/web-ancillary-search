@@ -38,7 +38,9 @@ serviceCreator.service("ServiceService", [
 
     this.initialize = function() {
       browser.runtime.sendMessage({call: "getServices"}).then(storedServices => {
-        $service.services = storedServices.services;
+        $service.services = (storedServices.services && Object.keys(storedServices.services).length > 0) ?
+          storedServices.services :
+          {};
       });
     };
 
