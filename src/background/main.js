@@ -1,7 +1,7 @@
 var browserUI = new BrowserUiManager();
 
 browser.browserAction.onClicked.addListener(function updateIcon() {
-	console.log("cicking!")
+	console.log("cicking!");
   browserUI.toggleSidebar();
 });
 
