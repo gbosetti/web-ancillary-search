@@ -5,11 +5,12 @@
   "description": "ANDES",
   "scripts": {
     "web-ext-prepare": "pushd ./src && npm install && popd",
-    "serve": "npm-run-all web-ext-prepare && grunt && grunt watch&",
-    "start:chrome": "npm-run-all serve && chrome --load-extension=$(pwd)/build/web-ancillary-search",
-    "start:chromium": "npm-run-all serve && chromium --load-extension=$(pwd)/build/web-ancillary-search",
-    "start:firefox": "npm-run-all serve && web-ext run -s build/web-ancillary-search",
-    "start:nightly": "npm-run-all serve && web-ext run -s build/web-ancillary-search --firefox=nightly",
+    "build": "grunt",
+    "watch": "grunt watch",
+    "start:chrome": "chrome --load-extension=$(pwd)/src",
+    "start:chromium": "chromium --load-extension=$(pwd)/src",
+    "start:firefox": "web-ext run -s build/web-ancillary-search",
+    "start:nightly": "web-ext run -s build/web-ancillary-search --firefox=nightly",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "LIFIA",
