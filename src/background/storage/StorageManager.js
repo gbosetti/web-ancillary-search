@@ -21,8 +21,9 @@ class StorageManager {
   }
 
   set(data) {
-    return this.storage.set(this.key, data)
-      .catch(this.errorHandler);
+    return this.storage.set({
+      [this.key]: data
+    }).catch(this.errorHandler);
   }
 
   remove() {

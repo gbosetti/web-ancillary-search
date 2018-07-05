@@ -10,19 +10,18 @@ class LocalStorage extends Storage {
       .catch(this.errorHandler);
   }
 
-  get(key) {
-    return browser.storage.local.get(key)
+  get(keys) {
+    return browser.storage.local.get(keys)
       .catch(this.errorHandler);
   }
 
-  set(key, data) {
-    return browser.storage.local.set({
-      [key]: data
-    }).catch(this.errorHandler);
+  set(keys) {
+    return browser.storage.local.set(keys)
+      .catch(this.errorHandler);
   }
 
-  remove(key) {
-    return browser.storage.local.remove(key)
+  remove(keys) {
+    return browser.storage.local.remove(keys)
       .catch(this.errorHandler);
   }
 }
