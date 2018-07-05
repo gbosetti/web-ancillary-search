@@ -4,14 +4,15 @@
   "version": "1.0.0",
   "description": "ANDES",
   "scripts": {
-    "web-ext-prepare": "pushd ./src && npm install && popd",
     "build": "grunt",
-    "watch": "grunt watch",
+    "prepublish": "npm run build && npm run test",
     "start:chrome": "chrome --load-extension=$(pwd)/src",
     "start:chromium": "chromium --load-extension=$(pwd)/src",
     "start:firefox": "web-ext run -s build/web-ancillary-search",
     "start:nightly": "web-ext run -s build/web-ancillary-search --firefox=nightly",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "grunt watch",
+    "web-ext-prepare": "pushd ./src && npm install && popd"
   },
   "author": "LIFIA",
   "license": "MIT",
