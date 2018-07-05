@@ -14,7 +14,7 @@ Refused to display <url> in a frame because it set 'X-Frame-Options' to 'sameori
 or similar mistakes. For this it is recommended to evaluate the way to set
 the url search to avoid errors with SSL and others.
 
-## Sitios
+## Sites
 
 ### google.com
 
