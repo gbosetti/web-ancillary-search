@@ -31,7 +31,7 @@ Refused to display 'https://www.youtube.com/results?search_query=libros' in a fr
 
 ### baidu.com
 
-Se puede crear y utilizar servicios con click y enter.
+You can create and use services with click and enter.
 
 ### wikipedia.org - try later
 
@@ -43,15 +43,15 @@ No pude crear el servicio
 
 ### qq.com
 
-Se puede crear y utilizar servicios con click y enter.
+You can create and use services with click and enter.
 
 ### taobao.com - try later
 
-Se pueden crear servicios, pero no fuí capaz de recopilar resultados.
+You can create services, but I was not able to collect results.
 
 ### amazon.com
 
-Se puede crear servicios, pero no fuí capaz de recopilar resultados.
+You can create services, but I was not able to collect results.
 
 ```
 Refused to display 'https://www.amazon.com/s/ref=nb_sb_noss/131-4333338-7737457?url=search-alias%3Daps&field-keywords=books' in a frame because it set 'X-Frame-Options' to 'sameorigin'.
@@ -59,15 +59,19 @@ Refused to display 'https://www.amazon.com/s/ref=nb_sb_noss/131-4333338-7737457?
 
 ### reddit.com
 
-Se puede crear y utilizar servicios con click y enter.
+You can create and use services with click and enter.
 
 ### netflix.com - try later
 
 ### pornhub.com - try later
 
-Not working, same error as amazon
+You can create services, but I was not able to collect results.
+
+Not working, same error as amazon.
 
 ### linkedin.com - try later
+
+You can create services, but I was not able to collect results.
 
 ```
 Refused to display 'https://www.linkedin.com/search/results/index/?keywords=asd&origin=GLOBAL_SEARCH_HEADER' in a frame because an ancestor violates the following Content Security Policy directive: "frame-ancestors 'self'".
@@ -75,6 +79,16 @@ Refused to display 'https://www.linkedin.com/search/results/index/?keywords=asd&
 
 ### ebay.com - try later
 
+You can create services, but I was not able to collect results.
+
 ```
 Refused to display 'https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw=libros&_sacat=0' in a frame because it set 'X-Frame-Options' to 'sameorigin'.
 ```
+
+### 360.cn
+
+You can create and use services with click and enter.
+
+### bing.com - try later
+
+You can create services, but I was not able to collect results.
