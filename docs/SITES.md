@@ -60,12 +60,6 @@ You can create and use services with click and enter.
 
 ### netflix.com - try later
 
-### pornhub.com - try later
-
-You can create services, but I was not able to collect results.
-
-Not working, same error as amazon.
-
 ### linkedin.com - try later
 
 You can create services, but I was not able to collect results.
