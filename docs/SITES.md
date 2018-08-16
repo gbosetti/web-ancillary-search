@@ -1,5 +1,7 @@
 # Sites
 
+* * *
+
 ## Stats
 
 | Tested Sites | Service Definition Working | Visualizations Working |
@@ -79,3 +81,5 @@ You can create and use services with click and enter.
 ### bing.com - try later
 
 You can create services, but I was not able to collect results.
+
+* * *
