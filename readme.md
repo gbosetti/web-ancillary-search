@@ -23,6 +23,12 @@ $ npm install
 $ npm run web-ext-prepare
 ```
 
+If the last command throws you an error, please:
+```sh
+$ cd src
+$ npm install
+```
+
 ## Installing the extension in Chrome
 
 After performing the steps described above,
