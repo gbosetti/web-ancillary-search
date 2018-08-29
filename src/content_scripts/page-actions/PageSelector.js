@@ -39,9 +39,15 @@ function PageSelector(){
 };
 PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector){
 
+	console.log("relativeElem", relativeElem);
+	console.log("generateRelativeSelector", generateRelativeSelector);
+
 	var xpi = new XPathInterpreter(),
-		labeledXpaths = {}, 
-		xpaths = xpi.getMultipleXPaths(element, relativeElem || element.ownerDocument);
+		labeledXpaths = {};
+
+	xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem) : xpi.getMultipleXPaths(element, element.ownerDocument);
+
+	console.log("xpaths", xpaths);
 
     for (var i = xpaths.length - 1; i >= 0; i--) {
 

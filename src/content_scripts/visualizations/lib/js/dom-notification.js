@@ -127,7 +127,20 @@ function ReadyToExtractResults() {
     //Puede que el doc no esté completamente cargado aún! 
     //TODO: add listener
 
-    var conceptDomElems = this.evaluateSelector(data.service.results.selector.value, document);
+    var me=this, conceptDomElems, extractionTries=0;
+    var myVar = setInterval(function myTimer() {
+      conceptDomElems = me.evaluateSelector(data.service.results.selector.value, document);
+
+      if((conceptDomElems && conceptDomElems.length > 0) || extractionTries > 10){
+        clearInterval(myVar);
+        me.extractAndShow(conceptDomElems, data);
+      }
+      extractionTries++;
+    }, 1500);
+
+    
+  };
+  this.extractAndShow = function(conceptDomElems, data) {
     data.service.results = this.extractConcepts(conceptDomElems, data.service.results.properties);
 
     var me = this;
@@ -170,6 +183,8 @@ function ReadyToExtractResults() {
     var propSpecKeys = Object.keys(propSpecs);
     var me = this;
 
+    console.log("***keys", propSpecKeys);
+
     if (propSpecKeys.length > 0) {
 
       conceptDomElems.forEach(conceptDom => {
@@ -177,6 +192,8 @@ function ReadyToExtractResults() {
         var incompleteConcept = false;
         var concept = {};
         propSpecKeys.forEach(propIndex => {
+
+          console.log("*key", propSpecKeys, propSpecs[propIndex]);
 
           var propDom = (new XPathInterpreter()).getSingleElementByXpath(
             propSpecs[propIndex].relativeSelector,

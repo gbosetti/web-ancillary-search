@@ -7,7 +7,7 @@ function XPathInterpreter() {
     arguments.callee.instance = this;
     this.currentElement;
     this.xPaths;
-    this.engine = [new IdTreeXPathEngine(), new ControlTypeBasedEngine(), 
+    this.engine = [new ControlTypeBasedEngine(), 
     new FullXPathEngine(), new ClassXPathEngine() ]; //new BasicIdEngine(), 
     //, new CssPathEngine()
 
@@ -35,17 +35,43 @@ XPathInterpreter.prototype.removeEngines = function() {
     this.engines = new array();
 };
 
+XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent) {
+    var xPathArray = [];
+    if(element == undefined || parent == undefined)
+        return;
+
+    for (var i = 0; i < this.engine.length; i++) {
+
+        if(this.engine[i].suitableForRelative()){
+            try{
+                var path = this.engine[i].getPath(element, parent);
+                if (path !== undefined && path !== null && path.length && path.length > 0){
+
+                    for (var j = 0; j < path.length; j++) {
+                        
+                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
+                        xPathArray.push(path[j]);                        
+                    } 
+                }
+            }catch(err){ 
+                console.log(err);
+            }
+        }
+    };
+    return xPathArray;
+};
+
 
 // obtener un array de xPaths correspondiente a los engines seteados
 XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeBase) {
     var xPathArray = [];
-    if(element == undefined)
+    if(element == undefined || parent == undefined)
         return;
-    if(parent == undefined)
-        parent = element.ownerDocument;
 
     //var console = element.ownerDocument.defaultView.console; //.log("********************************", element, parent);
     for (var i = 0; i < this.engine.length; i++) {
+
+        if(this.engine[i].suitableForRelative())
         try{
             var path = this.engine[i].getPath(element, parent);
             if (path !== undefined && path !== null && path.length && path.length > 0){
@@ -130,6 +156,10 @@ XPathSelectorEngine.prototype.getElement = function(aNode, aExpr) {
         found.push(res);
     return found;
 };
+XPathSelectorEngine.prototype.suitableForRelative = function(aNode, aExpr) {
+   
+    return true;
+};
 
 
 /* 
@@ -153,77 +183,6 @@ BasicIdEngine.prototype.getPath = function(element, parent){
     }
 };
 
-/* 
- * Función que obtiene un Xpath según su RelativePath.
- * Busca para arriba desde el padre un ID y a partir de ahi un path relativo.
- */
-function IdTreeXPathEngine() {
-    if ( arguments.callee.instance )    //Singleton pattern
-        return arguments.callee.instance;
-    arguments.callee.instance = this;
-}
-
-IdTreeXPathEngine.prototype = new XPathSelectorEngine();
-IdTreeXPathEngine.prototype.constructor = IdTreeXPathEngine;
-
-IdTreeXPathEngine.prototype.getPath = function(element, parent){
-
-    if(element == undefined)
-        return null;
-    var oldElem = element;
-    var oldTag = oldElem.nodeName.toLowerCase();
-    //element = element.parentNode;
-    var paths = [];
-    var parentNode = parent || element.ownerDocument;
-    //paths.splice(0, 0, oldTag);
-    // Use nodeName (instead of localName) so namespace prefix is included (if any).
-    var siblingId = false;    
-    for (; element && element.nodeType == 1 && element.innerHTML != parentNode.innerHTML; element = element.parentNode) {
-        var index = 1;
-        if (element.id){
-            siblingId = true;
-        }
-        else {
-        for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
-            // Ignore document type declaration.
-            if (sibling.nodeType == 10){ //element.ownerDocument.defaultView.Node.DOCUMENT_TYPE_NODE
-                continue;
-            }
-
-            if (sibling.nodeName == element.nodeName){
-                index++;
-            }
-        }
-        }
-        
-        var tagName = element.nodeName.toLowerCase();
-        var pathIndex;
-        if (!siblingId){
-            pathIndex = (index ? "[" + (index) + "]" : ""); 
-            paths.splice(0, 0, tagName + pathIndex);            
-        }else{
-            var result = this.getElementIdXPath(element) + (paths.length ? "/" + paths.join("/") : "");
-            var oldElem2 = (new BasicIdEngine()).getPath(oldElem);
-            if (oldElem2 && oldElem2.length && oldElem2.length > 0 && result == oldElem2[0]){
-                return null;
-            }
-            else return [result, result.substring(0, result.length-3)];
-        }        
-    }
-    var result =  paths.length ? ".//" + paths.join("/") : null;
-    var oldElem2 = (new BasicIdEngine()).getPath(oldElem);
-    if (oldElem2 && oldElem2.length && oldElem2.length > 0 && result == oldElem2[0]){
-        return;
-    }
-    else return [result];
-};
-IdTreeXPathEngine.prototype.getElementIdXPath = function(element){
-    if (element && element.id){
-        return './/'+ element.nodeName.toLowerCase() +'[@id="' + element.id + '"]'; 
-    }else{
-        return null; //Siempre que no encontremos el Xpath devolvamos null.
-    }
-};
 
 
 
@@ -318,13 +277,17 @@ function FullXPathEngine() {
 FullXPathEngine.prototype = new XPathSelectorEngine();
 FullXPathEngine.prototype.constructor = FullXPathEngine;
 
-//Función que obtiene un Xpath según su FullPath de árbol DOM. 
-FullXPathEngine.prototype.getPath = function(element, parent) {
+FullXPathEngine.prototype.suitableForRelative = function(aNode, aExpr) {
+   
+    return false;
+};
 
-    if(element == undefined)
+//Función que obtiene un Xpath según su FullPath de árbol DOM. 
+FullXPathEngine.prototype.getPath = function(element, parentNode) {
+
+    if(element == undefined || parentNode == undefined)
         return null;
     var paths = [];
-    var parentNode = parent || element.ownerDocument;
     // Arma el path hasta llegar al parent node, que puede ser el parametro o "document"
     for (; element && element.nodeType == 1 && element.innerHTML != parentNode.innerHTML; element = element.parentNode) {
         var index = 1;
