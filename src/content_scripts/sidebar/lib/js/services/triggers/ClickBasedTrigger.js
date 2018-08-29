@@ -51,6 +51,9 @@ class ClickBasedTrigger extends TriggerMechanism {
   }
 
   onTriggerSelection(data) {
+
+    console.log("***************");
+    console.log(data);
     this.client.showAllHiddenElements();
     this.client.loadPreview("#user-selected-trigger-element-img", data.previewSource);
     this.selector = data.selectors["1"][0];

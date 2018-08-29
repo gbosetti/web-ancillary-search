@@ -189,7 +189,6 @@ PageSelector.prototype.preventFormsOnSubmit = function(){
 	//TODO: it is not working with "addEventListener". This is a problem because maybe we can not resore the original behaviour after this
 	document.querySelectorAll("form").forEach(function(form){ 
 		form.onsubmit = function(evt){ 
-			console.log("ONSUBMIT!");
     		return false;
 		}; 
     });
