@@ -35,7 +35,6 @@ function NoSearchStrategy(status) {
 
 function UrlQueryBasedSearch(status) {
   SearchStrategy.call(this, status);
-  //this.status = status;
   this.analyseDom = function(data) {
 
     this.status.analyseDom(data);
@@ -68,8 +67,6 @@ function ReadyToTrigger() {
       return;
     }
 
-    console.log("Input is here!");
-
     const self = this;
 
     browser.runtime.sendMessage({
@@ -78,6 +75,7 @@ function ReadyToTrigger() {
         "status": "ReadyToExtractResults"
       }
     }).then(response => {
+
       const { strategy } = data.service.trigger;
       const { className } = strategy;
       const methodName = className.charAt(0).toLowerCase() + className.slice(1);
@@ -86,6 +84,8 @@ function ReadyToTrigger() {
       console.log(`calling ${methodName} strategy`);
       console.log(self);
       console.log(self[methodName]);
+
+      //TODO: acá debería haber un strategy, no un binding. Instanciar una clase y llamar al mismo método, mediante polimorfismo
       self[methodName].bind(self)({strategy, inputElement});
     });
   };
@@ -120,10 +120,12 @@ function ReadyToTrigger() {
 }
 window.ReadyToTrigger = ReadyToTrigger;
 
-
 function ReadyToExtractResults() {
   SearchStatus.call(this);
   this.analyseDom = function(data) {
+
+    //Puede que el doc no esté completamente cargado aún! 
+    //TODO: add listener
 
     var conceptDomElems = this.evaluateSelector(data.service.results.selector.value, document);
     data.service.results = this.extractConcepts(conceptDomElems, data.service.results.properties);
