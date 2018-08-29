@@ -1,6 +1,6 @@
 class EnterBasedTrigger extends TriggerMechanism {
   loadParamsConfigControls() {
-    this.client.addParamsConfigurationControls(document.createTextNode("EnterBasedTrigger"));
+    //this.client.addParamsConfigurationControls(document.createTextNode("EnterBasedTrigger"));
   }
 
   getProperties() {
