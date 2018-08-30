@@ -10,9 +10,9 @@ Searcher.prototype.notifyVisitedPageUrl = function() {
       "url": window.location.href
     }
   }).then(response => {
-    console.log("Instantiating search status", response.status);
+    //console.log("Instantiating search status", response.status);
     me.searchStrategy = new UrlQueryBasedSearch(new window[response.status]()); //TODO: extend UrlQueryBasedSearch
-    console.log("data", response.data);
+    //console.log("data", response.data);
     me.searchStrategy.analyseDom(response.data);
   })
 };

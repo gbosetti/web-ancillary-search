@@ -7,8 +7,8 @@ function XPathInterpreter() {
     arguments.callee.instance = this;
     this.currentElement;
     this.xPaths;
-    this.engine = [new ControlTypeBasedEngine(), 
-    new FullXPathEngine(), new ClassXPathEngine() ]; //new BasicIdEngine(), 
+    this.engine = [new BasicIdEngine(), new ControlTypeBasedEngine(), 
+    new FullXPathEngine(), new ClassXPathEngine()]; //
     //, new CssPathEngine()
 
 }
@@ -35,66 +35,69 @@ XPathInterpreter.prototype.removeEngines = function() {
     this.engines = new array();
 };
 
-XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent) {
+XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent, generatesSingleElemSelectors) {
+    
+    console.log("****** relative", element, parent);
     var xPathArray = [];
     if(element == undefined || parent == undefined)
         return;
 
     for (var i = 0; i < this.engine.length; i++) {
 
-        if(this.engine[i].suitableForRelative()){
+        console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
+        if(this.engine[i].suitableForRelative() && (this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors)){
             try{
                 var path = this.engine[i].getPath(element, parent);
                 if (path !== undefined && path !== null && path.length && path.length > 0){
 
                     for (var j = 0; j < path.length; j++) {
                         
-                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
+                        //xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
                         xPathArray.push(path[j]);                        
                     } 
                 }
-            }catch(err){ 
-                console.log(err);
-            }
+            }catch(err){ console.log(err); }
         }
     };
+    console.log(xPathArray);
     return xPathArray;
 };
 
 
 // obtener un array de xPaths correspondiente a los engines seteados
-XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, removeBase) {
+XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, generatesSingleElemSelectors) {
+    
     var xPathArray = [];
-    if(element == undefined || parent == undefined)
+    if(element == undefined)
         return;
+
+    if(parent == undefined)
+        parent = element.ownerDocument;
+
+    console.log("****** full");
 
     //var console = element.ownerDocument.defaultView.console; //.log("********************************", element, parent);
     for (var i = 0; i < this.engine.length; i++) {
 
-        if(this.engine[i].suitableForRelative())
-        try{
-            var path = this.engine[i].getPath(element, parent);
-            if (path !== undefined && path !== null && path.length && path.length > 0){
+        console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
+        if(this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors){
+            try{
+                var path = this.engine[i].getPath(element, parent);
+                if (path !== undefined && path !== null && path.length && path.length > 0){
 
-                for (var j = 0; j < path.length; j++) {
-                    
-                    if(removeBase){ //TODO: make a special message for retrieving without IDs & relatives
-
+                    for (var j = 0; j < path.length; j++) {
+                        
                         if(path[j] != null && path[j].indexOf('.//')>-1){
-                            path[j] = path[j].slice(3,path[j].length);
+                            xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
                         }
+                        
+                        xPathArray.push(path[j]);                        
                     } 
-                    else{
-                        xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
-                    }
-                    
-                    xPathArray.push(path[j]);                        
-                } 
-            }
-        }catch(err){ 
-            console.log(err);
+                }
+            }catch(err){ console.log(err); }
         }
     };
+    console.log(xPathArray);
     return xPathArray;
 };
 
@@ -118,15 +121,20 @@ XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
     return results.iterateNext(); 
 };
 XPathInterpreter.prototype.getElementsByXpath = function(xpath, node) {
-    var nodes = [];
-    var doc = (node && node.ownerDocument)? node.ownerDocument : node;
-    var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
-    var res = results.iterateNext(); 
 
-    while (res) {
-      nodes.push(res);
-      res = results.iterateNext();
-    }
+    var nodes = [];
+
+    try{
+        var doc = (node && node.ownerDocument)? node.ownerDocument : node;
+        var results = doc.evaluate(xpath, doc, null, XPathResult.ANY_TYPE, null); 
+        var res = results.iterateNext(); 
+
+        while (res) {
+          nodes.push(res);
+          res = results.iterateNext();
+        }
+    }catch(err){ console.log(err)}
+
     return nodes;
 };
 
@@ -156,9 +164,13 @@ XPathSelectorEngine.prototype.getElement = function(aNode, aExpr) {
         found.push(res);
     return found;
 };
-XPathSelectorEngine.prototype.suitableForRelative = function(aNode, aExpr) {
+XPathSelectorEngine.prototype.suitableForRelative = function() {
    
     return true;
+};
+XPathSelectorEngine.prototype.generatesSingleElemSelectors = function() {
+   
+    return false;
 };
 
 
@@ -182,6 +194,10 @@ BasicIdEngine.prototype.getPath = function(element, parent){
         return; 
     }
 };
+BasicIdEngine.prototype.generatesSingleElemSelectors = function() {
+   
+    return true;
+};
 
 
 
@@ -202,15 +218,6 @@ ControlTypeBasedEngine.prototype.getPath = function(element, parent){
     var accumPathEnding = tagName;
     var traversingElem = element;
 
-    //    .//*[contains(@class, 'briefCitRow')]/table/tbody/tr
-
-    /*for (var i = 0; i < 4; i++) {
-
-        traversingElem = traversingElem.parentElement;
-        accumPathEnding = traversingElem.parentElement.nodeName.toLowerCase() + "/" + accumPathEnding;
-        xpaths.push(".//"+ accumPathEnding);
-    }*/
-
     while (traversingElem = traversingElem.parentElement){
         if(traversingElem.className){
             accumPathEnding = "*[contains(@class, 'briefCitRow')]/" + accumPathEnding;
@@ -221,7 +228,8 @@ ControlTypeBasedEngine.prototype.getPath = function(element, parent){
         }
     }
 
-    xpaths.push(".//" + accumPathEnding);
+    if(accumPathEnding && accumPathEnding.trim() != "*")
+        xpaths.push(".//" + accumPathEnding);
 
     return (xpaths.length && xpaths.length > 0)? xpaths:undefined;
 }
@@ -246,11 +254,10 @@ ClassXPathEngine.prototype.getPath = function(element, parent){
     var tagName = element.nodeName.toLowerCase();
     
     // ESTO ES LO QUE DETERMINA COMO SERA EL XPATH -> VER VARIANTES
-    //var elemPath = "//"+tagName+"[@class='"+elemClass+"']";
-    var xpaths = [], elemClasses = elemClass.split("/[ ]+/");
+    var xpaths = [], elemClasses = elemClass.split(" ");
 
     for (var i = 0; i < elemClasses.length; i++) {
-
+        
         var elemPath = ".//"+tagName+"[contains(@class, '"+ elemClasses[i] +"')]";
         var res = this.getElement(element.ownerDocument, elemPath);
         for (var e in res){
@@ -277,7 +284,7 @@ function FullXPathEngine() {
 FullXPathEngine.prototype = new XPathSelectorEngine();
 FullXPathEngine.prototype.constructor = FullXPathEngine;
 
-FullXPathEngine.prototype.suitableForRelative = function(aNode, aExpr) {
+FullXPathEngine.prototype.suitableForRelative = function() {
    
     return false;
 };

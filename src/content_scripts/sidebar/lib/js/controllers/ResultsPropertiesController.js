@@ -21,8 +21,9 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       var selector = $scope.getElementsSelector(service.results.selector.value);
       $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
 
-      $scope.enableDomElementSelection(selector, "onElementSelection", ".well", "XpathScrapper", 
-        service.results.selector.value, false, true).then(function() {
+      $scope.enableDomElementSelection(selector, "onElementSelection", ".well", 
+        "XpathScrapper", service.results.selector.value, false, 
+        true, false).then(function() {
         $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
       });
     });

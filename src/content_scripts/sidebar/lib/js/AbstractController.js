@@ -44,22 +44,29 @@ function AbstractController($scope, $state, ServiceService) {
 
   $scope.loadSubformBehaviour = function() {};
 
-  $scope.enableDomElementSelection = function(controlsSelector, callbackMessage, scoped, scrapperClass, refElemSelector, removeStyleOnSelection, generateRelativeSelector) {
-    removeStyleOnSelection = (removeStyleOnSelection == undefined)
-      ? true
-      : removeStyleOnSelection;
+  $scope.enableDomElementSelection = function(
+    controlsSelector, callbackMessage, scoped, 
+    scrapperClass, refElemSelector, removeStyleOnSelection, 
+    generateRelativeSelector, generatesSingleElemSelectors) {
 
-    //console.log("refElemSelector from abstract", refElemSelector);
+    
+    console.log("ASKING generateRelativeSelector: ", generateRelativeSelector);
+    removeStyleOnSelection = (removeStyleOnSelection == undefined)? true: removeStyleOnSelection;
+    generatesSingleElemSelectors = (generatesSingleElemSelectors == undefined)? false: generatesSingleElemSelectors;
+    
+    console.log("ASKING generateRelativeSelector: ", generateRelativeSelector);
+
     return browser.runtime.sendMessage({
       call: "enableElementSelection",
       args: {
-        targetElementSelector: controlsSelector,
-        onElementSelection: callbackMessage,
-        scoped: scoped,
-        scrapperClass: scrapperClass || "QuerySelectorScrapper",
-        refElemSelector: refElemSelector,
-        removeStyleOnSelection: removeStyleOnSelection,
-        generateRelativeSelector: generateRelativeSelector || false
+        "targetElementSelector": controlsSelector,
+        "onElementSelection": callbackMessage,
+        "scoped": scoped,
+        "scrapperClass": scrapperClass || "QuerySelectorScrapper",
+        "refElemSelector": refElemSelector || undefined,
+        "removeStyleOnSelection": removeStyleOnSelection,
+        "generateRelativeSelector": generateRelativeSelector || false,
+        "generatesSingleElemSelectors": generatesSingleElemSelectors
       }
     });
   };

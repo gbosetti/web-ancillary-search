@@ -39,26 +39,25 @@ function PageSelector(){
 };
 PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector){
 
-	console.log("relativeElem", relativeElem);
-	console.log("generateRelativeSelector", generateRelativeSelector);
-
 	var xpi = new XPathInterpreter(),
 		labeledXpaths = {};
 
-	xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem) : xpi.getMultipleXPaths(element, element.ownerDocument);
+	var xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem, this.generatesSingleElemSelectors) : xpi.getMultipleXPaths(element, element.ownerDocument, this.generatesSingleElemSelectors);
 
-	console.log("xpaths", xpaths);
+	if(xpaths && xpaths.length)
+	    for (var i = xpaths.length - 1; i >= 0; i--) {
 
-    for (var i = xpaths.length - 1; i >= 0; i--) {
+	    	if(!xpaths[i].includes("andes-")){
 
-        var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
-        if(elemsBySelector > 0){
+		        var elemsBySelector = xpi.getElementsByXpath(xpaths[i], element.ownerDocument).length;
+		        if(elemsBySelector > 0){
 
-            if(labeledXpaths[elemsBySelector])
-            	this.addToExistingLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths)
-            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths); 
-        }
-    }
+		            if(labeledXpaths[elemsBySelector])
+		            	this.addToExistingLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths)
+		            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths); 
+		        }
+		    }
+	    }
 
     return labeledXpaths;
 }
@@ -92,6 +91,7 @@ PageSelector.prototype.loadListeners = function(){
 		me.generatePreview(me.selectedElem).then(function(preview){
 
 			me.removeStyleClass(me.selectedElem, me.selectableElemClass);
+			me.removeStyleClass(me.selectedElem, me.clearBackgroundClass);
 
 			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
 			
@@ -237,9 +237,11 @@ PageSelector.prototype.enableElementSelection = function(data){
 	this.preventFormsOnSubmit();
 
 	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
+	this.generatesSingleElemSelectors = data.generatesSingleElemSelectors;
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
 	this.onElementSelectionMessage = data.onElementSelection;
+
 
     this.addSelectionListener(
     	elements, 
