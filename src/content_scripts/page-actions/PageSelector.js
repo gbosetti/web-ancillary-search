@@ -39,12 +39,15 @@ function PageSelector(){
 };
 PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector){
 
-	var xpi = new XPathInterpreter(),
-		labeledXpaths = {};
+	var xpi = new XPathInterpreter(), labeledXpaths = {}, xpaths;
 
-	var xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem, this.generatesSingleElemSelectors) : xpi.getMultipleXPaths(element, element.ownerDocument, this.generatesSingleElemSelectors);
+	console.log("this.justFullPaths", this.justFullPaths);
+	if(this.justFullPaths){
+		xpaths = xpi.getMultipleFullPaths(element, relativeElem);
+	}
+	else xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem, this.generatesSingleElemSelectors) : xpi.getMultipleXPaths(element, element.ownerDocument, this.generatesSingleElemSelectors);
 
-	if(xpaths && xpaths.length)
+	if(xpaths && xpaths.length){
 	    for (var i = xpaths.length - 1; i >= 0; i--) {
 
 	    	if(!xpaths[i].includes("andes-")){
@@ -58,6 +61,7 @@ PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeE
 		        }
 		    }
 	    }
+	}
 
     return labeledXpaths;
 }
@@ -231,7 +235,7 @@ PageSelector.prototype.getTargetElements = function(selector){
 	
 	return document.querySelectorAll(selector);
 };
-PageSelector.prototype.enableElementSelection = function(data){
+PageSelector.prototype.enableFullPathElementSelection = function(data){
 
 	this.darkifyAllDomElements();
 	this.preventFormsOnSubmit();
@@ -242,6 +246,29 @@ PageSelector.prototype.enableElementSelection = function(data){
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
 	this.onElementSelectionMessage = data.onElementSelection;
 
+    this.addSelectionListener(
+    	elements, 
+    	data.onElementSelection, 
+    	"click", 
+    	data.scoped,
+    	data.removeStyleOnSelection,
+    	data.generateRelativeSelector,
+    	data /*este solo es laposta*/
+    );
+    this.undarkifySidebarElements();
+    this.darkify(document.body); 
+};
+PageSelector.prototype.enableElementSelection = function(data){
+
+	this.darkifyAllDomElements();
+	this.preventFormsOnSubmit();
+
+	this.lastUsedExtractor = new scrappers[data.scrapperClass]();
+	this.generatesSingleElemSelectors = data.generatesSingleElemSelectors;
+	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
+	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
+	this.onElementSelectionMessage = data.onElementSelection;
+	this.justFullPaths = data.justFullPaths;
 
     this.addSelectionListener(
     	elements, 

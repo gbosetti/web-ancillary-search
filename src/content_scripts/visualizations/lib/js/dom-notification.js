@@ -60,16 +60,27 @@ function ReadyToTrigger() {
 
   this.analyseDom = function(data) {
     var { input } = data.service;
-    var xpi = new XPathInterpreter();
-    var inputElement = xpi.getSingleElementByXpath(input.selector, document);
+    if (!input) return;
 
-    if (!input) {
-      return;
-    }
+    var me=this, inputElement, extractionTries=0; //Puede que el input aun no exista
+    var waitingForDomToLoad = setInterval(function myTimer() {
+      inputElement = (new XPathInterpreter()).getSingleElementByXpath(input.selector, document);
 
-    const self = this;
+      console.log("inputElement for ", input);
+      console.log(inputElement);
 
-    browser.runtime.sendMessage({
+      if(inputElement || extractionTries > 10){
+
+        clearInterval(waitingForDomToLoad);
+        me.extractAndShow(inputElement, data);
+      }
+      extractionTries++;
+    }, 1500);
+  };
+
+  this.extractAndShow = function(inputElement, data){
+
+    browser.runtime.sendMessage({ 
       "call": "setSearchListeningStatus",
       "args": {
         "status": "ReadyToExtractResults"
@@ -81,24 +92,22 @@ function ReadyToTrigger() {
       const methodName = className.charAt(0).toLowerCase() + className.slice(1);
 
       inputElement.value = data.keywords;
-      console.log(`calling ${methodName} strategy`);
+      /*console.log(`calling ${methodName} strategy`);
       console.log(self);
-      console.log(self[methodName]);
+      console.log(self[methodName]);*/
 
       //TODO: acá debería haber un strategy, no un binding. Instanciar una clase y llamar al mismo método, mediante polimorfismo
-      self[methodName].bind(self)({strategy, inputElement});
+      me[methodName].bind(me)({strategy, inputElement});
     });
-  };
+  }
 
   this.clickBasedTrigger = function({strategy}) {
-    console.log("clickBasedTrigger");
     const xpi = new XPathInterpreter();
     const triggerElement = xpi.getSingleElementByXpath(strategy.selector, document);
     triggerElement.click();
   };
 
   this.enterBasedTrigger = function({ inputElement }) {
-    console.log("enterBasedTrigger");
     const e = jQuery.Event("keypress");
     e.which = 13;
     $(inputElement)
@@ -109,12 +118,10 @@ function ReadyToTrigger() {
   };
 
   this.typeAndWaitBasedTrigger = function({ inputElement }) {
-    console.log("typeAndWaitBasedTrigger");
     /* TODO how to trigger input change?! */
   };
 
   this.typeAndEnterBasedTrigger = function({ inputElement }) {
-    console.log("typeAndEnterBasedTrigger");
     /* TODO how to trigger input change?! */
   };
 }
@@ -183,8 +190,6 @@ function ReadyToExtractResults() {
     var propSpecKeys = Object.keys(propSpecs);
     var me = this;
 
-    console.log("***keys", propSpecKeys);
-
     if (propSpecKeys.length > 0) {
 
       conceptDomElems.forEach(conceptDom => {
@@ -192,8 +197,6 @@ function ReadyToExtractResults() {
         var incompleteConcept = false;
         var concept = {};
         propSpecKeys.forEach(propIndex => {
-
-          console.log("*key", propSpecKeys, propSpecs[propIndex]);
 
           var propDom = (new XPathInterpreter()).getSingleElementByXpath(
             propSpecs[propIndex].relativeSelector,

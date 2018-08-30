@@ -35,6 +35,8 @@ TableVisualizer.prototype.presentData = function(data){
 	
 	var table = document.querySelector("#" + data.domId);
 	this.initializeDatatable(table, data.results);
+	console.log(table);
+	console.log(data.results);
 	this.hideLoadingMessage();
 }
 TableVisualizer.prototype.createTable = function(id){

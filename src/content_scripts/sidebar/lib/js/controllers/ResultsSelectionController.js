@@ -20,7 +20,7 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 
       $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", 
         "onElementSelection", ".well", undefined, undefined, undefined, 
-          false, false);
+          false, false)
 
       if ($scope.service.results.selector) {
 

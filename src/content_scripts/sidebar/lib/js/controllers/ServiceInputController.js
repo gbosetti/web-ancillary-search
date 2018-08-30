@@ -23,12 +23,12 @@ serviceCreator.controller('ServiceInputController', function($scope, $state, Ser
   };
 
   $scope.loadSubformBehaviour = function() {
-    $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image");
+    $scope.enableDomElementSelection("input", "onElementSelection", "#property-preview-image",
+      undefined, undefined, undefined, undefined, undefined, true);
   };
 
   $scope.onElementSelection = function(data) {
 
-    console.log("onElementSelection", data);
     this.showPreview(data.previewSource);
     $scope.showAllHiddenElements();
 

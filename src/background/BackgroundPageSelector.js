@@ -32,6 +32,17 @@ BackgroundPageSelector.prototype.enableElementSelection = function(tab, data) {
       	resolve(); 
   	});
 };
+BackgroundPageSelector.prototype.enableFullPathElementSelection = function(tab, data) {
+
+	return new Promise((resolve, reject) => {
+
+    	browser.tabs.sendMessage(tab.id, {
+	    	"call": "enableFullPathElementSelection",
+	    	"args":data
+	    });
+      	resolve(); 
+  	});
+};
 BackgroundPageSelector.prototype.disableElementSelection = function(tab, selector) {
 	browser.tabs.sendMessage(tab.id, {
     	"call": "disableElementSelection",

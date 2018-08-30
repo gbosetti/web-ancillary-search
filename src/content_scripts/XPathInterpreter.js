@@ -35,19 +35,37 @@ XPathInterpreter.prototype.removeEngines = function() {
     this.engines = new array();
 };
 
+XPathInterpreter.prototype.getMultipleFullPaths = function(element, parent) {
+    
+    var xPathArray = [];
+    if(element == undefined) return;
+
+    try{
+        var path = (new FullXPathEngine()).getPath(element, document);
+        if (path !== undefined && path !== null && path.length && path.length > 0){
+
+            for (var j = 0; j < path.length; j++) {
+                
+                xPathArray.push(path[j]);                        
+            } 
+        }
+    }catch(err){ console.log(err); }
+    console.log(xPathArray);
+
+    return xPathArray;
+};
+
 XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent, generatesSingleElemSelectors) {
     
-    console.log("****** relative", element, parent);
     var xPathArray = [];
     if(element == undefined || parent == undefined)
         return;
 
     for (var i = 0; i < this.engine.length; i++) {
 
-        console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
+        //console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
         if(this.engine[i].suitableForRelative() && (this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors)){
             try{
-                console.log("entra");
                 var path = this.engine[i].getPath(element, parent);
                 if (path !== undefined && path !== null && path.length && path.length > 0){
 

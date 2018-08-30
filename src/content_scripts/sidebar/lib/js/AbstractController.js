@@ -47,12 +47,16 @@ function AbstractController($scope, $state, ServiceService) {
   $scope.enableDomElementSelection = function(
     controlsSelector, callbackMessage, scoped, 
     scrapperClass, refElemSelector, removeStyleOnSelection, 
-    generateRelativeSelector, generatesSingleElemSelectors) {
+    generateRelativeSelector, generatesSingleElemSelectors, justFullPaths) {
 
-    
+    console.log("just full llega", justFullPaths);
     removeStyleOnSelection = (removeStyleOnSelection == undefined)? true: removeStyleOnSelection;
     generatesSingleElemSelectors = (generatesSingleElemSelectors == undefined)? false: generatesSingleElemSelectors;
-    
+    justFullPaths = (justFullPaths == undefined)? false: justFullPaths;
+
+    console.log("just full", justFullPaths);
+
+
     return browser.runtime.sendMessage({
       call: "enableElementSelection",
       args: {
@@ -63,7 +67,8 @@ function AbstractController($scope, $state, ServiceService) {
         "refElemSelector": refElemSelector || undefined,
         "removeStyleOnSelection": removeStyleOnSelection,
         "generateRelativeSelector": generateRelativeSelector || false,
-        "generatesSingleElemSelectors": generatesSingleElemSelectors
+        "generatesSingleElemSelectors": generatesSingleElemSelectors,
+        "justFullPaths": justFullPaths
       }
     });
   };

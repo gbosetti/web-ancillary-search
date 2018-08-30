@@ -90,6 +90,10 @@ TemplatesCreator.prototype.enableElementSelection = function(tab, data) {
 
 	this.backPageSelector.enableElementSelection(tab, data);
 }
+TemplatesCreator.prototype.enableFullPathElementSelection = function(tab, data) {
+
+  this.backPageSelector.enableFullPathElementSelection(tab, data);
+}  
 TemplatesCreator.prototype.disableElementSelection = function(tab, selector) {
 
   this.backPageSelector.disableElementSelection(tab, selector);

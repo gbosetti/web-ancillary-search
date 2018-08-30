@@ -165,6 +165,12 @@ class BrowserUiManager {
     });
   }
 
+  enableFullPathElementSelection(data) {
+    this.executeOnCurrentTab(tab => {
+      this.templatesCreator.enableFullPathElementSelection(tab, data);
+    });
+  }
+
   enableMultipleRefElementSelection(data) {
     this.executeOnCurrentTab(tab => {
       this.templatesCreator.enableMultipleRefElementSelection(tab, data);
