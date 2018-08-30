@@ -18,8 +18,9 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       $scope.service.results.preview = service.results.preview;
       $scope.service.results.name = service.results.name;
 
-      $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", "onElementSelection", ".well", undefined, undefined, undefined, 
-    false, false)
+      $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", 
+        "onElementSelection", ".well", undefined, undefined, undefined, 
+          false, false);
 
       if ($scope.service.results.selector) {
 
@@ -71,9 +72,6 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 
     //$scope.service.results.preview = data.previewSource;
     //$scope.loadPreview("#result-preview-image", data.previewSource);
-
-    console.log("saelectors");
-    console.log(data.selectors);
 
     $scope.fillOccurrencesSelector(data.selectors);
     document.querySelector("#result-selector").onchange();

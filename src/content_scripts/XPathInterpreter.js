@@ -47,6 +47,7 @@ XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent,
         console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
         if(this.engine[i].suitableForRelative() && (this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors)){
             try{
+                console.log("entra");
                 var path = this.engine[i].getPath(element, parent);
                 if (path !== undefined && path !== null && path.length && path.length > 0){
 
@@ -166,7 +167,7 @@ XPathSelectorEngine.prototype.getElement = function(aNode, aExpr) {
 };
 XPathSelectorEngine.prototype.suitableForRelative = function() {
    
-    return true;
+    return false;
 };
 XPathSelectorEngine.prototype.generatesSingleElemSelectors = function() {
    
@@ -257,7 +258,7 @@ ClassXPathEngine.prototype.getPath = function(element, parent){
     var xpaths = [], elemClasses = elemClass.split(" ");
 
     for (var i = 0; i < elemClasses.length; i++) {
-        
+
         var elemPath = ".//"+tagName+"[contains(@class, '"+ elemClasses[i] +"')]";
         var res = this.getElement(element.ownerDocument, elemPath);
         for (var e in res){
@@ -286,7 +287,7 @@ FullXPathEngine.prototype.constructor = FullXPathEngine;
 
 FullXPathEngine.prototype.suitableForRelative = function() {
    
-    return false;
+    return true;
 };
 
 //Función que obtiene un Xpath según su FullPath de árbol DOM. 

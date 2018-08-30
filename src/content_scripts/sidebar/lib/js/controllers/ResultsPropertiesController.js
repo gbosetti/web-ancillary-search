@@ -21,20 +21,21 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       var selector = $scope.getElementsSelector(service.results.selector.value);
       $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
 
+      console.log("\n\nfor parent: ", service.results.selector.value);
       $scope.enableDomElementSelection(selector, "onElementSelection", ".well", 
         "XpathScrapper", service.results.selector.value, false, 
-        true, false).then(function() {
+        true, false) /* removeStyleOnSelection, generateRelativeSelector, generatesSingleElemSelectors */
+
+      .then(function() {
         $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
       });
     });
   };
 
   $scope.loadPrevStep = function(aState) {
-    if (this.areRequirementsMet()) {
       $scope.saveDataModel();
       $scope.undoActionsOnDom();
       $state.go(aState);
-    }
   };
 
   $scope.undoActionsOnDom = function(aState) {
