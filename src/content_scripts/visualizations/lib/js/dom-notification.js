@@ -64,9 +64,9 @@ function ReadyToTrigger() {
 
     var me=this, inputElement, extractionTries=0; //Puede que el input aun no exista
     var waitingForDomToLoad = setInterval(function myTimer() {
-      inputElement = (new XPathInterpreter()).getSingleElementByXpath(input.selector, document);
+      inputElement = (new XPathInterpreter()).getElementByXPath(input.selector, document);
 
-      console.log("inputElement for ", input);
+      console.log("************ inputElement for ", input);
       console.log(inputElement);
 
       if(inputElement || extractionTries > 10){
@@ -80,6 +80,7 @@ function ReadyToTrigger() {
 
   this.extractAndShow = function(inputElement, data){
 
+    var me = this;
     browser.runtime.sendMessage({ 
       "call": "setSearchListeningStatus",
       "args": {

@@ -37,6 +37,7 @@ XPathInterpreter.prototype.removeEngines = function() {
 
 XPathInterpreter.prototype.getMultipleFullPaths = function(element, parent) {
     
+    console.log("getMultipleFullPaths");
     var xPathArray = [];
     if(element == undefined) return;
 
@@ -128,7 +129,8 @@ XPathInterpreter.prototype.getPath = function(element, parent) {
 
 XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
     //WARNING: I THINK THIS IS NOT PROPERLY WORKING. USE -> getSingleElementByXpath
-    var doc = node.ownerDocument;
+    var doc = (node && node.ownerDocument)? node.ownerDocument : node;
+    console.log(doc.URL);
     return  doc.evaluate( xpath, doc, null, 
         9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE*/
 }
@@ -136,6 +138,7 @@ XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
 
     //console.log("evaluating", xpath, " on ", node);
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
+    console.log(doc.URL);
     var results = doc.evaluate(xpath, node, null, XPathResult.ANY_TYPE, null); 
     return results.iterateNext(); 
 };
