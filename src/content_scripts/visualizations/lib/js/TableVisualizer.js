@@ -33,11 +33,30 @@ TableVisualizer.prototype.showLoadingMessage = function(msg){
 }
 TableVisualizer.prototype.presentData = function(data){
 	
-	var table = document.querySelector("#" + data.domId);
-	this.initializeDatatable(table, data.results);
-	console.log(table);
-	console.log(data.results);
-	this.hideLoadingMessage();
+	var extractionTries=0;
+
+	this.waitingForTableToLoad("#" + data.domId, data, extractionTries);
+}
+TableVisualizer.prototype.waitingForTableToLoad = function(selector, data, extractionTries){
+
+	var me=this; 
+	setTimeout(function() {
+
+      extractionTries++;
+      var table = document.querySelector("#" + data.domId);
+
+      console.log("Table:", table);
+
+      if( (table && table.tagName) || extractionTries > 10){
+
+      	console.log(table.tagName + " results:", data.results);
+        me.initializeDatatable(table, data.results);
+		me.hideLoadingMessage();
+      }
+      else {
+        me.waitingForTableToLoad(selector, data, extractionTries);
+      }
+    }, 1500);
 }
 TableVisualizer.prototype.createTable = function(id){
 

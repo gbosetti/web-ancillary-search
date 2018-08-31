@@ -37,7 +37,6 @@ XPathInterpreter.prototype.removeEngines = function() {
 
 XPathInterpreter.prototype.getMultipleFullPaths = function(element, parent) {
     
-    console.log("getMultipleFullPaths");
     var xPathArray = [];
     if(element == undefined) return;
 
@@ -51,7 +50,6 @@ XPathInterpreter.prototype.getMultipleFullPaths = function(element, parent) {
             } 
         }
     }catch(err){ console.log(err); }
-    console.log(xPathArray);
 
     return xPathArray;
 };
@@ -64,7 +62,6 @@ XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent,
 
     for (var i = 0; i < this.engine.length; i++) {
 
-        //console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
         if(this.engine[i].suitableForRelative() && (this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors)){
             try{
                 var path = this.engine[i].getPath(element, parent);
@@ -79,7 +76,6 @@ XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent,
             }catch(err){ console.log(err); }
         }
     };
-    console.log(xPathArray);
     return xPathArray;
 };
 
@@ -94,12 +90,11 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, generat
     if(parent == undefined)
         parent = element.ownerDocument;
 
-    console.log("****** full");
 
     //var console = element.ownerDocument.defaultView.console; //.log("********************************", element, parent);
     for (var i = 0; i < this.engine.length; i++) {
 
-        console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
+        //console.log(this.engine[i].constructor.name, this.engine[i].generatesSingleElemSelectors(), generatesSingleElemSelectors);
         if(this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors){
             try{
                 var path = this.engine[i].getPath(element, parent);
@@ -117,7 +112,6 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, generat
             }catch(err){ console.log(err); }
         }
     };
-    console.log(xPathArray);
     return xPathArray;
 };
 
@@ -130,15 +124,12 @@ XPathInterpreter.prototype.getPath = function(element, parent) {
 XPathInterpreter.prototype.getElementByXPath = function(xpath, node){
     //WARNING: I THINK THIS IS NOT PROPERLY WORKING. USE -> getSingleElementByXpath
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
-    console.log(doc.URL);
     return  doc.evaluate( xpath, doc, null, 
         9, null).singleNodeValue; // 9 = FIRST_ORDERED_NODE_TYPE*/
 }
 XPathInterpreter.prototype.getSingleElementByXpath = function(xpath, node) {
 
-    //console.log("evaluating", xpath, " on ", node);
     var doc = (node && node.ownerDocument)? node.ownerDocument : node;
-    console.log(doc.URL);
     var results = doc.evaluate(xpath, node, null, XPathResult.ANY_TYPE, null); 
     return results.iterateNext(); 
 };
