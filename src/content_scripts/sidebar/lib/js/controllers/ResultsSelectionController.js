@@ -102,7 +102,8 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
       browser.runtime.sendMessage({
         "call": "selectMatchingElements",
         "args": {
-          "selector": select.value
+          "selector": select.value,
+          "removeFullSelectionStyle": true
         }
       });
     }
