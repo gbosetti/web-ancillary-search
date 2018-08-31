@@ -7,13 +7,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       properties: {}
     }
   };
-  /*
-        {
-          'name': 'author',
-          'relativeSelector': '//a',
-          'exampleValue': 'Laura Alcobe'
-        }
-    */
   $scope.loadDataModel = function() {
     ServiceService.getService().then(function(service) {
 
@@ -21,7 +14,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
       var selector = $scope.getElementsSelector(service.results.selector.value);
       $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
 
-      console.log("\n\nfor parent: ", service.results.selector.value);
       $scope.enableDomElementSelection(selector, "onElementSelection", ".well", 
         "XpathScrapper", service.results.selector.value, false, 
         true, false) /* removeStyleOnSelection, generateRelativeSelector, generatesSingleElemSelectors */
@@ -98,14 +90,15 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $state
   $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
 
     console.log("////data.selectors", data.selectors);
-    var lala = Object.keys(data.selectors)[0];
+    var indexInJson = Object.keys(data.selectors)[0];
+    console.log("relativeSelector",  data.selectors[indexInJson][0]);
 
     var prop = {
       "name": "",
       "exampleValue": data.exampleValue.length > 35
         ? data.exampleValue.substring(0, 35) + "..."
         : data.exampleValue,
-      "relativeSelector": data.selectors[lala][0]
+      "relativeSelector": data.selectors[indexInJson][0]
     };
 
     var propControl = this.addPropertyToSidebar(prop);

@@ -65,17 +65,18 @@ XPathInterpreter.prototype.getMultipleRelativeXPaths = function(element, parent,
         if(this.engine[i].suitableForRelative() && (this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors)){
             try{
                 var path = this.engine[i].getPath(element, parent);
+                console.log(this.engine[i].constructor.name, path);
                 if (path !== undefined && path !== null && path.length && path.length > 0){
 
                     for (var j = 0; j < path.length; j++) {
                         
-                        //xPathArray.push(path[j].slice(0,path[j].lastIndexOf("[")));
                         xPathArray.push(path[j]);                        
                     } 
                 }
             }catch(err){ console.log(err); }
         }
     };
+
     return xPathArray;
 };
 
@@ -98,6 +99,8 @@ XPathInterpreter.prototype.getMultipleXPaths = function(element, parent, generat
         if(this.engine[i].generatesSingleElemSelectors() == generatesSingleElemSelectors){
             try{
                 var path = this.engine[i].getPath(element, parent);
+                //console.log(this.engine[i].constructor.name, path);
+
                 if (path !== undefined && path !== null && path.length && path.length > 0){
 
                     for (var j = 0; j < path.length; j++) {
@@ -201,6 +204,7 @@ BasicIdEngine.prototype = new XPathSelectorEngine();
 BasicIdEngine.prototype.constructor = BasicIdEngine;
 
 BasicIdEngine.prototype.getPath = function(element, parent){
+
     if (element && element.id){
         return ['.//'+ element.nodeName.toLowerCase() +'[@id="' + element.id + '"]']; 
     }else{
@@ -309,8 +313,11 @@ FullXPathEngine.prototype.getPath = function(element, parentNode) {
         return null;
     var paths = [];
     // Arma el path hasta llegar al parent node, que puede ser el parametro o "document"
-    for (; element && element.nodeType == 1 && element.innerHTML != parentNode.innerHTML; element = element.parentNode) {
+    for (   ;  
+            element && element.nodeType == 1 && element != parentNode; 
+            element = element.parentNode) {
         var index = 1;
+
         // aumenta el indice para comparar con los hermanos superiores del elemento actual (del mismo tipo)
         for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
             if (sibling.nodeType == 10) //element.ownerDocument.defaultView.Node.DOCUMENT_TYPE_NODE

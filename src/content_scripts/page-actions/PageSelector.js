@@ -37,15 +37,34 @@ function PageSelector(){
 	this.loadListeners();
 	this.selectedElem;
 };
-PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector){
+PageSelector.prototype.getSetOfXPathsByOccurrences = function(element, relativeElem, generateRelativeSelector, relativeElements){
 
 	var xpi = new XPathInterpreter(), labeledXpaths = {}, xpaths;
 
-	console.log("this.justFullPaths", this.justFullPaths);
 	if(this.justFullPaths){
+		//Input y trigger
 		xpaths = xpi.getMultipleFullPaths(element, relativeElem);
 	}
-	else xpaths = (generateRelativeSelector)? xpi.getMultipleRelativeXPaths(element, relativeElem, this.generatesSingleElemSelectors) : xpi.getMultipleXPaths(element, element.ownerDocument, this.generatesSingleElemSelectors);
+	else {
+		if(generateRelativeSelector){
+			// properties
+			var matchingRelativeElem;
+			for (var i = relativeElements.length - 1; i >= 0; i--) {
+				if(relativeElements[i].contains(element)){
+					matchingRelativeElem = relativeElements[i];
+					break;
+				}
+			}
+
+			if(matchingRelativeElem)
+				xpaths = xpi.getMultipleRelativeXPaths(element, matchingRelativeElem, this.generatesSingleElemSelectors);
+			else xpaths = [];
+		}
+		else{
+			console.log("getMultipleXPaths");
+			xpaths = xpi.getMultipleXPaths(element, element.ownerDocument, this.generatesSingleElemSelectors);
+		}
+	}
 
 	if(xpaths && xpaths.length){
 	    for (var i = xpaths.length - 1; i >= 0; i--) {
@@ -97,8 +116,9 @@ PageSelector.prototype.loadListeners = function(){
 			me.removeStyleClass(me.selectedElem, me.selectableElemClass);
 			me.removeStyleClass(me.selectedElem, me.clearBackgroundClass);
 
-			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
+			var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector, me.refElems);
 			
+			console.log(selectors);
 			me.addStyleClass(me.selectedElem, me.selectableElemClass);
 			me.addHighlightingOnHover(me.selectedElem);
 
@@ -244,6 +264,7 @@ PageSelector.prototype.enableFullPathElementSelection = function(data){
 	this.generatesSingleElemSelectors = data.generatesSingleElemSelectors;
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
+
 	this.onElementSelectionMessage = data.onElementSelection;
 
     this.addSelectionListener(
@@ -267,6 +288,7 @@ PageSelector.prototype.enableElementSelection = function(data){
 	this.generatesSingleElemSelectors = data.generatesSingleElemSelectors;
 	var elements = this.lastUsedExtractor.getElements(data.targetElementSelector);
 	this.refElem = this.lastUsedExtractor.getElement(data.refElemSelector);
+	this.refElems = this.lastUsedExtractor.getElements(data.refElemSelector);
 	this.onElementSelectionMessage = data.onElementSelection;
 	this.justFullPaths = data.justFullPaths;
 

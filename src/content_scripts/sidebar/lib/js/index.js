@@ -62,7 +62,7 @@ browser.runtime.onMessage.addListener(function callServiceNameActions(request, s
 
   if (controller != undefined && controller[request.call]) {
     if (sender.url == undefined) { //tHIS IS TRICKY BUT THE BROWSER IS SENDING THE MESSAGE TWICE, THE SAME CALL BUT WITH NO URL
-      console.log("\n\n\n" + request.call + " from index.js (sidebar)", sender);
+      //console.log("\n\n\n" + request.call + " from index.js (sidebar)", sender);
       controller[request.call](request.args);
     }
   }

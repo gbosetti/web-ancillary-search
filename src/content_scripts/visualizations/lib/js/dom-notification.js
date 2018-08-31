@@ -105,22 +105,22 @@ function ReadyToTrigger() {
       const methodName = className.charAt(0).toLowerCase() + className.slice(1);
 
       inputElement.value = data.keywords;
-      /*console.log(`calling ${methodName} strategy`);
-      console.log(self);
-      console.log(self[methodName]);*/
 
       //TODO: acá debería haber un strategy, no un binding. Instanciar una clase y llamar al mismo método, mediante polimorfismo
       me[methodName].bind(me)({strategy, inputElement});
+      //this calls clickBasedTrigger || enterBasedTrigger || typeAndWaitBasedTrigger || typeAndEnterBasedTrigger
     });
   }
 
   this.clickBasedTrigger = function({strategy}) {
+
     const xpi = new XPathInterpreter();
     const triggerElement = xpi.getSingleElementByXpath(strategy.selector, document);
     triggerElement.click();
   };
 
   this.enterBasedTrigger = function({ inputElement }) {
+
     const e = jQuery.Event("keypress");
     e.which = 13;
     $(inputElement)
@@ -152,16 +152,19 @@ function ReadyToExtractResults() {
       conceptDomElems = me.evaluateSelector(data.service.results.selector.value, document);
 
       if((conceptDomElems && conceptDomElems.length > 0) || extractionTries > 10){
+
         clearInterval(myVar);
         me.extractAndShow(conceptDomElems, data);
       }
       extractionTries++;
     }, 1500);
 
-    
   };
   this.extractAndShow = function(conceptDomElems, data) {
     data.service.results = this.extractConcepts(conceptDomElems, data.service.results.properties);
+
+    //console.log("DOM results", conceptDomElems);
+    console.log("JSON results", data.service.results);
 
     var me = this;
     browser.runtime.sendMessage({
@@ -207,14 +210,21 @@ function ReadyToExtractResults() {
 
       conceptDomElems.forEach(conceptDom => {
 
+        //console.log("\nconceptDom");
+        //console.log(conceptDom);
         var incompleteConcept = false;
         var concept = {};
         propSpecKeys.forEach(propIndex => {
+
+          console.log("-- Relative: ", propSpecs[propIndex].relativeSelector);
 
           var propDom = (new XPathInterpreter()).getSingleElementByXpath(
             propSpecs[propIndex].relativeSelector,
             conceptDom
           );
+
+          console.log(propDom);
+
           if (propDom != null) { //asi solo se agregan los que tienen algo
             concept[propIndex] = propDom.textContent.replace(/\n/g, ' ').trim();
           } else incompleteConcept = true;
