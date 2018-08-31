@@ -62,21 +62,34 @@ function ReadyToTrigger() {
     var { input } = data.service;
     if (!input) return;
 
-    var me=this, inputElement, extractionTries=0; //Puede que el input aun no exista
-    var waitingForDomToLoad = setInterval(function myTimer() {
-      inputElement = (new XPathInterpreter()).getElementByXPath(input.selector, document);
+   var extractionTries=0; //Puede que el input aun no exista
+    
+    this.waitingForDomToLoad(input.selector, data, extractionTries)
+  };
 
-      console.log("************ inputElement for ", input);
-      console.log(inputElement);
+  this.waitingForDomToLoad = function(selector, data, extractionTries){
+
+    var me=this;
+
+    setTimeout(function() {
+
+      extractionTries++;
+      var inputElement = (new XPathInterpreter()).getSingleElementByXpath(selector, document);
+
+      console.log("************ waitingForDomToLoad ", selector);
+      console.log("************ url ", document.URL);
+      console.log("************ inputElement ", inputElement);
 
       if(inputElement || extractionTries > 10){
 
-        clearInterval(waitingForDomToLoad);
+        console.log("\n\nextractionTries: ", extractionTries)
         me.extractAndShow(inputElement, data);
       }
-      extractionTries++;
+      else {
+        me.waitingForDomToLoad(selector, data, extractionTries);
+      }
     }, 1500);
-  };
+  }
 
   this.extractAndShow = function(inputElement, data){
 
