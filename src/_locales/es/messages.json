@@ -40,7 +40,7 @@
     "message": "El control de entrada"
   },
   "select_the_input_control": {
-    "message": "Hacé click en el elemento de la página que identifiques como el control que <b>dispara</b> una búsqueda."
+    "message": "Hacé click en el elemento de la página que identifiques como el <b>input</b>, que permite ingresar el texto a buscar."
   },
   "selected_input_control": {
     "message": "Elemento seleccionado"
